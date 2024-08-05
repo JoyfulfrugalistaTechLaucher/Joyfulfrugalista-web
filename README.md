@@ -4,3 +4,13 @@ People in Australia are struggling with the cost of living, with 6.9 million peo
 ## Document Directory
 * [Landing Page](https://wax-butternut-983.notion.site/The-Joyful-Joyfulfrugalista-Project-cb94c30dcd1f4fcd8cf3f9334867ff90?pvs=4)
 * [Google Drive](https://drive.google.com/drive/folders/181NKiNVCuW4TMf3HKB54Vql3RZBUGc-3?hl=zh_CN)
+
+## Set up for development
+Run the following:
+```
+npm install
+npx next build
+npx next start
+```
+
+Then in your browser, visit `localhost:3000`
