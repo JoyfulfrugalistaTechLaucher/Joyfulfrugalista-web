@@ -8,13 +8,20 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      colors: {
+        primary: '#603a6b',
+        secondary: '#f3c875',
+        error: '#fc96bb',
+        warning: '#ffc397',
+        info: '#6dc1dc',
+        success: '#a690fc',
       },
     },
   },
+  corePlugins: {
+    // Remove the Tailwind CSS preflight styles so it can use Material UI's preflight instead (CssBaseline).
+    preflight: false,
+  },  
   plugins: [],
 };
 export default config;

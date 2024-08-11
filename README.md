@@ -9,8 +9,7 @@ People in Australia are struggling with the cost of living, with 6.9 million peo
 Run the following:
 ```
 npm install
-npx next build
-npx next start
+npx next
 ```
 
 Then in your browser, visit `localhost:3000`

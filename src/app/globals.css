@@ -1,3 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply font-sans;
+}
+
+/* src/app/globals.css */
 body {
   margin: 0;
   padding: 0;
@@ -8,6 +17,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  width: 100%; /* Ensure the layout container spans the full width */
 }
 
 .header {
@@ -39,12 +49,53 @@ body {
 .content {
   flex: 1;
   padding: 20px;
+  width: 100%; /* Ensure content spans the full width */
+}
+
+
+.home-hero-container {
+  display: flex; /* Ensure the container is a flex container */
+  justify-content: center;
+  align-items: center;
+  padding: 50px 20px;
+  /* background: url('/path-to-your-background-image.png') no-repeat center center;
+  background-size: cover; */
+  width: 100%;
+}
+
+.home-hero {
+  max-width: 1200px; /* Set a max width for the hero content */
+  width: 100%; /* Ensure it takes the full width of its container */
 }
 
 .footer {
   text-align: center;
   padding: 10px;
   background: transparent;
+  width: 100%; /* Ensure footer spans the full width */
+}
+
+.hero-image {
+  flex: 1;
+}
+
+.hero-text {
+  flex: 2;
+  max-width: 600px;
+}
+
+.hero-text h1 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.hero-text p {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.hero-text button {
+  margin-top: 20px;
 }
 
 .login-container {
