@@ -33,8 +33,8 @@ const Navbar = () => {
             Joyful Savings Jar
           </Typography>
           <div className="hidden md:flex space-x-4">
-            <a href="#" className="text-gray-800 hover:text-primary">About</a>
-            <a href="#" className="text-gray-800 hover:text-primary">Ledger</a>
+            <a href="" className="text-gray-800 hover:text-primary">About</a>
+            <a href="/ledger" className="text-gray-800 hover:text-primary">Ledger</a>
             <a href="#" className="text-gray-800 hover:text-primary">Statistic</a>
             <a href="#" className="text-gray-800 hover:text-primary">Community</a>
             <div className="flex items-center space-x-2">

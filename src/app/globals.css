@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+/* custom colors with alpha values */
+
 body {
   @apply font-sans;
 }
@@ -134,3 +136,21 @@ body {
   margin-top: 20px;
   font-size: 0.8rem;
 }
+
+
+
+.goal-container {
+  @apply rounded-md w-4/5;
+  background-color: rgba(41, 20, 74, 0.83);
+  height: 80px;
+  padding: .5em;
+}
+
+.prog-bar {
+  @apply rounded-md;
+  height: 20px;
+  background-color: rgba(242, 200, 117, 1);
+}
+
+/* background: rgba(217, 114, 157, 1);
+ */

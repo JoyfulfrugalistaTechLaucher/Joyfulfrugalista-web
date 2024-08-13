@@ -21,5 +21,11 @@ export const themeOptions: ThemeOptions = {
     success: {
       main: '#a690fc',
     },
+    gray: {
+      main: '#dedede',
+    },
+    pinkbg: {
+      main: '#d9729d',
+    }
   },
 };
