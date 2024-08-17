@@ -1,6 +1,6 @@
-import React from 'react';
-import ThemeRegistry from '../themeRegistry';
-import Navbar from '../components/Navbar';
+import React from "react";
+import ThemeRegistry from "../themeRegistry";
+import Navbar from "../components/Navbar";
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
   return (
