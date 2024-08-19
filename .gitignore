@@ -36,4 +36,4 @@ yarn-error.log*
 next-env.d.ts
 
 #ignore configuration file
-/src/config/firebaseConfig.ts
+/src/app/config/firebaseConfig.ts
