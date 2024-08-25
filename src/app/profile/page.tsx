@@ -14,7 +14,7 @@ const Profile: React.FC = () => {
   // 如果没有 UID，则重定向到登录页面
   useEffect(() => {
     if (!uid) {
-      router.push("/login"); // 重定向到登录页面
+      router.replace("/login"); // 重定向到登录页面
     }
   }, [uid, router]);
 
@@ -28,7 +28,7 @@ const Profile: React.FC = () => {
       setUid(null);
 
       // 重定向到登录页面
-      router.push("/login");
+      router.replace("/login");
     } catch (error) {
       console.error("Error signing out:", error);
     }
