@@ -31,8 +31,8 @@ jobs:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
 
-      - name: Build project
-        run: npm run build
+      - name: Build project with Vercel
+        run: npx vercel build
         env:
           NODE_ENV: production
           NEXT_PUBLIC_FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
