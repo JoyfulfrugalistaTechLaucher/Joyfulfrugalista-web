@@ -31,6 +31,18 @@ jobs:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
 
+      - name: Determine deployment environment
+        id: deploy_env
+        run: |
+          if [ "${{ github.ref }}" == 'refs/heads/main' ]
+          then
+              echo "vercel-args=--prod --prebuilt" >> $GITHUB_OUTPUT
+              echo "vercel-domain=joyfulfrugalista-web.vercel.app" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref }}" == 'refs/heads/dev' ]] || [[ "${{ github.ref }}" == refs/heads/test/* ]]
+          then
+              echo "vercel-args=--prebuilt" >> $GITHUB_OUTPUT
+              echo "vercel-domain=demo.lastoccultism.com" >> $GITHUB_OUTPUT
+
       - name: Build project with Vercel
         run: npx vercel build
         env:
@@ -44,24 +56,11 @@ jobs:
           NEXT_PUBLIC_FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
           NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID: ${{ secrets.FIREBASE_MEASUREMENT_ID }}
 
-      - name: Determine deployment environment
-        id: deploy_env
-        run: |
-          if [ "${{ github.ref }}" == 'refs/heads/main' ]
-          then
-              echo "vercel-args=--prod --prebuilt" >> $GITHUB_OUTPUT
-              echo "vercel-domain=joyfulfrugalista-web.vercel.app" >> $GITHUB_OUTPUT
-          elif [[ "${{ github.ref }}" == 'refs/heads/dev' ]] || [[ "${{ github.ref }}" == refs/heads/test/* ]]
-          then
-              echo "vercel-args=--prebuilt" >> $GITHUB_OUTPUT
-              echo "vercel-domain=demo.lastoccultism.com" >> $GITHUB_OUTPUT
-          fi
-
       - name: Deploy to Vercel
         uses: amondnet/vercel-action@v25.2.0
         with:
           vercel-cli: vercel
-          vercel-version: lastest
+          vercel-version: 37.1.1
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
