@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Container,
   Box,
@@ -8,41 +8,62 @@ import {
   Typography,
   Link,
 } from "@mui/material";
-import { auth } from "../config/firebaseConfig";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/navigation";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
+import { auth } from "../config/firebaseConfig";
+import { useAuth } from "../context/AuthContext";
 import "@fontsource/montserrat"; // 导入 Montserrat 字体
 import BackgroundWrapper from "../components/BackgroundWrapper"; // 导入背景组件
 
-const LoginPage: React.FC = () => {
+const RegisterPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
-  const { uid, setUid } = useAuth();
+  const { setUid } = useAuth();
   const router = useRouter();
 
-  useEffect(() => {
-    if (uid) {
-      console.log("UID already saved in context:", uid);
-    }
-  }, [uid]);
-
-  const handleLogin = async (event: React.FormEvent) => {
+  const handleRegister = async (event: React.FormEvent) => {
     event.preventDefault();
+    setError(""); // 清空错误信息
+    setSuccess(""); // 清空成功信息
+
+    // 检查密码和确认密码是否匹配
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
     try {
-      const userCredential = await signInWithEmailAndPassword(
+      // 使用 Firebase 创建新用户
+      const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
       const user = userCredential.user;
+
+      // 发送验证邮件
+      await sendEmailVerification(user);
+
+      // 保存 UID 到上下文
       setUid(user.uid);
-      router.push("/");
+
+      // 显示成功信息
+      setSuccess(
+        "Registration successful! Please check your email for verification."
+      );
+
+      // 跳转到主页
+      setTimeout(() => router.push("/"), 3000); // 延迟跳转，让用户有时间看到成功消息
     } catch (err) {
-      setError("Login failed. Please check your email and password.");
-      console.error("Login error:", err);
+      setError("Registration failed. Please check your details and try again.");
+      console.error("Registration error:", err);
     }
   };
 
@@ -67,13 +88,13 @@ const LoginPage: React.FC = () => {
               textTransform: "uppercase",
             }}
           >
-            Login
+            Register
           </Typography>
           <Box
             component="form"
             noValidate
             sx={{ mt: 1 }}
-            onSubmit={handleLogin}
+            onSubmit={handleRegister}
           >
             <TextField
               margin="normal"
@@ -96,13 +117,13 @@ const LoginPage: React.FC = () => {
                 "& .MuiOutlinedInput-root": {
                   borderRadius: 3,
                   "& fieldset": {
-                    borderColor: "purple", // 默认边框颜色
+                    borderColor: "purple",
                   },
                   "&:hover fieldset": {
-                    borderColor: "darkviolet", // 悬停时边框颜色
+                    borderColor: "darkviolet",
                   },
                   "&.Mui-focused fieldset": {
-                    borderColor: "purple", // 聚焦时边框颜色
+                    borderColor: "purple",
                   },
                 },
               }}
@@ -115,7 +136,7 @@ const LoginPage: React.FC = () => {
               label="Password"
               type="password"
               id="password"
-              autoComplete="current-password"
+              autoComplete="new-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               InputProps={{
@@ -128,13 +149,45 @@ const LoginPage: React.FC = () => {
                 "& .MuiOutlinedInput-root": {
                   borderRadius: 3,
                   "& fieldset": {
-                    borderColor: "purple", // 默认边框颜色
+                    borderColor: "purple",
                   },
                   "&:hover fieldset": {
-                    borderColor: "darkviolet", // 悬停时边框颜色
+                    borderColor: "darkviolet",
                   },
                   "&.Mui-focused fieldset": {
-                    borderColor: "purple", // 聚焦时边框颜色
+                    borderColor: "purple",
+                  },
+                },
+              }}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="confirmPassword"
+              label="Confirm Password"
+              type="password"
+              id="confirm-password"
+              autoComplete="new-password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              InputProps={{
+                style: { fontFamily: "Montserrat, sans-serif" },
+              }}
+              InputLabelProps={{
+                style: { fontFamily: "Montserrat, sans-serif" },
+              }}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: 3,
+                  "& fieldset": {
+                    borderColor: "purple",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "darkviolet",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "purple",
                   },
                 },
               }}
@@ -146,6 +199,15 @@ const LoginPage: React.FC = () => {
                 sx={{ fontFamily: "Montserrat, sans-serif" }}
               >
                 {error}
+              </Typography>
+            )}
+            {success && (
+              <Typography
+                color="primary"
+                variant="body2"
+                sx={{ fontFamily: "Montserrat, sans-serif", color: "green" }}
+              >
+                {success}
               </Typography>
             )}
             <Button
@@ -165,9 +227,10 @@ const LoginPage: React.FC = () => {
                 },
               }}
             >
-              Log in
+              Register
             </Button>
             <Link
+              href="#"
               variant="body2"
               sx={{
                 display: "block",
@@ -175,14 +238,13 @@ const LoginPage: React.FC = () => {
                 mt: 2,
                 fontFamily: "Montserrat, sans-serif",
                 color: "purple",
-                cursor: "pointer",
                 "&:hover": {
                   color: "darkviolet",
                 },
               }}
-              onClick={() => router.push("/register")}
+              onClick={() => router.push("/login")}
             >
-              Create Account
+              Already have an account? Log in
             </Link>
           </Box>
         </Box>
@@ -191,4 +253,4 @@ const LoginPage: React.FC = () => {
   );
 };
 
-export default LoginPage;
+export default RegisterPage;
