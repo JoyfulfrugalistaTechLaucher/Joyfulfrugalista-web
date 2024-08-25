@@ -17,6 +17,7 @@ export const themeOptions: ThemeOptions = {
     },
     info: {
       main: '#6dc1dc',
+      gray: '#7b8298',
     },
     success: {
       main: '#a690fc',
