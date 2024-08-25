@@ -12,4 +12,4 @@ npm install
 npx next
 ```
 
-Then in your browser, visit `localhost:3000` or `127.0.0.1:3000`
+Then in your browser, visit `localhost:3000`
