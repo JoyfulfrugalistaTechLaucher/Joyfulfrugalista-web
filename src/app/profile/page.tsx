@@ -18,6 +18,7 @@ import BackgroundWrapper from "../components/BackgroundWrapper";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
 import SavingsIcon from "@mui/icons-material/Savings";
+import { log } from "console";
 
 // 统一颜色变量
 const colors = {
@@ -33,13 +34,15 @@ const URL =
 const ProfilePage: React.FC = () => {
   const [userData, setUserData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const { uid, setUid } = useAuth();
+  const { uid, isLoggedIn, setUid } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (!uid) {
+    console.log("local" + isLoggedIn);
+
+    if (!isLoggedIn) {
       router.replace("/login");
-    } else {
+    } else if (uid) {
       const fetchProfile = async () => {
         try {
           const response = await axios.get(`${URL}/users/${uid}.json`);
@@ -53,12 +56,13 @@ const ProfilePage: React.FC = () => {
 
       fetchProfile();
     }
-  }, [uid, router]);
+  }, [isLoggedIn, uid, router]);
 
   const handleLogout = async () => {
     try {
       await signOut(auth);
       setUid(null);
+      localStorage.setItem("isLoggedIn", "false");
       router.replace("/login");
     } catch (error) {
       console.error("Error signing out:", error);

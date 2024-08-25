@@ -39,6 +39,7 @@ const LoginPage: React.FC = () => {
       );
       const user = userCredential.user;
       setUid(user.uid);
+      localStorage.setItem("isLoggedIn", "true");
       router.push("/");
     } catch (err) {
       setError("Login failed. Please check your email and password.");
