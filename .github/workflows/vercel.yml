@@ -20,9 +20,6 @@ jobs:
         with:
           node-version: '18'  
 
-      - name: Install Latest Vercel CLI
-        run: npm install vercel@latest -g
-
       - name: Install dependencies
         run: npm ci
 
@@ -63,7 +60,8 @@ jobs:
       - name: Deploy to Vercel
         uses: amondnet/vercel-action@v25.2.0
         with:
-          vercel-cli: vercel@lastest
+          vercel-cli: vercel
+          vercel-version: lastest
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
