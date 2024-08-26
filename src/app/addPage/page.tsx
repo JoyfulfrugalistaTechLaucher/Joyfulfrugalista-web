@@ -1,6 +1,9 @@
 "use client";
 
 import React, { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
+import { addEntryToDatabase } from '../components/FirebaseDatabase';
+import BackgroundWrapper from "../components/BackgroundWrapper";
 
 interface Category {
     id: string;
@@ -31,49 +34,31 @@ export const categories: Category[] = [
 ];
 
 const App: React.FC = () => {
-    const [inputValue, setInputValue] = useState<string>('0');
-    const [previousValue, setPreviousValue] = useState<string | null>(null);
-    const [operator, setOperator] = useState<string | null>(null);
+    const [amount, setAmount] = useState<string>('0');
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [date, setDate] = useState<Date>(new Date());
     const [description, setDescription] = useState<string>('');
 
-    const handleButtonPress = (value: string) => {
-        if (value === 'Back') {
-            setInputValue(inputValue.slice(0, -1) || '0');
-        } else if (value === 'Done') {
-            let result = inputValue;
-            if (operator && previousValue !== null) {
-                result = String(calculate(parseFloat(previousValue), parseFloat(inputValue), operator)); // Convert number to string
-                setPreviousValue(null);
-                setOperator(null);
-            }
-            setInputValue(result);
-            // 在此处可以添加保存到数据库的逻辑
-        } else if (['+', '-'].includes(value)) {
-            if (operator && previousValue !== null) {
-                const result = String(calculate(parseFloat(previousValue), parseFloat(inputValue), operator)); // Convert number to string
-                setPreviousValue(result);
-                setInputValue('0');
-                setOperator(value);
-            } else {
-                setPreviousValue(inputValue);
-                setInputValue('0');
-                setOperator(value);
-            }
-        } else if (!isNaN(parseFloat(value)) || (value === '.' && !inputValue.includes('.'))) {
-            setInputValue((inputValue === '0' && value !== '.') ? value : inputValue + value);
-        }
-    };
+    const { uid } = useAuth(); // 获取当前用户的 UID
 
-    const calculate = (a: number, b: number, operator: string): number => {
-        switch (operator) {
-            case '+':
-                return a + b;
-            case '-':
-                return a - b;
-            default:
-                return b;
+    const handleSave = () => {
+        if (uid && selectedCategory) {
+            const formattedDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+
+            // 保存数据到数据库
+            addEntryToDatabase(uid, formattedDate, amount, selectedCategory, description)
+                .then(() => {
+                    alert('Entry added successfully!');
+                    // 清空输入框和选择的分类
+                    setAmount('0');
+                    setSelectedCategory(null);
+                    setDescription('');
+                })
+                .catch((error) => {
+                    console.error('Error adding entry:', error);
+                });
+        } else {
+            console.error('UID or selected category is missing');
         }
     };
 
@@ -86,6 +71,7 @@ const App: React.FC = () => {
     };
 
     return (
+        <BackgroundWrapper>
         <div style={styles.container}>
             <div style={styles.scrollView}>
                 {/* 类别按钮 */}
@@ -107,8 +93,14 @@ const App: React.FC = () => {
                 </div>
 
                 <div style={styles.inputContainer}>
-                    {/* 显示输入值 */}
-                    <span style={styles.inputDisplay}>{inputValue}</span>
+                    {/* 金额输入框 */}
+                    <input
+                        type="number"
+                        style={styles.amountInput}
+                        placeholder="Amount"
+                        value={amount}
+                        onChange={(e) => setAmount(e.target.value)}
+                    />
                     {/* 描述输入框 */}
                     <input
                         type="text"
@@ -119,19 +111,11 @@ const App: React.FC = () => {
                     />
                 </div>
 
-                {/* 按键区 */}
-                <div style={styles.keypadContainer}>
-                    <div style={styles.keypad}>
-                        {['7', '8', '9', '+', '4', '5', '6', '-', '1', '2', '3', '0', '.', 'Back', 'Done'].map(label => (
-                            <button
-                                key={label}
-                                style={styles.keypadButton}
-                                onClick={() => handleButtonPress(label)}
-                            >
-                                {label}
-                            </button>
-                        ))}
-                    </div>
+                {/* 保存按钮 */}
+                <div style={styles.saveButtonContainer}>
+                    <button style={styles.saveButton} onClick={handleSave}>
+                        Save
+                    </button>
                 </div>
 
                 {/* 日期选择器 */}
@@ -145,6 +129,7 @@ const App: React.FC = () => {
                 </div>
             </div>
         </div>
+            </BackgroundWrapper>
     );
 };
 
@@ -154,6 +139,7 @@ const styles = {
         flexDirection: 'column',
         backgroundColor: '#fff',
         alignItems: 'center',
+        width: '600px',
     } as React.CSSProperties,
     scrollView: {
         overflowY: 'scroll',
@@ -185,12 +171,13 @@ const styles = {
         padding: '10px',
         backgroundColor: '#29144A',
     } as React.CSSProperties,
-    inputDisplay: {
-        fontSize: '30px',
-        color: '#fff',
-        textAlign: 'right',
+    amountInput: {
+        width: '100%',
         padding: '10px',
-        backgroundColor: '#29144A',
+        marginTop: '10px',
+        borderRadius: '5px',
+        border: '1px solid #ccc',
+        fontSize: '20px',
     } as React.CSSProperties,
     descriptionInput: {
         width: '100%',
@@ -198,22 +185,19 @@ const styles = {
         marginTop: '10px',
         borderRadius: '5px',
         border: '1px solid #ccc',
+        fontSize: '16px',
     } as React.CSSProperties,
-    keypadContainer: {
+    saveButtonContainer: {
         padding: '10px',
-        backgroundColor: '#29144A',
     } as React.CSSProperties,
-    keypad: {
-        display: 'flex',
-        flexWrap: 'wrap',
-        justifyContent: 'space-between',
-    } as React.CSSProperties,
-    keypadButton: {
-        padding: '20px',
-        margin: '5px',
+    saveButton: {
+        width: '100%',
+        padding: '10px',
+        backgroundColor: '#4CAF50',
+        color: 'white',
+        border: 'none',
+        borderRadius: '5px',
         fontSize: '18px',
-        borderRadius: '8px',
-        backgroundColor: '#f0f0f0',
         cursor: 'pointer',
     } as React.CSSProperties,
     datePickerContainer: {
