@@ -5,7 +5,7 @@ import { categories } from '../addPage/page';
 import Image from 'next/image';
 import { fetchSavingData } from '../components/FirebaseDatabase';
 import { useAuth } from '../context/AuthContext';
-import BackgroundWrapper from "../components/BackgroundWrapper";
+import BackgroundWrapper from "../components/DetailPageBackgroud";
 
 interface FetchedData {
     savingEntries: Array<any>;
