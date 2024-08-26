@@ -33,12 +33,6 @@ const RegisterPage: React.FC = () => {
     setError(""); // 清空错误信息
     setSuccess(""); // 清空成功信息
 
-    // 检查密码和确认密码是否匹配
-    if (password !== confirmPassword) {
-      setError("Passwords do not match.");
-      return;
-    }
-
     try {
       // 使用 Firebase 创建新用户
       const userCredential = await createUserWithEmailAndPassword(

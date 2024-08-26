@@ -38,7 +38,7 @@ const ProfilePage: React.FC = () => {
   const router = useRouter();
 
   useEffect(() => {
-    console.log("local" + isLoggedIn);
+    console.log("uid" + uid);
 
     if (!isLoggedIn) {
       router.replace("/login");

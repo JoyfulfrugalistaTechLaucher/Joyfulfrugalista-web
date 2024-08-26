@@ -13,8 +13,8 @@ import {
   Typography,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import SmsIcon from '@mui/icons-material/Sms';
-import NotificationsIcon from '@mui/icons-material/Notifications';
+import SmsIcon from "@mui/icons-material/Sms";
+import NotificationsIcon from "@mui/icons-material/Notifications";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -43,7 +43,8 @@ const Navbar = () => {
     <AppBar component="nav" color="transparent" elevation={0}>
       <Toolbar className="nav-bar">
         <Box className="nav-home">
-          <Typography variant="h6"
+          <Typography
+            variant="h6"
             sx={{
               fontFamily: "Montserrat, sans-serif",
               fontWeight: 700,
@@ -54,8 +55,14 @@ const Navbar = () => {
           </Typography>
         </Box>
         <Box className="nav-links hidden space-x-4">
-          <a href="" className="text-gray-800 hover:text-primary">
-            <Typography variant="h6" className="flex-grow"
+          <a
+            href=""
+            className="text-gray-800 hover:text-primary"
+            style={{ textDecoration: "none" }}
+          >
+            <Typography
+              variant="h6"
+              className="flex-grow"
               sx={{
                 fontFamily: "Montserrat, sans-serif",
               }}
@@ -63,17 +70,29 @@ const Navbar = () => {
               About
             </Typography>
           </a>
-          <a href="/ledger" className="text-gray-800 hover:text-primary">
-            <Typography variant="h6" className="flex-grow"
+          <a
+            href="/ledger"
+            className="text-gray-800 hover:text-primary"
+            style={{ textDecoration: "none" }}
+          >
+            <Typography
+              variant="h6"
+              className="flex-grow"
               sx={{
                 fontFamily: "Montserrat, sans-serif",
               }}
             >
-              Leger
+              Ledger
             </Typography>
           </a>
-          <a href="#" className="text-gray-800 hover:text-primary">
-            <Typography variant="h6" className="flex-grow"
+          <a
+            href="#"
+            className="text-gray-800 hover:text-primary"
+            style={{ textDecoration: "none" }}
+          >
+            <Typography
+              variant="h6"
+              className="flex-grow"
               sx={{
                 fontFamily: "Montserrat, sans-serif",
               }}
@@ -81,8 +100,14 @@ const Navbar = () => {
               Stats
             </Typography>
           </a>
-          <a href="#" className="text-gray-800 hover:text-primary">
-            <Typography variant="h6" className="flex-grow"
+          <a
+            href="#"
+            className="text-gray-800 hover:text-primary"
+            style={{ textDecoration: "none" }}
+          >
+            <Typography
+              variant="h6"
+              className="flex-grow"
               sx={{
                 fontFamily: "Montserrat, sans-serif",
               }}
@@ -91,10 +116,12 @@ const Navbar = () => {
             </Typography>
           </a>
           <div className="flex items-center space-x-2">
-            <NotificationsIcon color="primary"/>
-            <SmsIcon color="primary"/>
+            <NotificationsIcon color="primary" />
+            <SmsIcon color="primary" />
             <Link href="/profile" passHref>
-              <Typography variant="h6" className="flex-grow"
+              <Typography
+                variant="h6"
+                className="flex-grow"
                 sx={{
                   fontFamily: "Montserrat, sans-serif",
                 }}
