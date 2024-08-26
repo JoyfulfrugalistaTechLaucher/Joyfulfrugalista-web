@@ -28,6 +28,6 @@ npx next
 
 Then in your browser, visit `localhost:3000` or `127.0.0.1:3000`
 
-## Build and depoly
-This project use [github actions](.github/workflows/vercel.yml), each commit and pull request on main and dev branches will trigger the build and depoly to vercel instance.
+## Build and deploy
+This project use [github actions](.github/workflows/vercel.yml), each commit and pull request on main and dev branches will trigger the build and deploy to vercel instance.
 You can access through [Joyful Savings Jar](https://joyfulfrugalista-web.vercel.app/) web.
