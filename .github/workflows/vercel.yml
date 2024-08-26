@@ -6,6 +6,9 @@ on:
       - main
       - dev
   pull_request_target:
+    branches:
+      - main
+      - dev
 
 jobs:
   deploy:
