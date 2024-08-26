@@ -195,8 +195,7 @@ const ProfilePage: React.FC = () => {
           </Grid>
         </Grid>
 
-        {/* 将 Castle 组件放在右侧 */}
-        <Castle target={100} progress={0} />
+        <Castle target={100} progress={100} />
       </Container>
     </BackgroundWrapper>
   );
