@@ -10,7 +10,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
     <BackgroundWrapper>
       <ThemeRegistry>
         <Container className="layout-container">
-          <Navbar className="flex-1"/>
+          <Navbar/>
           <Box component="main" className="flex-1 flex justify-center items-center">
             {children}
           </Box>
