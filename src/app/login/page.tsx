@@ -16,6 +16,8 @@ import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/navigation";
 import "@fontsource/montserrat"; // 导入 Montserrat 字体
 import BackgroundWrapper from "../components/BackgroundWrapper"; // 导入背景组件
+import Navbar from "../components/Navbar";
+import MainLayout from "../layouts/MainLayout";
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -50,11 +52,11 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <BackgroundWrapper>
-      <Container component="main" maxWidth="xs">
+    <MainLayout>
+      <Container component="div" maxWidth="xs">
         <Box
           sx={{
-            marginTop: -30,
+            // marginTop: -30,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -63,12 +65,7 @@ const LoginPage: React.FC = () => {
           <Typography
             component="h1"
             variant="h4"
-            sx={{
-              fontFamily: "Montserrat, sans-serif",
-              fontWeight: 700,
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-            }}
+            sx={{letterSpacing: "0.1em"}}
           >
             Login
           </Typography>
@@ -164,7 +161,7 @@ const LoginPage: React.FC = () => {
           </Box>
         </Box>
       </Container>
-    </BackgroundWrapper>
+    </MainLayout>
   );
 };
 

@@ -1,63 +1,63 @@
 "use client";
 import React from "react";
-import MainLayout from "./layouts/MainLayout";
-import { Container, Box, Button, Grid, Typography, Link } from "@mui/material";
+import {
+  Container,
+  Box,
+  Button,
+  Grid,
+  Link,
+  Stack,
+  Typography
+} from "@mui/material";
 import "@fontsource/montserrat";
+import MainLayout from "./layouts/MainLayout";
 
 const imgSize = 330;
 
 const HomePage = () => {
   return (
     <MainLayout>
-      <Grid container spacing={8} justifyContent="center" alignItems="center">
-        <Grid item xs={12} md={4}>
+      <Stack direction={{ md: "row", sm: "column" }} spacing={{xs: 4, md: 8}}
+        justifyContent="center" alignItems="center">
           <Box
             component="img"
             className="rounded-lg"
             src="/assets/saving_jar.png"
             alt="Saving Jar Logo"
-            width={imgSize}
-            height={imgSize}
-            alignItems="center"
+            width={{ md: imgSize, xs: (imgSize * 0.8)}}
+            width={{ md: imgSize, xs: (imgSize * 0.8)}}
           />
-        </Grid>
-        <Grid item xs={12} md={8}>
-          <Grid container justifyContent="start" spacing={2}>
-            <Grid item xs={12}>
-              <Typography
-                variant="h4"
-                sx={{
-                  fontFamily: "Montserrat, sans-serif",
-                  fontWeight: 700,
-                  color: "primary.main",
-                  whiteSpace: "pre-line",
-                }}
-              >
-                Welcome to Joyful Savings Jar,
-                {"\n"}your ultimate savings {"\n"} companion.
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography
-                component="h5"
-                sx={{
-                  fontFamily: "Montserrat, sans-serif",
-                  fontSize: 24,
-                  color: "info.gray",
-                }}
-              >
-                Track spending, wealth extending. Join our community and save
-                more.
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Button variant="outlined" color="primary">
-                Learn More
-              </Button>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
+        <Stack spacing={{md: 4, xs: 2}}>
+          <Box>
+            <Typography variant="h3" color="primary.main"
+              sx={{
+                fontSize: {
+                  md: "3rem", sm: "2rem", xs: "1.5rem",
+                }
+              }}
+            >
+              Joyful Savings Jar will help you save.
+            </Typography>
+          </Box>
+          <Box>
+            <Typography variant="h4" color="gray.500"
+              sx={{
+                fontSize: {
+                  md: "1.5rem", sm: "1rem", xs: ".75rem",
+                }
+              }}
+            >
+              Track your spending and watch your savings grow.
+              Join our community of joyful savers now.
+            </Typography>
+          </Box>
+          <Box>
+            <Button variant="outlined" color="primary">
+              Learn More
+            </Button>
+          </Box>
+        </Stack>
+      </Stack>
     </MainLayout>
   );
 };
