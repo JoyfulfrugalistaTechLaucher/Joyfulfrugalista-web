@@ -6,7 +6,10 @@ People in Australia are struggling with the cost of living, with 6.9 million peo
 * [Google Drive](https://drive.google.com/drive/folders/181NKiNVCuW4TMf3HKB54Vql3RZBUGc-3?hl=zh_CN)
 
 ## Set up for development
-Run the following:
+
+Download ``.env.local`` file and place in the project root file, you need to have those environment variable to access the firebase.
+
+Then run the following:
 ```
 npm install
 npx next

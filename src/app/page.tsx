@@ -41,7 +41,7 @@ const HomePage = () => {
                   color: "primary.main",
                 }}
               >
-                Test CI/CD Welcome to Joyful Savings Jar, your ultimate savings companion.
+                Welcome to Joyful Savings Jar, your ultimate savings companion.
               </Typography>
             </Grid>
             <Grid item>

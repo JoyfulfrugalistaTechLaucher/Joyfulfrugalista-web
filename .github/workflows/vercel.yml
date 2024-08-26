@@ -5,7 +5,6 @@ on:
     branches:
       - main
       - dev
-      - test/*
   pull_request_target:
 
 jobs:
@@ -31,19 +30,6 @@ jobs:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
 
-      - name: Determine deployment environment
-        id: deploy_env
-        run: |
-          if [ "${{ github.ref }}" == 'refs/heads/main' ]
-          then
-              echo "vercel-args=--prod --prebuilt" >> $GITHUB_OUTPUT
-              echo "vercel-domain=joyfulfrugalista-web.vercel.app" >> $GITHUB_OUTPUT
-          elif [[ "${{ github.ref }}" == 'refs/heads/dev' ]] || [[ "${{ github.ref }}" == refs/heads/test/* ]]
-          then
-              echo "vercel-args=--prebuilt" >> $GITHUB_OUTPUT
-              echo "vercel-domain=demo.lastoccultism.com" >> $GITHUB_OUTPUT
-          fi
-
       - name: Build project with Vercel
         run: npx vercel build
         env:
@@ -65,8 +51,7 @@ jobs:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          vercel-args: ${{ steps.deploy_env.outputs.vercel-args }}
-          alias-domains: ${{ steps.deploy_env.outputs.vercel-domain }}
+          vercel-args: --prod
         env:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
