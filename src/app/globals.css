@@ -37,7 +37,7 @@ body {
 }
 
 .nav-home {
-  @apply flex justify-center max-sm:hidden;
+  @apply flex justify-center max-sm:hidden no-underline;
   flex: 1 0 auto;
 }
 
@@ -45,6 +45,11 @@ body {
   @apply flex justify-end items-center mx-4 md:gap-x-4 gap-x-1 max-sm:hidden;
   list-style: none;
   flex: 4 0 auto;
+}
+
+
+.nav-routes li {
+  cursor: pointer;
 }
 
 .nav-icons {
@@ -57,10 +62,6 @@ body {
 }
 
 
-
-.nav-links li {
-  cursor: pointer;
-}
 
 .content {
   flex: 1;

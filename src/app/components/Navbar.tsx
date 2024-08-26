@@ -5,6 +5,7 @@ import {
   Box,
   IconButton,
   Drawer,
+  Link,
   List,
   ListItem,
   ListItemText,
@@ -17,8 +18,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import SmsIcon from "@mui/icons-material/Sms";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import Image from "next/image";
-import Link from "next/link";
 
 
 // Hamburger Menu for small screens
@@ -63,11 +62,11 @@ const Navbar = () => {
   return (
     <Box component="nav" color="transparent" elevation={0}>
       <Toolbar className="nav-bar">
-        <Box className="nav-home">
+        <Link href="/" className="nav-home">
           <Typography color="primary" >
             Joyful Savings Jar
           </Typography>
-        </Box>
+        </Link>
         <IconButton
           size="large"
           edge="start"
@@ -79,7 +78,7 @@ const Navbar = () => {
           <MenuIcon fontSize="inherit"/>
         </IconButton>
         <Box className="nav-routes">
-          <a
+          <Link
             href=""
             className="text-gray-800 hover:text-primary"
             style={{ textDecoration: "none" }}
@@ -87,8 +86,8 @@ const Navbar = () => {
             <Typography color="primary" >
               About
             </Typography>
-          </a>
-          <a
+          </Link>
+          <Link
             href="/ledger"
             className="text-gray-800 hover:text-primary"
             style={{ textDecoration: "none" }}
@@ -96,8 +95,8 @@ const Navbar = () => {
             <Typography color="primary">
               Ledger
             </Typography>
-          </a>
-          <a
+          </Link>
+          <Link
             href="#"
             className="text-gray-800 hover:text-primary"
             style={{ textDecoration: "none" }}
@@ -106,8 +105,8 @@ const Navbar = () => {
             >
               Stats
             </Typography>
-          </a>
-          <a
+          </Link>
+          <Link
             href="#"
             className="text-gray-800 hover:text-primary"
             style={{ textDecoration: "none" }}
@@ -115,28 +114,28 @@ const Navbar = () => {
             <Typography color="primary" >
               Community
             </Typography>
-          </a>
+          </Link>
         </Box>
         <Box className="nav-icons">
-          <a
+          <Link
             className="text-gray-800 hover:text-primary"
             style={{ textDecoration: "none" }}
           >
             <NotificationsIcon color="primary" sx={{ fontSize: 32 }}/>
-          </a>
-          <a
+          </Link>
+          <Link
             className="text-gray-800 hover:text-primary"
             style={{ textDecoration: "none" }}
           >
             <SmsIcon color="primary" sx={{ fontSize: 32 }}/>
-          </a>
+          </Link>
 
-          <a href="/profile"
+          <Link href="/profile"
             className="text-gray-800 hover:text-primary"
             style={{ textDecoration: "none" }}
           >
             <AccountCircleIcon color="primary" sx={{ fontSize: 32 }}/>
-          </a>
+          </Link>
         </Box>
       </Toolbar>
     </Box>

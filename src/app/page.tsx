@@ -25,7 +25,7 @@ const HomePage = () => {
             src="/assets/saving_jar.png"
             alt="Saving Jar Logo"
             width={{ md: imgSize, xs: (imgSize * 0.8)}}
-            width={{ md: imgSize, xs: (imgSize * 0.8)}}
+            height={{ md: imgSize, xs: (imgSize * 0.8)}}
           />
         <Stack spacing={{md: 4, xs: 2}}>
           <Box>
