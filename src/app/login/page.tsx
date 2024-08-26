@@ -7,6 +7,8 @@ import {
   Button,
   Typography,
   Link,
+  createTheme,
+  ThemeProvider,
 } from "@mui/material";
 import { auth } from "../config/firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -96,15 +98,6 @@ const LoginPage: React.FC = () => {
               sx={{
                 "& .MuiOutlinedInput-root": {
                   borderRadius: 3,
-                  "& fieldset": {
-                    borderColor: "purple", // 默认边框颜色
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "darkviolet", // 悬停时边框颜色
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "purple", // 聚焦时边框颜色
-                  },
                 },
               }}
             />
@@ -128,15 +121,6 @@ const LoginPage: React.FC = () => {
               sx={{
                 "& .MuiOutlinedInput-root": {
                   borderRadius: 3,
-                  "& fieldset": {
-                    borderColor: "purple", // 默认边框颜色
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "darkviolet", // 悬停时边框颜色
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "purple", // 聚焦时边框颜色
-                  },
                 },
               }}
             />
@@ -160,10 +144,6 @@ const LoginPage: React.FC = () => {
                 fontWeight: 600,
                 textTransform: "none",
                 borderRadius: 3,
-                backgroundColor: "purple",
-                "&:hover": {
-                  backgroundColor: "darkviolet",
-                },
               }}
             >
               Log in
@@ -175,11 +155,7 @@ const LoginPage: React.FC = () => {
                 textAlign: "center",
                 mt: 2,
                 fontFamily: "Montserrat, sans-serif",
-                color: "purple",
                 cursor: "pointer",
-                "&:hover": {
-                  color: "darkviolet",
-                },
               }}
               onClick={() => router.push("/register")}
             >

@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "./context/AuthContext";
 import { auth } from "./config/firebaseConfig";
 import { useEffect } from "react";
+import ThemeRegistry from "./themeRegistry";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,7 +21,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <AuthProvider>{children}</AuthProvider>
+        <ThemeRegistry>
+          <AuthProvider>{children}</AuthProvider>
+        </ThemeRegistry>
       </body>
     </html>
   );
