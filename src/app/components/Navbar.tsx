@@ -60,7 +60,7 @@ const Navbar = () => {
   );
 
   return (
-    <Box component="nav" color="transparent" elevation={0}>
+    <Box component="nav" color="transparent">
       <Toolbar className="nav-bar">
         <Link href="/" className="nav-home">
           <Typography color="primary" >
