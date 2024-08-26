@@ -18,7 +18,7 @@ import BackgroundWrapper from "../components/BackgroundWrapper";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
 import SavingsIcon from "@mui/icons-material/Savings";
-import { log } from "console";
+import Castle from "../components/Castle"; // 导入 Castle 组件
 
 // 统一颜色变量
 const colors = {
@@ -86,7 +86,11 @@ const ProfilePage: React.FC = () => {
 
   return (
     <BackgroundWrapper>
-      <Container component="main" maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      <Container
+        component="main"
+        maxWidth="lg"
+        sx={{ mt: 4, mb: 4, position: "relative" }}
+      >
         <Grid container spacing={3}>
           <Grid item xs={12} sm={8} md={6}>
             <Box
@@ -170,12 +174,8 @@ const ProfilePage: React.FC = () => {
             </Box>
           </Grid>
 
-          {/* 右侧空白区域，可用于未来的用户账本或其他内容 */}
-          <Grid item xs={12} sm={4} md={6}>
-            {/* 此处保留为空白 */}
-          </Grid>
+          <Grid item xs={12} sm={4} md={6}></Grid>
 
-          {/* Logout 链接居中 */}
           <Grid item xs={12}>
             <Box mt={4} textAlign="center">
               <Typography
@@ -194,6 +194,9 @@ const ProfilePage: React.FC = () => {
             </Box>
           </Grid>
         </Grid>
+
+        {/* 将 Castle 组件放在右侧 */}
+        <Castle target={100} progress={0} />
       </Container>
     </BackgroundWrapper>
   );
