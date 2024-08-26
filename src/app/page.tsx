@@ -40,7 +40,7 @@ const HomePage = () => {
             </Typography>
           </Box>
           <Box>
-            <Typography variant="h4" color="gray.500"
+            <Typography variant="h4" color="grey.500"
               sx={{
                 fontSize: {
                   md: "1.5rem", sm: "1rem", xs: ".75rem",

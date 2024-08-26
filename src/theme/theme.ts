@@ -21,14 +21,13 @@ export const themeOptions: ThemeOptions = {
     success: {
       main: '#a690fc',
     },
-    gray: {
+    grey: {
       500: '#7B8298',
     },
   },
   typography: {
     fontFamily: "Montserrat, sans-serif",
-    fontSize: "1rem",
-    fontWeight: 600,
+    fontSize: 24,
     h3: {
       fontFamily: "Montserrat, sans-serif",
       fontWeight: 700,
