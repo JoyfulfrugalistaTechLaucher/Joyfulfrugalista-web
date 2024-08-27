@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { categories } from '../addPage/page';
+import { categories } from '@/data/Category';
 import Image from 'next/image';
 import { fetchSavingData } from '../components/FirebaseDatabase';
 import { useAuth } from '../context/AuthContext';
@@ -64,7 +64,7 @@ const Detail: React.FC = () => {
     const fetchDataAndUpdate = () => {
         if (isLoggedIn && uid) {
             fetchSavingData(uid)
-                .then((data) => {
+                .then((data:any) => {
                     setTotalSavingAmount(data.totalSaved);
 
                     // 将 savingEntries 对象传递给 categorizeSavingEntries
