@@ -26,7 +26,13 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [uid, setUid] = useState<string | null>(null);
+  const [uid, setUid] = useState<string | null>(() => {
+    // 从 localStorage 恢复 uid
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("uid");
+    }
+    return null;
+  });
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
     if (typeof window !== "undefined") {
       return localStorage.getItem("isLoggedIn") === "true";
@@ -40,10 +46,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (user) {
         setUid(user.uid);
         setIsLoggedIn(true);
+        localStorage.setItem("uid", user.uid); // 保存 uid
         localStorage.setItem("isLoggedIn", "true"); // 设置登录标志
       } else {
         setUid(null);
         setIsLoggedIn(false);
+        localStorage.removeItem("uid"); // 移除 uid
         localStorage.removeItem("isLoggedIn"); // 移除登录标志
       }
     });
@@ -52,8 +60,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ uid, setUid, isLoggedIn }}>
-      {children}
-    </AuthContext.Provider>
+      <AuthContext.Provider value={{ uid, setUid, isLoggedIn }}>
+        {children}
+      </AuthContext.Provider>
   );
 };
