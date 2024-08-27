@@ -50,7 +50,7 @@ const App: React.FC = () => {
             // 保存数据到数据库
             addEntryToDatabase(uid, formattedDate, amount, selectedCategory, description)
                 .then(() => {
-                    toast.success('Entry added successfully!', {
+                    toast.success('Added successfully!', {
                         position: "top-center",
                         autoClose: 3000,
                         hideProgressBar: false,
