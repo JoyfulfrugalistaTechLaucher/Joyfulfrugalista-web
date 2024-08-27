@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { addEntryToDatabase } from '../components/FirebaseDatabase';
 import BackgroundWrapper from "../components/BackgroundWrapper";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface Category {
     id: string;
@@ -48,17 +50,41 @@ const App: React.FC = () => {
             // 保存数据到数据库
             addEntryToDatabase(uid, formattedDate, amount, selectedCategory, description)
                 .then(() => {
-                    alert('Entry added successfully!');
+                    toast.success('Entry added successfully!', {
+                        position: "top-center",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                    });
                     // 清空输入框和选择的分类
                     setAmount('0');
                     setSelectedCategory(null);
                     setDescription('');
                 })
                 .catch((error) => {
-                    console.error('Error adding entry:', error);
+                    toast.error(`Error adding entry: ${error.message}`, {
+                        position: "top-center",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                    });
                 });
         } else {
-            console.error('UID or selected category is missing');
+            toast.error('UID or selected category is missing', {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
         }
     };
 
@@ -71,65 +97,66 @@ const App: React.FC = () => {
     };
 
     return (
-        <BackgroundWrapper>
         <div style={styles.container}>
-            <div style={styles.scrollView}>
-                {/* 类别按钮 */}
-                <div style={styles.categoryContainer}>
-                    {categories.map((category) => (
-                        <div
-                            key={category.id}
-                            style={{
-                                ...styles.categoryButton,
-                                backgroundColor: category.color,
-                                border: selectedCategory === category.id ? '2px solid #000' : 'none',
-                            }}
-                            onClick={() => handleCategoryPress(category.id)}
-                        >
-                            <img src={category.iconName} alt={category.title} style={styles.icon} />
-                            <span>{category.title}</span>
-                        </div>
-                    ))}
-                </div>
+            <BackgroundWrapper>
+                <div style={styles.scrollView}>
+                    {/* 类别按钮 */}
+                    <div style={styles.categoryContainer}>
+                        {categories.map((category) => (
+                            <div
+                                key={category.id}
+                                style={{
+                                    ...styles.categoryButton,
+                                    backgroundColor: category.color,
+                                    border: selectedCategory === category.id ? '2px solid #000' : 'none',
+                                }}
+                                onClick={() => handleCategoryPress(category.id)}
+                            >
+                                <img src={category.iconName} alt={category.title} style={styles.icon} />
+                                <span>{category.title}</span>
+                            </div>
+                        ))}
+                    </div>
 
-                <div style={styles.inputContainer}>
-                    {/* 金额输入框 */}
-                    <input
-                        type="number"
-                        style={styles.amountInput}
-                        placeholder="Amount"
-                        value={amount}
-                        onChange={(e) => setAmount(e.target.value)}
-                    />
-                    {/* 描述输入框 */}
-                    <input
-                        type="text"
-                        style={styles.descriptionInput}
-                        placeholder="Description"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                    />
-                </div>
+                    <div style={styles.inputContainer}>
+                        {/* 金额输入框 */}
+                        <input
+                            type="number"
+                            style={styles.amountInput}
+                            placeholder="Amount"
+                            value={amount}
+                            onChange={(e) => setAmount(e.target.value)}
+                        />
+                        {/* 描述输入框 */}
+                        <input
+                            type="text"
+                            style={styles.descriptionInput}
+                            placeholder="Description"
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                        />
+                    </div>
 
-                {/* 保存按钮 */}
-                <div style={styles.saveButtonContainer}>
-                    <button style={styles.saveButton} onClick={handleSave}>
-                        Save
-                    </button>
-                </div>
+                    {/* 保存按钮 */}
+                    <div style={styles.saveButtonContainer}>
+                        <button style={styles.saveButton} onClick={handleSave}>
+                            Save
+                        </button>
+                    </div>
 
-                {/* 日期选择器 */}
-                <div style={styles.datePickerContainer}>
-                    <input
-                        type="date"
-                        value={date.toISOString().substr(0, 10)}
-                        onChange={handleDateChange}
-                        style={styles.datePicker}
-                    />
+                    {/* 日期选择器 */}
+                    <div style={styles.datePickerContainer}>
+                        <input
+                            type="date"
+                            value={date.toISOString().substr(0, 10)}
+                            onChange={handleDateChange}
+                            style={styles.datePicker}
+                        />
+                    </div>
                 </div>
-            </div>
-        </div>
             </BackgroundWrapper>
+            <ToastContainer />
+        </div>
     );
 };
 
@@ -140,10 +167,13 @@ const styles = {
         backgroundColor: '#fff',
         alignItems: 'center',
         width: '600px',
+        height: '100vh', // 限制容器高度为视口高度
+        overflow: 'hidden', // 隐藏任何可能的溢出
     } as React.CSSProperties,
     scrollView: {
-        overflowY: 'scroll',
-        height: '100vh',
+        overflowY: 'hidden', // 禁用滚动条
+        height: '100%', // 确保内容高度适应容器高度
+        width: '100%',
     } as React.CSSProperties,
     categoryContainer: {
         display: 'flex',
@@ -169,7 +199,8 @@ const styles = {
     } as React.CSSProperties,
     inputContainer: {
         padding: '10px',
-        backgroundColor: '#29144A',
+        backgroundColor: 'transparent',
+        width: '93%',
     } as React.CSSProperties,
     amountInput: {
         width: '100%',
@@ -202,6 +233,7 @@ const styles = {
     } as React.CSSProperties,
     datePickerContainer: {
         padding: '10px',
+        width: '93%',
     } as React.CSSProperties,
     datePicker: {
         width: '100%',
@@ -210,5 +242,6 @@ const styles = {
         border: '1px solid #ccc',
     } as React.CSSProperties,
 };
+
 
 export default App;

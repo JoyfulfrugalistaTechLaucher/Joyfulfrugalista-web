@@ -1,343 +1,140 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { categories } from '../addPage/page';
+import React, { useState } from 'react';
 import Image from 'next/image';
-import { fetchSavingData } from '../components/FirebaseDatabase';
-import { useAuth } from '../context/AuthContext';
-import BackgroundWrapper from "../components/DetailPageBackgroud";
+import Detail from "../detail/page";
+import AddPage from "../addPage/page";
 
-interface FetchedData {
-    savingEntries: Array<any>;
-    totalSaved: number;
-}
+const LedgerPage: React.FC = () => {
+    const [showModal, setShowModal] = useState(false);
+    const [refreshDetail, setRefreshDetail] = useState(false); // 用于控制 Detail 刷新
 
-const Detail: React.FC = () => {
-    const [dateIndex, setDateIndex] = useState(0);
-    const [dataType, setDataType] = useState<string>("saving");
-    const { currentUser } = useAuth();
-    const [fetchedData, setFetchedData] = useState<FetchedData>({
-        savingEntries: [],
-        totalSaved: 0,
-    });
-    const [totalSavingAmount, setTotalSavingAmount] = useState<number>(0);
-    const [dailySavingAmount, setDailySavingAmount] = useState<number>(0);
-
-    const getDate = (dateIndex: number): string => {
-        const currentDate = new Date();
-        const targetDate = new Date(currentDate);
-        targetDate.setDate(currentDate.getDate() + dateIndex);
-
-        const year = targetDate.getFullYear();
-        const month = targetDate.getMonth() + 1;
-        const day = targetDate.getDate();
-
-        return `${year}-${month < 10 ? `0${month}` : month}-${day < 10 ? `0${day}` : day}`;
+    const toggleModal = () => {
+        setShowModal(!showModal);
     };
 
-    const handleDataChange = (data: string) => {
-        setDataType(data);
+    const closeModalAndRefresh = () => {
+        setShowModal(false);
+        setRefreshDetail(!refreshDetail); // 触发 Detail 组件的刷新
     };
 
-    const handlePrevious = () => {
-        setDateIndex(dateIndex - 1);
-        fetchDataAndUpdate();
-    };
-
-    const handleNext = () => {
-        const today = new Date();
-        const nextDate = new Date(getDate(dateIndex + 1));
-        today.setHours(0, 0, 0, 0);
-        nextDate.setHours(0, 0, 0, 0);
-        if (nextDate <= today) {
-            setDateIndex(prevIndex => prevIndex + 1);
-        } else {
-            console.log('Cannot navigate to a future date');
+    const closeModalOnClickOutside = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        if (event.target === event.currentTarget) {
+            closeModalAndRefresh();
         }
-    };
-
-
-    useEffect(() => {
-        fetchDataAndUpdate();
-    }, [dateIndex]);
-    const { uid, isLoggedIn } = useAuth(); // 从AuthContext中获取 uid 和 isLoggedIn
-
-    const fetchDataAndUpdate = () => {
-        if (isLoggedIn && uid) {
-            fetchSavingData(uid)
-                .then((data) => {
-                    setTotalSavingAmount(data.totalSaved);
-
-                    // 将 savingEntries 对象传递给 categorizeSavingEntries
-                    const categorizedData = categorizeSavingEntries(data.savingEntries);
-                    const currentData = getEntriesForDate(categorizedData, getDate(dateIndex));
-                    setDailySavingAmount(calculateDailySavingAmount(currentData));
-
-                    setFetchedData({
-                        savingEntries: currentData,
-                        totalSaved: data.totalSaved,
-                    });
-                })
-                .catch((error) => {
-                    console.error("Error fetching saving data:", error);
-                });
-        } else {
-            console.log('User is not logged in or UID is not available.');
-        }
-    };
-
-
-
-
-    const categorizeSavingEntries = (savingEntries: Record<string, any>) => {
-        const categorizedData: { [key: string]: any[] } = {};
-
-        const entriesArray = Object.values(savingEntries);
-
-        entriesArray.forEach((entry) => {
-            const { date } = entry;
-            if (categorizedData[date]) {
-                categorizedData[date].push(entry);
-            } else {
-                categorizedData[date] = [entry];
-            }
-        });
-
-        return categorizedData;
-    };
-
-    const formatDateString = (dateString: string) => {
-        const [year, month, day] = dateString.split("-").map(Number);
-        return `${year}-${month}-${day}`;
-    };
-
-    const getEntriesForDate = (categorizedData: { [key: string]: any[] }, date: string) => {
-        const reformattedDate = formatDateString(date);
-        return categorizedData[reformattedDate] || [];
-    };
-
-    const calculateDailySavingAmount = (currentData: Array<any>) => {
-        return currentData.reduce((sum, entry) => sum + parseInt(entry.moneyAdded, 10), 0);
-    };
-
-    const getButtonStyle = (data: string): React.CSSProperties => {
-        return dataType === data ? styles.activeButton : styles.button;
-    };
-
-    const getButtonTextColor = (data: string): React.CSSProperties => {
-        return dataType === data ? styles.activeButtonText : styles.buttonText;
     };
 
     return (
-<BackgroundWrapper>
         <div style={styles.container}>
-            <div style={styles.header}>
-                <button onClick={handlePrevious} style={styles.navButton}>{"<"}</button>
-                <span style={styles.dateText}>{getDate(dateIndex)}</span>
-                <button onClick={handleNext} style={styles.navButton}>{">"}</button>
+            {/* 背景图片 */}
+            <div style={styles.backgroundContainer}>
+                <Image
+                    src="/assets/ledgerPage.jpg"
+                    alt="Ledger Page Background"
+                    layout="fill"
+                    objectFit="cover"
+                    quality={100}
+                />
             </div>
 
-            <div style={styles.mainButtons}>
-                <button onClick={() => handleDataChange("saving")} style={getButtonStyle("saving")}>
-                    <span style={getButtonTextColor("saving")}>LEDGER</span>
+            {/* Detail 组件 */}
+            <div style={styles.detailContainer}>
+                <Detail key={refreshDetail ? 'refresh' : 'static'} />
+            </div>
+
+            {/* Add Entry 按钮 */}
+            <div style={styles.addButtonContainer}>
+                <button style={styles.addButton} onClick={toggleModal}>
+                    +
                 </button>
             </div>
 
-            <div style={styles.content}>
-                <div style={styles.board}>
-                    <span style={styles.boardLabel}>You have saved</span>
-                    <span style={styles.amount}>${totalSavingAmount}</span>
-                </div>
-                <div style={styles.subBoard}>
-                    <span style={styles.subBoardLabel}>You saved ${dailySavingAmount} today!</span>
-                </div>
-                <BackgroundWrapper>
-                    <div style={{ ...styles.scrollView, width: '100%' }}>
-                        <span style={styles.dateTextForData}>{getDate(dateIndex)}</span>
-                        {fetchedData.savingEntries.length > 0 ? (
-                            fetchedData.savingEntries.map((entry, index) => {
-                                const categoryInfo = categories.find(cat => cat.id === entry.category);
-                                if (!categoryInfo) return null;
-                                return (
-                                    <div key={index} style={{ ...styles.dataContainer }}>
-                                        <div style={{ ...styles.data, backgroundColor: categoryInfo.color }}>
-                                            <Image src={categoryInfo.iconName} alt={entry.category} width={30} height={30} />
-                                            <div style={styles.dataText}>
-                                                <span style={styles.dataLabel}>{entry.description ? `${entry.category}: ${entry.description}` : entry.category}</span>
-                                                <span style={styles.dataAmount}>${entry.moneyAdded}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                );
-                            })
-                        ) : (
-                            <span>No data available</span>
-                        )}
+            {/* Modal 弹窗 */}
+            {showModal && (
+                <div style={styles.modalOverlay} onClick={closeModalOnClickOutside}>
+                    <div style={styles.modalContent}>
+                        <AddPage />
+                        <button style={styles.closeButton} onClick={closeModalAndRefresh}>
+                            Close
+                        </button>
                     </div>
-                </BackgroundWrapper>
-            </div>
+                </div>
+            )}
         </div>
-</BackgroundWrapper>
     );
-}
+};
 
 const styles = {
     container: {
+        position: 'relative',
+        width: '100vw',
+        height: '100vh',
+    } as React.CSSProperties,
+    backgroundContainer: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        zIndex: 1, // 确保背景图片在最底层
+    } as React.CSSProperties,
+    detailContainer: {
+        position: 'absolute',
+        top: '25%',
+        left: '14%', // 左边距
+        width: '30%',
+        height: '60%',
+        zIndex: 2, // 确保 Detail 组件在图片上方
+        backgroundColor: 'rgba(255, 255, 255, 0.8)', // 半透明背景色
+        padding: '0px', // 内边距
+        borderRadius: '10px',
+        overflow: 'hidden', // 防止内容溢出
         display: 'flex',
         flexDirection: 'column',
-        minHeight: '100vh',
-        width: '600px',
-        backgroundColor: "#F9F3EE",
     } as React.CSSProperties,
-    header: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        margin: 20,
-        backgroundColor: "#FFFFFF", // 纯白色背景
-        borderRadius: '8px',
-    } as React.CSSProperties,
-    navButton: {
-        padding: '3px 15px',
-        backgroundColor: "#E0BBE4", // 按钮背景色为淡紫色
-        color: "#4A4A4A", // 文字颜色为较深的灰色
-        border: 'none',
-        borderRadius: '4px',
-        cursor: 'pointer',
-    } as React.CSSProperties,
-    dateText: {
-        fontSize: 15,
-        color: "#4A4A4A", // 深灰色
-    } as React.CSSProperties,
-    mainButtons: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        marginBottom: 10,
-        marginHorizontal: 20,
-    } as React.CSSProperties,
-    activeButton: {
-        flex: 1,
-        backgroundColor: "#F3C5C5", // 活动按钮背景色淡粉色
-        padding: '10px 0',
-        alignItems: "center",
-        borderRadius: 5,
-        marginHorizontal: 1,
-        color: '#FFFFFF', // 文字为白色
-        border: 'none',
-    } as React.CSSProperties,
-    button: {
-        flex: 1,
-        backgroundColor: "#E0BBE4", // 按钮背景色为淡紫色
-        padding: '10px 0',
-        alignItems: "center",
-        borderRadius: 5,
-        marginHorizontal: 1,
-        color: '#4A4A4A', // 深灰色文字
-        border: '1px solid #C49DDE', // 边框为深紫色
-    } as React.CSSProperties,
-    buttonText: {
-        color: "#4A4A4A", // 深灰色
-        fontSize: 15,
-    } as React.CSSProperties,
-    activeButtonText: {
-        color: "#FFFFFF", // 白色文字
-        fontSize: 15,
-    } as React.CSSProperties,
-    content: {
-        flex: 1,
-        backgroundColor: "#FFFFFF", // 内容背景为白色
-        width: "100%",
-        marginTop: 10,
-        borderRadius: '8px',
+    addButtonContainer: {
+        position: 'absolute',
+        bottom: '16%', // 距离底部16%
+        left: '15%',
+        zIndex: 3, // 确保按钮显示在最上层
     } as React.CSSProperties,
     addButton: {
-        position: "fixed",
-        bottom: 20,
-        right: 20,
-        width: 60,
-        height: 60,
-        borderRadius: 30,
-        backgroundColor: "#F3C5C5", // 添加按钮为淡粉色
-        display: 'flex',
-        justifyContent: "center",
-        alignItems: "center",
-        fontSize: 30,
-        color: "#4A4A4A", // 深灰色文字
+        padding: '10px 20px',
+        backgroundColor: '#E0BBE4',
+        color: 'white',
         border: 'none',
+        borderRadius: '300px',
         cursor: 'pointer',
     } as React.CSSProperties,
-    board: {
-        backgroundColor: "#F3C5C5", // 板块背景为淡粉色
-        padding: 5,
-        borderRadius: '10px 10px 0 0',
-        margin: 10,
-        alignItems: "center",
-        height: 120,
-    } as React.CSSProperties,
-    boardLabel: {
-        color: "#4A4A4A", // 深灰色文字
-        lineHeight: "50px",
-    } as React.CSSProperties,
-    amount: {
-        color: "#4A4A4A", // 深灰色
-        lineHeight: "35px",
-        fontSize: 30,
-        fontWeight: "bold",
-    } as React.CSSProperties,
-    subBoard: {
-        backgroundColor: "#E0BBE4", // 子板块背景色为淡紫色
-        padding: 10,
-        borderRadius: '0 0 10px 10px',
-        marginHorizontal: 10,
-        marginTop: 0,
-        alignItems: "left",
-        height: 40,
-    } as React.CSSProperties,
-    subBoardLabel: {
-        fontSize: 15,
-        color: "#4A4A4A", // 深灰色文字
-        marginLeft: 10,
-        fontWeight: "bold",
-    } as React.CSSProperties,
-    dataContainer: {
-        justifyContent: "flex-start",
-        paddingHorizontal: 10,
-        width: '100%'
-    } as React.CSSProperties,
-    dateTextForData: {
-        fontSize: 15,
-        color: "#4A4A4A", // 深灰色
-        margin: 10,
-    } as React.CSSProperties,
-    data: {
-        display: 'flex',
-        alignItems: "center",
-        flexDirection: "row",
-        marginTop: 5,
-        marginBottom: 5,
-        padding: 10,
-        borderRadius: 5,
-        height: 50,
-        backgroundColor: "#F9F3EE", // 数据条目背景色为米色
-    } as React.CSSProperties,
-    dataText: {
-        display: 'flex',
-        flexDirection: "row",
-        justifyContent: "space-between",
+    modalOverlay: {
+        position: 'fixed',
+        top: 0,
+        left: 0,
         width: '100%',
+        height: '100%',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // 半透明黑色背景
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 4, // 确保在最顶层显示
     } as React.CSSProperties,
-    dataLabel: {
-        color: "#4A4A4A", // 深灰色
-        fontSize: 15,
+    modalContent: {
+        width: '35%',
+        backgroundColor: 'transparent',
+        padding: '20px',
+        height: '70%',
+        borderRadius: '10px',
     } as React.CSSProperties,
-    dataAmount: {
-        color: "#4A4A4A", // 深灰色
-        fontSize: 15,
-    } as React.CSSProperties,
-    scrollView: {
-        overflowY: 'auto',
-        padding: 10,
+    closeButton: {
+        marginTop: '20px',
+        padding: '10px 20px',
+        backgroundColor: '#f44336',
+        color: 'white',
+        border: 'none',
+        borderRadius: '5px',
+        cursor: 'pointer',
+        alignSelf: 'flex-end',
     } as React.CSSProperties,
 };
 
-export default Detail;
+export default LedgerPage;
