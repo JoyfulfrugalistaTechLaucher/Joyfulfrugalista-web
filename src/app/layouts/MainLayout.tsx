@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Container, Grid } from "@mui/material";
+import { Box, Container } from "@mui/material";
 import ThemeRegistry from "../themeRegistry";
 import Navbar from "../components/Navbar";
 import BackgroundWrapper from "../components/BackgroundWrapper";

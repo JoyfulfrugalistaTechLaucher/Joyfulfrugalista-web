@@ -7,16 +7,12 @@ import {
   Button,
   Typography,
   Link,
-  createTheme,
-  ThemeProvider,
 } from "@mui/material";
 import { auth } from "../config/firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/navigation";
-import "@fontsource/montserrat"; // 导入 Montserrat 字体
-import BackgroundWrapper from "../components/BackgroundWrapper"; // 导入背景组件
-import Navbar from "../components/Navbar";
+import "@fontsource/montserrat";
 import MainLayout from "../layouts/MainLayout";
 
 const LoginPage: React.FC = () => {
@@ -67,7 +63,7 @@ const LoginPage: React.FC = () => {
             variant="h4"
             sx={{letterSpacing: "0.1em"}}
           >
-            Login
+            LOGIN
           </Typography>
           <Box
             component="form"
@@ -140,6 +136,7 @@ const LoginPage: React.FC = () => {
                 fontFamily: "Montserrat, sans-serif",
                 fontWeight: 600,
                 textTransform: "none",
+                backgroundColor: "purple",
                 borderRadius: 3,
               }}
             >

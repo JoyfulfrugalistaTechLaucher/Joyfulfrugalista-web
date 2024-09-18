@@ -1,5 +1,6 @@
 import { ThemeOptions } from '@mui/material/styles';
 
+// Basic options for all dependecies
 export const themeOptions: ThemeOptions = {
   palette: {
     mode: 'light',
@@ -10,7 +11,8 @@ export const themeOptions: ThemeOptions = {
       main: '#f3c875',
     },
     error: {
-      main: '#fc96bb',
+      main: '#ff2172',
+      sub:  '#fc96bb',
     },
     warning: {
       main: '#ffc397',
@@ -22,7 +24,7 @@ export const themeOptions: ThemeOptions = {
       main: '#a690fc',
     },
     grey: {
-      500: '#7B8298',
+      main: '#7B8298',
     },
   },
 };
