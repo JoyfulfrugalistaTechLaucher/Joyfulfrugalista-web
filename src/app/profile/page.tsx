@@ -22,13 +22,19 @@ import { auth } from "../config/firebaseConfig";
 import MainLayout from "../layouts/MainLayout";
 import Castle from "../components/Castle";
 import { User } from "../../data/User";
-import { UserEmail, UserName, UserPhone, UserMonthGoal } from "./components/Inputs";
+import {
+  UserEmail,
+  UserGender,
+  UserName,
+  UserPhone,
+  UserMonthGoal
+} from "./components/Inputs";
 
 // for developement only
 const userFakeData: User = {
   email: 'u7890123@anu.edu.au',
   name: 'Joyful Jar',
-  gender: 'male',
+  gender: 'Male',
   goal: 100,
   phone: '0478912345',
 };
@@ -132,26 +138,14 @@ function ProfilePage() {
             <UserName user={userFakeData} />
 
             <UserMonthGoal user={userFakeData} />
+
+            {/* optional fields */}
+            <UserGender user={userFakeData} />
+            <UserPhone user={userFakeData} />
           </Stack>
 
-          <Grid item xs={12} sm={4} md={6}></Grid>
 
-          <Grid item xs={12}>
-            <Box mt={4} textAlign="center">
-              <Typography
-                variant="body2"
-                sx={{
-                  cursor: "pointer",
-                  "&:hover": {
-                    textDecoration: "underline",
-                  },
-                }}
-                onClick={handleLogout}
-              >
-                Log out
-              </Typography>
-            </Box>
-          </Grid>
+
         </Stack>
 
       </Container>

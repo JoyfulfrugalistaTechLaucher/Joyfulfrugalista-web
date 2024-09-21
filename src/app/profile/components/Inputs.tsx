@@ -1,7 +1,6 @@
 'use client';
 
 import React, { Fragment, useEffect, useState } from 'react';
-import { User } from '../../../data/User';
 import {
   Button,
   FormControl,
@@ -9,24 +8,29 @@ import {
   IconButton,
   InputAdornment,
   InputLabel,
+  MenuItem,
   OutlinedInput,
+  Select,
   Stack,
   TextField
 } from '@mui/material';
+import { SelectChangeEvent } from '@mui/material/Select';
 import {useMediaQuery, useTheme} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
+import { User } from '../../../data/User';
 
-const MAX_NAME_LEN: number = 30;
+const MAX_NAME_LEN = 30;
 
-type UserEmailProps = {
+interface UserEmailProps {
   userData: User,
   onConfirm: (update: Partial<User>) => void;
 };
 
-const Gender: string[] = ['Male', 'Femal', 'Secret', 'Trans'];
+
+const genders: string[] = ['Male', 'Female', 'Secret', 'Trans'];
 
 // Override some default styles
 const MyInputLabel = styled(InputLabel)(({ theme }) => ({
@@ -75,7 +79,7 @@ export function UserMonthGoal(props: {user: User}) {
   const [txtFieldLb, setTxtFieldLb] = useState<string>("Monthly Saving Goal");
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value: number = Number(e.target.value);
+    const value = Number(e.target.value);
     if (isNaN(value) || value <= 0) {
       setValid(false);
       setTxtFieldId("outlined-error-helper-text")
@@ -102,31 +106,102 @@ export function UserMonthGoal(props: {user: User}) {
   );
 }
 
-// TODO: support both Chinese and Australian phone numbers
+function formatPhoneNumber(input: string): string {
+  const digitsOnly = input.replace(/\D/g, '');
+  const match = digitsOnly.match(/^(\d{0,4})(\d{0,3})(\d{0,3})$/);
+
+  if (!match) return '';
+
+  return match
+    .slice(1)
+    .filter(Boolean)
+    .join(' ')
+    .trim();
+}
+
+function isValidPhoneNumber(phone: string): boolean {
+  return phone.length === 0 || /^04\d{2}\s\d{3}\s\d{3}$/.test(phone);
+}
+
+// TODO: support Chinese mobile phone number
 export function UserPhone(props: {user: User}) {
+  // user phone
+  const { phone } = props.user;
+
   const [valid, setValid] = useState<boolean>(true);
-  const [txtFieldId, setTxtFieldId] = useState<string>("outlined-required");
-  const [txtFieldLb, setTxtFieldLb] = useState<string>("Monthly Saving Goal");
+  const [userPhone, setUserPhone] = useState<string | undefined>(phone);
+
+  useEffect(() => {
+    setUserPhone(phone);
+  }, [phone]);
 
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
+    const input = e.target.value;
+    const formatted = formatPhoneNumber(input);
+
+    if (formatted.length <= 12 && isValidPhoneNumber(formatted)) {
+      setValid(true);
+      setUserPhone(formatted);
+    } else {
+      setValid(false);
+      setUserPhone(input);
+    }
+
   };
 
   return (
     <TextField
       error={!valid}
-      required
       autoComplete="off"
-      id={txtFieldId}
-      label={txtFieldLb}
-      type="text"
+      label="Mobile"
+      type="tel"
+      value={userPhone}
       onChange={onChange}
-      helperText={valid ? "" : "Monthly Goal must be a positive number"}
+      helperText={valid ? "" : "Invalid mobile number. Must be '04xx xxx xxx'"}
+      placeholder="04xx xxx xxx"
     />
   );
 }
 
+
+export function UserGender(props: {user: User}) {
+  const { gender } = props.user;
+
+  const [userGender, setUserGender] = useState<string | undefined>(gender);
+
+  useEffect(() => {
+    setUserGender(gender);
+  }, [gender]);
+
+
+  // const onSelect = (e: SelectChangeEvent<string>) => {
+  const onSelect = (e: SelectChangeEvent<string>) => {
+    setUserGender(e.target.value);
+  }
+
+  return (
+    <FormControl>
+      <InputLabel id="user-gender-label">Gender</InputLabel>
+      <Select
+        labelId="user-gender-label"
+        id="user-gender-select"
+        value={userGender}
+        label="Gender"
+        onChange={onSelect}
+      >
+        {genders.map((gender) => (
+          <MenuItem
+            key={gender}
+            value={gender}
+          >
+            {gender}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  );
+}
 
 function isEmail(email: string): boolean {
   const eRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
