@@ -12,7 +12,6 @@ export const themeOptions: ThemeOptions = {
     },
     error: {
       main: '#ff2172',
-      sub:  '#fc96bb',
     },
     warning: {
       main: '#ffc397',
@@ -22,9 +21,6 @@ export const themeOptions: ThemeOptions = {
     },
     success: {
       main: '#a690fc',
-    },
-    grey: {
-      main: '#7B8298',
     },
   },
 };

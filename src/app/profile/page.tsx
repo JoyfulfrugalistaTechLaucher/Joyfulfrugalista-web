@@ -1,6 +1,6 @@
 "use client";
 
-import{ React, useEffect, useState } from "react";
+import  React, { useEffect, useState } from "react";
 import {
   Avatar,
   Box,
@@ -21,7 +21,7 @@ import { useAuth } from "../context/AuthContext";
 import { auth } from "../config/firebaseConfig";
 import MainLayout from "../layouts/MainLayout";
 import Castle from "../components/Castle";
-import User from "../../data/User";
+import { User } from "../../data/User";
 import { UserEmail, UserName, UserPhone, UserMonthGoal } from "./components/Inputs";
 
 // for developement only
@@ -37,20 +37,20 @@ const URL =
   "https://joyful-429b0-default-rtdb.asia-southeast1.firebasedatabase.app/";
 
 
-function ProfilePage(): void {
+function ProfilePage() {
   // local state
-  const [userData, setUserData] = useState<User | null>(userFakeData);
+  const [userInfo, setUserInfo] = useState<User | null>(userFakeData);
   const [loading, setLoading] = useState<boolean>(true);
   const { uid, isLoggedIn, setUid } = useAuth();
   const router = useRouter();
 
   // user data
   const {email, name, gender, goal, phone } = userFakeData;
-  const handleEmailConfirm = (newEmail: string) => {
-    setUserData((oldUserData) => ({
-      ...oldUserData,
-      email: newEmail,
-    }));
+
+  const handleEmailConfirm = (update: Partial<User>) => {
+    setUserInfo(
+      (oldUserData) => oldUserData ? {...oldUserData, ...update,} : null
+    );
   };
 
 
@@ -126,8 +126,8 @@ function ProfilePage(): void {
             />
           </Box>
 
-          <Stack component="form" >
-            <UserEmail user={userFakeData} onConfrim={handleEmailConfirm} />
+          <Stack spacing={2}>
+            <UserEmail userData={userFakeData} onConfirm={handleEmailConfirm} />
 
             <UserName user={userFakeData} />
 

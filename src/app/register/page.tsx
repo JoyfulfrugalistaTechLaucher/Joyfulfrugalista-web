@@ -17,10 +17,10 @@ import { auth } from "../config/firebaseConfig";
 import { useAuth } from "../context/AuthContext";
 import "@fontsource/montserrat";
 import MainLayout from "../layouts/MainLayout";
-import User from "../../data/User";
+import { User } from "../../data/User";
 
 const RegisterPage: React.FC = () => {
-  const [email, setEmail] = useState<string | undefined>("");
+  const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
