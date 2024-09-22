@@ -5,4 +5,6 @@ export interface User {
   gender?: string,
   goal?: number,
   phone?: string,
+  // image path?
+  avatar?: string,
 };

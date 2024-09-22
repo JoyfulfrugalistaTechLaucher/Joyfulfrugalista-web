@@ -1,6 +1,6 @@
 'use client';
 
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import {
   Button,
   FormControl,
@@ -23,14 +23,12 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { User } from '../../../data/User';
 
 const MAX_NAME_LEN = 30;
+const GENDERS: string[] = ['Male', 'Female', 'Secret', 'Trans'];
 
 interface UserEmailProps {
-  userData: User,
+  user: User,
   onConfirm: (update: Partial<User>) => void;
 };
-
-
-const genders: string[] = ['Male', 'Female', 'Secret', 'Trans'];
 
 // Override some default styles
 const MyInputLabel = styled(InputLabel)(({ theme }) => ({
@@ -127,22 +125,19 @@ function isValidPhoneNumber(phone: string): boolean {
 export function UserPhone(props: {user: User}) {
   // user phone
   const { phone } = props.user;
+  let fmtPhone: string = formatPhoneNumber(phone);
 
   const [valid, setValid] = useState<boolean>(true);
-  const [userPhone, setUserPhone] = useState<string | undefined>(phone);
-
-  useEffect(() => {
-    setUserPhone(phone);
-  }, [phone]);
+  const [userPhone, setUserPhone] = useState<string | undefined>(fmtPhone);
 
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
-    const formatted = formatPhoneNumber(input);
+    fmtPhone = formatPhoneNumber(input);
 
-    if (formatted.length <= 12 && isValidPhoneNumber(formatted)) {
+    if (fmtPhone.length <= 12 && isValidPhoneNumber(fmtPhone)) {
       setValid(true);
-      setUserPhone(formatted);
+      setUserPhone(fmtPhone);
     } else {
       setValid(false);
       setUserPhone(input);
@@ -152,6 +147,7 @@ export function UserPhone(props: {user: User}) {
 
   return (
     <TextField
+      fullWidth
       error={!valid}
       autoComplete="off"
       label="Mobile"
@@ -170,18 +166,13 @@ export function UserGender(props: {user: User}) {
 
   const [userGender, setUserGender] = useState<string | undefined>(gender);
 
-  useEffect(() => {
-    setUserGender(gender);
-  }, [gender]);
-
-
   // const onSelect = (e: SelectChangeEvent<string>) => {
   const onSelect = (e: SelectChangeEvent<string>) => {
     setUserGender(e.target.value);
   }
 
   return (
-    <FormControl>
+    <FormControl fullWidth >
       <InputLabel id="user-gender-label">Gender</InputLabel>
       <Select
         labelId="user-gender-label"
@@ -190,7 +181,7 @@ export function UserGender(props: {user: User}) {
         label="Gender"
         onChange={onSelect}
       >
-        {genders.map((gender) => (
+        {GENDERS.map((gender) => (
           <MenuItem
             key={gender}
             value={gender}
@@ -208,9 +199,9 @@ function isEmail(email: string): boolean {
   return eRegex.test(email);
 }
 
-export function UserEmail({userData, onConfirm}: UserEmailProps) {
-  // user data
-  const { email } = userData;
+export function UserEmail({user, onConfirm}: UserEmailProps) {
+  // user email
+  const { email } = user;
 
   // local state
   const [valid, setValid] = useState<boolean>(true);
@@ -220,11 +211,6 @@ export function UserEmail({userData, onConfirm}: UserEmailProps) {
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-
-  useEffect(() => {
-    setUserEmail(email);
-  }, [email]);
-
 
   const onEdit = () => {
     if (!editing) {
@@ -293,7 +279,6 @@ export function UserEmail({userData, onConfirm}: UserEmailProps) {
       <OutlinedInput
         id="outlined-adornment-email"
         error={!valid}
-        disabled={!editing}
         autoComplete="off"
         label="Email"
         type="email"
@@ -348,7 +333,7 @@ export function UserEmail({userData, onConfirm}: UserEmailProps) {
               </Stack>
             ) : (isSmallScreen ? (
               <IconButton
-                 ariable-label="start editing email"
+                 aria-label="start editing email"
                  onClick={onEdit}
                  onMouseUp={onMouseUpEmail}
                  onMouseDown={onMouseDownEmail}

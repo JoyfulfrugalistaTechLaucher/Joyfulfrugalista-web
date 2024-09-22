@@ -18,7 +18,7 @@ theme = createTheme(theme, {
             backgroundColor: 'rgba(255, 255, 255, 0.05)',
           },
           '& .MuiOutlinedInput-notchedOutline': {
-            borderColor: theme.palette.grey[300],
+            borderColor: theme.palette.grey[500],
             borderWidth: "2px",
             borderRadius: 10,
           },
@@ -38,7 +38,6 @@ theme = createTheme(theme, {
             borderWidth: "3px",
             borderRadius: 10,
           },
-
         },
       },
     },

@@ -61,6 +61,24 @@ body {
   font-weight: bold;
 }
 
+.avatar-container {
+  @apply relative m-2 border border-2 border-black;
+  width: 140px;
+}
+
+.avatar {
+  height: 120px;
+  width: 120px;
+}
+
+.avatar img {
+  @apply h-full w-full;
+}
+
+.avatar-btn {
+  @apply absolute right-0 bottom-2;
+}
+
 .content {
   flex: 1;
   padding: 20px;

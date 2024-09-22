@@ -2,7 +2,6 @@
 
 import  React, { useEffect, useState } from "react";
 import {
-  Avatar,
   Box,
   CircularProgress,
   Container,
@@ -14,6 +13,7 @@ import {
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
 import SavingsIcon from "@mui/icons-material/Savings";
+import {useMediaQuery, useTheme} from '@mui/material';
 import { useRouter } from "next/navigation";
 import { signOut } from "firebase/auth";
 import axios from "axios";
@@ -28,15 +28,17 @@ import {
   UserName,
   UserPhone,
   UserMonthGoal
-} from "./components/Inputs";
+} from './components/Inputs';
+import { UserAvatar } from './components/Avatar';
 
-// for developement only
+// for development only
 const userFakeData: User = {
   email: 'u7890123@anu.edu.au',
   name: 'Joyful Jar',
   gender: 'Male',
   goal: 100,
   phone: '0478912345',
+  avatar: '/assets/portrait.png',
 };
 
 const URL =
@@ -50,6 +52,9 @@ function ProfilePage() {
   const { uid, isLoggedIn, setUid } = useAuth();
   const router = useRouter();
 
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
   // user data
   const {email, name, gender, goal, phone } = userFakeData;
 
@@ -58,6 +63,8 @@ function ProfilePage() {
       (oldUserData) => oldUserData ? {...oldUserData, ...update,} : null
     );
   };
+
+
 
 
   // useEffect(() => {
@@ -115,33 +122,18 @@ function ProfilePage() {
         sx={{ mt: 4, mb: 4, position: "relative" }}
       >
         <Stack>
-          <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="flex-start"
-            mb={4}
-          >
-            <Avatar
-              src="/assets/portrait.png"
-              sx={{
-                width: 120,
-                height: 120,
-                mb: 2,
-                border: '4px solid black',
-              }}
-            />
-          </Box>
-
+          <UserAvatar user={userFakeData} />
           <Stack spacing={2}>
-            <UserEmail userData={userFakeData} onConfirm={handleEmailConfirm} />
-
+            {/* optional fields */}
+            <UserEmail user={userFakeData} onConfirm={handleEmailConfirm} />
             <UserName user={userFakeData} />
-
             <UserMonthGoal user={userFakeData} />
 
             {/* optional fields */}
-            <UserGender user={userFakeData} />
-            <UserPhone user={userFakeData} />
+            <Stack direction={isSmallScreen ? "column" : "row"} spacing={2}>
+              <UserGender user={userFakeData} />
+              <UserPhone user={userFakeData} />
+            </Stack>
           </Stack>
 
 
