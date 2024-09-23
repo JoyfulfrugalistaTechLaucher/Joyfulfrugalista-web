@@ -1,4 +1,6 @@
-import React, { Fragment, useState } from 'react';
+'use client';
+
+import React, { Fragment, useState, useRef} from 'react';
 import {
   Avatar,
   Box,
@@ -13,9 +15,20 @@ import {
   TextField
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
+import { styled } from '@mui/material/styles';
 import {useMediaQuery, useTheme} from '@mui/material';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { getAuth, updateProfile } from 'firebase/auth';
 import { User } from '../../../data/User';
 
+const AvatarButton = styled(Button)(() => ({
+  '& .MuiButton-startIcon' : {
+    marginRight: '2px',
+  },
+  '&.MuiButton-root' : {
+    padding: 0,
+  },
+})) as typeof Button;
 
 export function UserAvatar(props: {user: User}) {
   // user avatar
@@ -33,6 +46,15 @@ export function UserAvatar(props: {user: User}) {
     }
   };
 
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // TODO: use props to pass down parent state and store new file there
+
+  };
+
   return (
     <Box className='avatar-container'>
       <Avatar
@@ -44,23 +66,32 @@ export function UserAvatar(props: {user: User}) {
       {/* edit button */}
        {isSmallScreen ? (
         <IconButton
-          aria-label="edit profile image"
+          aria-label="upload new profile image"
           onClick={onEdit}
           className="avatar-btn"
         >
-          <EditIcon />
+          <EditIcon fontSize="small" />
         </IconButton>
       ) : (
-        <Button
+        <AvatarButton
+          component="label"
           variant="outlined"
-          aria-label="toggle email editing"
+          aria-label="upload new profile image"
           onClick={onEdit}
-          startIcon={<EditIcon />}
-          size='small'
+          startIcon={<EditIcon fontSize="small" />}
+          size="small"
           className="avatar-btn"
         >
           Edit
-        </Button>
+          <input
+            type="file"
+            name="user_profile_img"
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            style={{ display: 'none' }}
+            accept=".png, .jpeg, .jpg"
+          />
+        </AvatarButton>
       )}
     </Box>
   );

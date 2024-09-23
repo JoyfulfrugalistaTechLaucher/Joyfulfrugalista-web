@@ -39,6 +39,9 @@ const MyInputLabel = styled(InputLabel)(({ theme }) => ({
 
 
 export function UserName(props: {user: User}) {
+  // user name
+  const { name } = props.user;
+  const [userName, setUserName] = useState<string>(name);
   const [valid, setValid] = useState<boolean>(true);
   const [txtFieldId, setTxtFieldId] = useState<string>("outlined-required");
   const [txtFieldLb, setTxtFieldLb] = useState<string>("Name");
@@ -53,6 +56,7 @@ export function UserName(props: {user: User}) {
       setValid(true);
       setTxtFieldId("outlined-required")
       setTxtFieldLb("Name")
+      setUserName(value);
     }
     // TODO: update parent props `user`
   };
@@ -66,6 +70,8 @@ export function UserName(props: {user: User}) {
       label={txtFieldLb}
       type="text"
       onChange={onChange}
+      value={userName}
+      placeholder="Joyful Jar"
       helperText={valid ? "" : "Name length exceeds 30 characters"}
     />
   );
