@@ -7,6 +7,8 @@ import {
   Button,
   Typography,
   Link,
+  createTheme,
+  ThemeProvider,
 } from "@mui/material";
 import { auth } from "../config/firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -14,6 +16,8 @@ import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/navigation";
 import "@fontsource/montserrat"; // 导入 Montserrat 字体
 import BackgroundWrapper from "../components/BackgroundWrapper"; // 导入背景组件
+import Navbar from "../components/Navbar";
+import MainLayout from "../layouts/MainLayout";
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -48,11 +52,11 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <BackgroundWrapper>
-      <Container component="main" maxWidth="xs">
+    <MainLayout>
+      <Container component="div" maxWidth="xs">
         <Box
           sx={{
-            marginTop: -30,
+            // marginTop: -30,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -61,12 +65,7 @@ const LoginPage: React.FC = () => {
           <Typography
             component="h1"
             variant="h4"
-            sx={{
-              fontFamily: "Montserrat, sans-serif",
-              fontWeight: 700,
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-            }}
+            sx={{letterSpacing: "0.1em"}}
           >
             Login
           </Typography>
@@ -96,15 +95,6 @@ const LoginPage: React.FC = () => {
               sx={{
                 "& .MuiOutlinedInput-root": {
                   borderRadius: 3,
-                  "& fieldset": {
-                    borderColor: "purple", // 默认边框颜色
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "darkviolet", // 悬停时边框颜色
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "purple", // 聚焦时边框颜色
-                  },
                 },
               }}
             />
@@ -128,15 +118,6 @@ const LoginPage: React.FC = () => {
               sx={{
                 "& .MuiOutlinedInput-root": {
                   borderRadius: 3,
-                  "& fieldset": {
-                    borderColor: "purple", // 默认边框颜色
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "darkviolet", // 悬停时边框颜色
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "purple", // 聚焦时边框颜色
-                  },
                 },
               }}
             />
@@ -160,10 +141,6 @@ const LoginPage: React.FC = () => {
                 fontWeight: 600,
                 textTransform: "none",
                 borderRadius: 3,
-                backgroundColor: "purple",
-                "&:hover": {
-                  backgroundColor: "darkviolet",
-                },
               }}
             >
               Log in
@@ -175,11 +152,7 @@ const LoginPage: React.FC = () => {
                 textAlign: "center",
                 mt: 2,
                 fontFamily: "Montserrat, sans-serif",
-                color: "purple",
                 cursor: "pointer",
-                "&:hover": {
-                  color: "darkviolet",
-                },
               }}
               onClick={() => router.push("/register")}
             >
@@ -188,7 +161,7 @@ const LoginPage: React.FC = () => {
           </Box>
         </Box>
       </Container>
-    </BackgroundWrapper>
+    </MainLayout>
   );
 };
 

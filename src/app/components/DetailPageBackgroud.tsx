@@ -18,7 +18,8 @@ const BackgroundWrapper: React.FC<BackgroundWrapperProps> = ({ children }) => {
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                justifyContent: "center",
+                justifyContent: "flex-start",
+                width: "100%",
             }}
         >
             {children}

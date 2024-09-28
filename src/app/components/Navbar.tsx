@@ -5,19 +5,39 @@ import {
   Box,
   IconButton,
   Drawer,
+  Link,
   List,
   ListItem,
   ListItemText,
   ListItemButton,
+  Stack,
   Toolbar,
   Typography,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import SmsIcon from "@mui/icons-material/Sms";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import Image from "next/image";
-import Link from "next/link";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
+
+// Hamburger Menu for small screens
+const items: string[] = [
+  "Profile",
+  "Ledger",
+  "Stats",
+  "About",
+];
+const MENU_HEIGHT: number = 48;
+
+function HamburgerMenu() {
+
+  return (
+    <Stack spacing={1}>
+
+
+    </Stack>
+  );
+}
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -28,7 +48,7 @@ const Navbar = () => {
   const drawer = (
     <div onClick={handleDrawerToggle} onKeyDown={handleDrawerToggle}>
       <List>
-        {["About", "Ledger", "Statistic", "Community"].map((text) => (
+        {items.map((text) => (
           <ListItem key={text}>
             <ListItemButton>
               <ListItemText primary={text} />
@@ -40,113 +60,85 @@ const Navbar = () => {
   );
 
   return (
-    <AppBar component="nav" color="transparent" elevation={0}>
+    <Box component="nav" color="transparent">
       <Toolbar className="nav-bar">
-        <Box className="nav-home">
-          <Typography
-            variant="h6"
-            sx={{
-              fontFamily: "Montserrat, sans-serif",
-              fontWeight: 700,
-              color: "primary.main",
-            }}
-          >
+        <Link href="/" className="nav-home">
+          <Typography color="primary" >
             Joyful Savings Jar
           </Typography>
-        </Box>
-        <Box className="nav-links hidden space-x-4">
-          <a
+        </Link>
+        <IconButton
+          size="large"
+          edge="start"
+          color="primary"
+          aria-label="menu"
+          className="sm:hidden"
+          sx={{ mr: 2 }}
+        >
+          <MenuIcon fontSize="inherit"/>
+        </IconButton>
+        <Box className="nav-routes">
+          <Link
             href=""
             className="text-gray-800 hover:text-primary"
             style={{ textDecoration: "none" }}
           >
-            <Typography
-              variant="h6"
-              className="flex-grow"
-              sx={{
-                fontFamily: "Montserrat, sans-serif",
-              }}
-            >
+            <Typography color="primary" >
               About
             </Typography>
-          </a>
-          <a
+          </Link>
+          <Link
             href="/ledger"
             className="text-gray-800 hover:text-primary"
             style={{ textDecoration: "none" }}
           >
-            <Typography
-              variant="h6"
-              className="flex-grow"
-              sx={{
-                fontFamily: "Montserrat, sans-serif",
-              }}
-            >
+            <Typography color="primary">
               Ledger
             </Typography>
-          </a>
-          <a
+          </Link>
+          <Link
             href="#"
             className="text-gray-800 hover:text-primary"
             style={{ textDecoration: "none" }}
           >
-            <Typography
-              variant="h6"
-              className="flex-grow"
-              sx={{
-                fontFamily: "Montserrat, sans-serif",
-              }}
+            <Typography color="primary"
             >
               Stats
             </Typography>
-          </a>
-          <a
+          </Link>
+          <Link
             href="#"
             className="text-gray-800 hover:text-primary"
             style={{ textDecoration: "none" }}
           >
-            <Typography
-              variant="h6"
-              className="flex-grow"
-              sx={{
-                fontFamily: "Montserrat, sans-serif",
-              }}
-            >
+            <Typography color="primary" >
               Community
             </Typography>
-          </a>
-          <div className="flex items-center space-x-2">
-            <NotificationsIcon color="primary" />
-            <SmsIcon color="primary" />
-            <Link href="/profile" passHref>
-              <Typography
-                variant="h6"
-                className="flex-grow"
-                sx={{
-                  fontFamily: "Montserrat, sans-serif",
-                }}
-              >
-                Profile
-              </Typography>
-            </Link>
-          </div>
+          </Link>
         </Box>
-        <IconButton
-          edge="start"
-          className="md:hidden"
-          color="inherit"
-          aria-label="menu"
-          onClick={handleDrawerToggle}
-        >
-          <MenuIcon />
-        </IconButton>
+        <Box className="nav-icons">
+          <Link
+            className="text-gray-800 hover:text-primary"
+            style={{ textDecoration: "none" }}
+          >
+            <NotificationsIcon color="primary" sx={{ fontSize: 32 }}/>
+          </Link>
+          <Link
+            className="text-gray-800 hover:text-primary"
+            style={{ textDecoration: "none" }}
+          >
+            <SmsIcon color="primary" sx={{ fontSize: 32 }}/>
+          </Link>
+
+          <Link href="/profile"
+            className="text-gray-800 hover:text-primary"
+            style={{ textDecoration: "none" }}
+          >
+            <AccountCircleIcon color="primary" sx={{ fontSize: 32 }}/>
+          </Link>
+        </Box>
       </Toolbar>
-      <nav>
-        <Drawer anchor="right" open={drawerOpen} onClose={handleDrawerToggle}>
-          {drawer}
-        </Drawer>
-      </nav>
-    </AppBar>
+    </Box>
   );
 };
 
