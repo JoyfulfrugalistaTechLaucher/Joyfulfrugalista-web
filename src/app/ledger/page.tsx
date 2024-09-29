@@ -4,14 +4,21 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import Detail from "../detail/page";
 import AddPage from "../addPage/page";
+import PieChartComponent from '../components/pieChart';
 
 const LedgerPage: React.FC = () => {
     const [showModal, setShowModal] = useState(false);
     const [refreshDetail, setRefreshDetail] = useState(false); // 用于控制 Detail 刷新
+    const [showPieChart, setShowPieChart] = useState(false);
 
     const toggleModal = () => {
         setShowModal(!showModal);
     };
+
+    const togglePieChart = () => {
+        setShowPieChart(!showPieChart);
+    };
+    
 
     const closeModalAndRefresh = () => {
         setShowModal(false);
@@ -22,6 +29,10 @@ const LedgerPage: React.FC = () => {
         if (event.target === event.currentTarget) {
             closeModalAndRefresh();
         }
+    };
+
+    const closePieChart = () => {
+        setShowPieChart(false);
     };
 
     return (
@@ -49,8 +60,17 @@ const LedgerPage: React.FC = () => {
                 </button>
             </div>
 
+            {/* Pie Chart Diagram 按钮*/}
+            <div style={styles.pieChartButtonContainer}>
+                <button style={styles.pieChartButton} onClick={togglePieChart}>
+                    Show Pie Chart 
+                </button>
+            </div>
+            {/* Pie Chart 显示*/}
+            {showPieChart &&<PieChartComponent />}
+
             {/* Modal 弹窗 */}
-            {showModal && (
+             {showModal && (
                 <div style={styles.modalOverlay} onClick={closeModalOnClickOutside}>
                     <div style={styles.modalContent}>
                         <AddPage />
@@ -59,7 +79,18 @@ const LedgerPage: React.FC = () => {
                         </button>
                     </div>
                 </div>
-            )}
+            )}            
+                    {/* Pie Chart Diagram Button */}
+                        <div style={styles.pieChartButtonContainer}>
+                <button style={styles.pieChartButton} onClick={togglePieChart}>
+                    Show Pie Chart 
+                </button>
+            </div>
+
+            {/* Pie Chart Display */}
+            {showPieChart && <PieChartComponent onClose={closePieChart} />}
+            
+            {/* Existing Modal code omitted for brevity */}
         </div>
     );
 };
@@ -92,11 +123,25 @@ const styles = {
         display: 'flex',
         flexDirection: 'column',
     } as React.CSSProperties,
+    pieChartButtonContainer: {
+        position: 'absolute',
+        bottom: '16%', // 距离底部16%
+        left: '30%',
+        zIndex: 3, // 确保按钮显示在最上层
+    } as React.CSSProperties,
     addButtonContainer: {
         position: 'absolute',
         bottom: '16%', // 距离底部16%
         left: '15%',
         zIndex: 3, // 确保按钮显示在最上层
+    } as React.CSSProperties,
+    pieChartButton: {
+        padding: '10px 20px',
+        backgroundColor: '#E0BBE4',
+        color: 'white',
+        border: 'none',
+        borderRadius: '300px',
+        cursor: 'pointer',
     } as React.CSSProperties,
     addButton: {
         padding: '10px 20px',
