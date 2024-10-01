@@ -7,8 +7,12 @@ export interface User {
   email: string,
   name: string,
   gender?: string,
-  goal?: number,
   phone?: string,
   avatar?: string,
   task?: Task,
+};
+
+export interface UserProfileProps {
+  user: User,
+  handler: (update: Partial<User>) => void;
 };

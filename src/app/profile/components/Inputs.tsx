@@ -2,6 +2,7 @@
 
 import React, { Fragment, useState } from 'react';
 import {
+  Box,
   Button,
   FormControl,
   FormHelperText,
@@ -20,97 +21,36 @@ import { styled } from '@mui/material/styles';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
-import { User } from '../../../data/User';
+import { User, UserProfileProps } from '../_interface';
+import { GENDERS, MAX_NAME_LEN } from '../_constants';
 
-const MAX_NAME_LEN = 30;
-const GENDERS: string[] = ['Male', 'Female', 'Secret', 'Trans'];
-
-interface UserEmailProps {
-  user: User,
-  onConfirm: (update: Partial<User>) => void;
-};
-
-// Override some default styles
-const MyInputLabel = styled(InputLabel)(({ theme }) => ({
-  '&.Mui-focused.Mui-disabled': {
-    color: theme.palette.primary.main,
-  },
-}));
-
-
-export function UserName(props: {user: User}) {
-  // user name
-  const { name } = props.user;
-  const [userName, setUserName] = useState<string>(name);
-  const [valid, setValid] = useState<boolean>(true);
-  const [txtFieldId, setTxtFieldId] = useState<string>("outlined-required");
-  const [txtFieldLb, setTxtFieldLb] = useState<string>("Name");
+export function UserName({user, handler}: UserProfileProps) {
+  const isValid = (value: string) => value.length <= MAX_NAME_LEN;
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value: string = e.target.value;
-    if (value.length > MAX_NAME_LEN) {
-      setValid(false);
-      setTxtFieldId("outlined-error-helper-text")
-      setTxtFieldLb("Error")
-    } else {
-      setValid(true);
-      setTxtFieldId("outlined-required")
-      setTxtFieldLb("Name")
-      setUserName(value);
-    }
-    // TODO: update parent props `user`
+    const newName = e.target.value;
+    handler({ name: newName });
   };
-
   return (
-    <TextField
-      error={!valid}
-      required
-      autoComplete="off"
-      id={txtFieldId}
-      label={txtFieldLb}
-      type="text"
-      onChange={onChange}
-      value={userName}
-      placeholder="Joyful Jar"
-      helperText={valid ? "" : "Name length exceeds 30 characters"}
+   <TextField
+     error={!isValid(user.name)}
+     required
+     autoComplete="off"
+     label="Name"
+     type="text"
+     onChange={onChange}
+     value={user.name}
+     placeholder="Joyful Jar"
+     helperText={isValid(user.name) ? "" : "Name length exceeds 30 characters"}
     />
   );
 }
 
-export function UserMonthGoal(props: {user: User}) {
-  const [valid, setValid] = useState<boolean>(true);
-  const [txtFieldId, setTxtFieldId] = useState<string>("outlined-required");
-  const [txtFieldLb, setTxtFieldLb] = useState<string>("Monthly Saving Goal");
+function formatPhoneNumber(input: string | undefined): string {
+  if (input === undefined || input.length === 0) {
+    return '';
+  }
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Number(e.target.value);
-    if (isNaN(value) || value <= 0) {
-      setValid(false);
-      setTxtFieldId("outlined-error-helper-text")
-      setTxtFieldLb("Error")
-    } else {
-      setValid(true);
-      setTxtFieldId("outlined-required")
-      setTxtFieldLb("Monthly Saving Goal")
-    }
-    // TODO: update parent props `user`
-  };
-
-  return (
-    <TextField
-      error={!valid}
-      required
-      autoComplete="off"
-      id={txtFieldId}
-      label={txtFieldLb}
-      type="text"
-      onChange={onChange}
-      helperText={valid ? "" : "Monthly Goal must be a positive number"}
-    />
-  );
-}
-
-function formatPhoneNumber(input: string): string {
   const digitsOnly = input.replace(/\D/g, '');
   const match = digitsOnly.match(/^(\d{0,4})(\d{0,3})(\d{0,3})$/);
 
@@ -128,53 +68,36 @@ function isValidPhoneNumber(phone: string): boolean {
 }
 
 // TODO: support Chinese mobile phone number
-export function UserPhone(props: {user: User}) {
-  // user phone
-  const { phone } = props.user;
-  let fmtPhone: string = formatPhoneNumber(phone);
+export function UserPhone({user, handler}: UserProfileProps) {
 
-  const [valid, setValid] = useState<boolean>(true);
-  const [userPhone, setUserPhone] = useState<string | undefined>(fmtPhone);
-
-
+  let fmtPhone = formatPhoneNumber(user.phone);
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
     fmtPhone = formatPhoneNumber(input);
 
-    if (fmtPhone.length <= 12 && isValidPhoneNumber(fmtPhone)) {
-      setValid(true);
-      setUserPhone(fmtPhone);
-    } else {
-      setValid(false);
-      setUserPhone(input);
-    }
-
+    handler({phone: fmtPhone});
   };
 
   return (
     <TextField
       fullWidth
-      error={!valid}
+      error={!isValidPhoneNumber(fmtPhone)}
       autoComplete="off"
       label="Mobile"
       type="tel"
-      value={userPhone}
+      value={fmtPhone}
       onChange={onChange}
-      helperText={valid ? "" : "Invalid mobile number. Must be '04xx xxx xxx'"}
-      placeholder="04xx xxx xxx"
+      helperText={isValidPhoneNumber(fmtPhone) ? "" : "Mobile must be '04xx xxx xxx'"}
+      placeholder="0412 356 789"
     />
   );
 }
 
 
-export function UserGender(props: {user: User}) {
-  const { gender } = props.user;
+export function UserGender({user, handler}: UserProfileProps) {
 
-  const [userGender, setUserGender] = useState<string | undefined>(gender);
-
-  // const onSelect = (e: SelectChangeEvent<string>) => {
   const onSelect = (e: SelectChangeEvent<string>) => {
-    setUserGender(e.target.value);
+    handler({gender: e.target.value});
   }
 
   return (
@@ -183,7 +106,7 @@ export function UserGender(props: {user: User}) {
       <Select
         labelId="user-gender-label"
         id="user-gender-select"
-        value={userGender}
+        value={user.gender}
         label="Gender"
         onChange={onSelect}
       >
@@ -205,7 +128,7 @@ function isEmail(email: string): boolean {
   return eRegex.test(email);
 }
 
-export function UserEmail({user, onConfirm}: UserEmailProps) {
+export function UserEmail({user, handler}: UserProfileProps) {
   // user email
   const { email } = user;
 
@@ -213,7 +136,7 @@ export function UserEmail({user, onConfirm}: UserEmailProps) {
   const [valid, setValid] = useState<boolean>(true);
   const [editing, setEditing] = useState<boolean>(false);
   const [userEmail, setUserEmail] = useState<string>(email);
-  const [error, setError] = useState<string>("");
+  const [error, setError] = useState<string>('');
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -233,7 +156,7 @@ export function UserEmail({user, onConfirm}: UserEmailProps) {
   };
 
   const onSave = () => {
-    if (userEmail.trim() === "") {
+    if (userEmail.trim() === '') {
       setValid(false);
       setError("Email is required.");
     }
@@ -241,7 +164,7 @@ export function UserEmail({user, onConfirm}: UserEmailProps) {
       setValid(false);
       setError("Email address format is not valid.");
     } else {
-      onConfirm({ email: userEmail });
+      handler({ email: userEmail });
       setEditing(false);
     }
   };
