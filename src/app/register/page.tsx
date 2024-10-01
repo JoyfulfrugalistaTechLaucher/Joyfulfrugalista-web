@@ -13,10 +13,12 @@ import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
 } from "firebase/auth";
-import { auth } from "../config/firebaseConfig";
+import { auth,db} from "../config/firebaseConfig";
 import { useAuth } from "../context/AuthContext";
 import "@fontsource/montserrat"; // 导入 Montserrat 字体
 import BackgroundWrapper from "../components/BackgroundWrapper"; // 导入背景组件
+import { ref, set } from "firebase/database";
+
 
 const RegisterPage: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -47,6 +49,17 @@ const RegisterPage: React.FC = () => {
 
       // 保存 UID 到上下文
       setUid(user.uid);
+
+      //将用户信息保存到 Realtime Database
+      await set(ref(db, "users/" + user.uid), {
+        email: user.email,
+        name: "",
+        phone: "",
+        task: {
+          goal: 0,
+          setDate: "",
+        },
+      });
 
       // 显示成功信息
       setSuccess(
