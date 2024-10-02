@@ -28,11 +28,11 @@ const LedgerPage: React.FC = () => {
 
     const [targetReached, setTargetReached] = useState(false);
 
-    const userId = useAuth(); // For test: 3DNh7orraCdeYJvXtRHCE425dYr1
+    const { uid } = useAuth(); // For test: 3DNh7orraCdeYJvXtRHCE425dYr1
 
     const checkGoalStatus = async () => {
         try {
-            const response = await fetch(`http://localhost:3000/api/savings/${userId}`); // sending requests to back-end
+            const response = await fetch(`http://localhost:3000/api/savings/${uid}`); // sending requests to back-end
             const data = await response.json(); // Get the dataset
             const { goal, totalMoneyAdded } = data; // Get the target money & current savings
 
