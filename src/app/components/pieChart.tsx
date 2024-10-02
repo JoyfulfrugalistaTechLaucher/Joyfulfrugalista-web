@@ -103,6 +103,7 @@ const PieChartComponent: React.FC<PieChartComponentProps> = ({ onClose }) => {
         }
     };
 
+
     useEffect(() => {
         if (uid) {
             fetchData(uid);

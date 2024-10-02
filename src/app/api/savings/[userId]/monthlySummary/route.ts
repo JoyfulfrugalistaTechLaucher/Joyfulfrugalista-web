@@ -5,7 +5,7 @@ import { DateTime } from 'luxon';
 const URL = 'https://joyful-429b0-default-rtdb.asia-southeast1.firebasedatabase.app/';
 
 export async function GET(request: Request, context: { params: { userId: string } }) {
-    const { userId } = context.params;  // 从 context 获取 userId
+    const { userId } = context.params;  // From context to get userId
 
     try {
         console.log("Fetching data for Id:", userId);
@@ -38,7 +38,7 @@ export async function GET(request: Request, context: { params: { userId: string 
         const currentSydneyTime = DateTime.now().setZone('Australia/Sydney').toISODate() || DateTime.now().toISODate();
 
         // Filter records based on setDate and compute total saving
-        const groupedByMonth: any = {};  // 用于按月份分组记录
+        const groupedByMonth: any = {};  // For grouping records by month
 
         Object.entries(addInfoData).forEach(([recordId, recordData]: [string, any]) => {
             const recordDate = DateTime.fromISO(recordData.date, { zone: 'Australia/Sydney' }).toISODate();
@@ -67,14 +67,14 @@ export async function GET(request: Request, context: { params: { userId: string 
         // Return the result with the required format
         const responsePayload = {
             userId,
-            groupedByMonth  // 返回只包含 userId 和按月汇总的数据
+            groupedByMonth  // Returns data containing only the userId and aggregated by month
         };
 
-        // 返回用户数据
+        // Returning user data
         return NextResponse.json(responsePayload);
 
     } catch (error) {
-        // 详细记录错误信息
+        // Detailed logging of error messages
         console.error('Error fetching user data:', error);
         return new NextResponse('Failed to fetch user data', { status: 500 });
     }
