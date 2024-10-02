@@ -4,6 +4,7 @@ import { DateTime } from 'luxon';
 
 const URL = 'https://joyful-429b0-default-rtdb.asia-southeast1.firebasedatabase.app/';
 
+
 export async function GET(request: Request, context: { params: { userId: string } }) {
     const { userId } = context.params;  // From context to get userId
 

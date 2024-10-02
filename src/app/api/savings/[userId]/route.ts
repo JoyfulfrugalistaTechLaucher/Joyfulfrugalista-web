@@ -81,7 +81,6 @@ export async function GET(request: Request, context: { params: { userId: string 
   };
 
 
-
   // 返回用户数据
   return NextResponse.json(responsePayload);
 

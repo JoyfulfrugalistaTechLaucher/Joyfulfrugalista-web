@@ -118,7 +118,7 @@ const PieChartComponent: React.FC<PieChartComponentProps> = ({ onClose }) => {
             if (monthData) {
                 const labels = categories.filter((category) => monthData[category]);
                 const values = labels.map((label) => monthData[label]);
-
+               
                 setChartData({
                     labels,
                     datasets: [
