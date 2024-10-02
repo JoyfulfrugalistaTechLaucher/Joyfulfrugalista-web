@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Detail from "../detail/page";
 import AddPage from "../addPage/page";
+import {useAuth} from "@/app/context/AuthContext";
+
 
 const LedgerPage: React.FC = () => {
     const [showModal, setShowModal] = useState(false);
@@ -24,8 +26,48 @@ const LedgerPage: React.FC = () => {
         }
     };
 
+    const [targetReached, setTargetReached] = useState(false);
+
+    const userId = useAuth(); // For test: 3DNh7orraCdeYJvXtRHCE425dYr1
+
+    const checkGoalStatus = async () => {
+        try {
+            const response = await fetch(`http://localhost:3000/api/savings/${userId}`); // sending requests to back-end
+            const data = await response.json(); // Get the dataset
+            const { goal, totalMoneyAdded } = data; // Get the target money & current savings
+
+            const buttonIsClicked = true;
+            if (goal === totalMoneyAdded && buttonIsClicked) {
+                setTargetReached(true);
+            }
+        } catch (error) {
+            console.error("Error fetching goal status:", error);
+        }
+    };
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            checkGoalStatus();
+        }, 2000); // Check every two seconds
+        return () => clearInterval(interval);
+    }, []);
+
     return (
         <div style={styles.container}>
+            {/* The animation */}
+            {targetReached && (
+                <div style={styles.animationOverlay}>
+                    <video
+                        src="/assets/targetReachedAnimation.mp4"
+                        autoPlay
+                        muted
+                        width="100%"
+                        height="100%"
+                        style={styles.fullscreenAnimation}
+                        onEnded={() => setTargetReached(false)} // Reset the target state
+                    />
+                </div>
+            )}
             {/* 背景图片 */}
             <div style={styles.backgroundContainer}>
                 <Image
@@ -135,6 +177,22 @@ const styles = {
         cursor: 'pointer',
         alignSelf: 'flex-end',
     } as React.CSSProperties,
+    animationOverlay: {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        backgroundColor: 'black',
+        zIndex: 9999,
+    } as React.CSSProperties,
+    fullscreenAnimation: {
+        objectFit: 'cover',
+        width: '100vw',
+        height: '100vh',
+    } as React.CSSProperties,
+
+
 };
 
 export default LedgerPage;
