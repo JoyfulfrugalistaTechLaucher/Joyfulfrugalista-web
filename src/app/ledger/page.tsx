@@ -30,27 +30,26 @@ const LedgerPage: React.FC = () => {
 
     const { uid } = useAuth(); // For test: 3DNh7orraCdeYJvXtRHCE425dYr1
 
-    const checkGoalStatus = async () => {
-        try {
-            const response = await fetch(`http://localhost:3000/api/savings/${uid}`); // sending requests to back-end
-            const data = await response.json(); // Get the dataset
-            const { goal, totalMoneyAdded } = data; // Get the target money & current savings
 
-            const buttonIsClicked = true;
-            if (goal === totalMoneyAdded && buttonIsClicked) {
-                setTargetReached(true);
-            }
-        } catch (error) {
-            console.error("Error fetching goal status:", error);
-        }
-    };
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            checkGoalStatus();
-        }, 2000); // Check every two seconds
-        return () => clearInterval(interval);
-    }, []);
+        const checkGoalStatus = async () => {
+            try {
+                const response = await fetch(`http://localhost:3000/api/savings/${uid}`); // sending requests to back-end
+                const data = await response.json(); // Get the dataset
+                const { goal, totalMoneyAdded } = data; // Get the target money & current savings
+
+                const buttonIsClicked = true;
+                if (goal === totalMoneyAdded && buttonIsClicked) {
+                    setTargetReached(true);
+                }
+            } catch (error) {
+                console.error("Error fetching goal status:", error);
+            }
+        };
+        checkGoalStatus();
+
+    }, [uid]);
 
     return (
         <div style={styles.container}>
