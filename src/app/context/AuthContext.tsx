@@ -9,6 +9,7 @@ import React, {
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../config/firebaseConfig";
 
+
 interface AuthContextType {
   uid: string | null;
   setUid: (uid: string | null) => void;
@@ -65,3 +66,4 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       </AuthContext.Provider>
   );
 };
+

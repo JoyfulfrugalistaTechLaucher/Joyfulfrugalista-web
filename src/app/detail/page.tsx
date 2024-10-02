@@ -31,7 +31,11 @@ const Detail: React.FC = () => {
         const month = targetDate.getMonth() + 1;
         const day = targetDate.getDate();
 
-        return `${year}-${month < 10 ? `0${month}` : month}-${day < 10 ? `0${day}` : day}`;
+        // 确保月份和日期有两位数
+        const formattedMonth = month < 10 ? `0${month}` : `${month}`;
+        const formattedDay = day < 10 ? `0${day}` : `${day}`;
+
+        return `${year}-${formattedMonth}-${formattedDay}`;
     };
 
     const handleDataChange = (data: string) => {
@@ -40,7 +44,6 @@ const Detail: React.FC = () => {
 
     const handlePrevious = () => {
         setDateIndex(dateIndex - 1);
-        fetchDataAndUpdate();
     };
 
     const handleNext = () => {
@@ -55,16 +58,16 @@ const Detail: React.FC = () => {
         }
     };
 
-
     useEffect(() => {
         fetchDataAndUpdate();
     }, [dateIndex]);
+
     const { uid, isLoggedIn } = useAuth(); // 从AuthContext中获取 uid 和 isLoggedIn
 
     const fetchDataAndUpdate = () => {
         if (isLoggedIn && uid) {
             fetchSavingData(uid)
-                .then((data:any) => {
+                .then((data: any) => {
                     setTotalSavingAmount(data.totalSaved);
 
                     // 将 savingEntries 对象传递给 categorizeSavingEntries
@@ -85,9 +88,6 @@ const Detail: React.FC = () => {
         }
     };
 
-
-
-
     const categorizeSavingEntries = (savingEntries: Record<string, any>) => {
         const categorizedData: { [key: string]: any[] } = {};
 
@@ -105,18 +105,12 @@ const Detail: React.FC = () => {
         return categorizedData;
     };
 
-    const formatDateString = (dateString: string) => {
-        const [year, month, day] = dateString.split("-").map(Number);
-        return `${year}-${month}-${day}`;
-    };
-
     const getEntriesForDate = (categorizedData: { [key: string]: any[] }, date: string) => {
-        const reformattedDate = formatDateString(date);
-        return categorizedData[reformattedDate] || [];
+        return categorizedData[date] || [];
     };
 
     const calculateDailySavingAmount = (currentData: Array<any>) => {
-        return currentData.reduce((sum, entry) => sum + parseInt(entry.moneyAdded, 10), 0);
+        return currentData.reduce((sum, entry) => sum + parseFloat(entry.moneyAdded), 0);
     };
 
     const getButtonStyle = (data: string): React.CSSProperties => {
@@ -128,14 +122,13 @@ const Detail: React.FC = () => {
     };
 
     return (
-// <BackgroundWrapper>
+        // <BackgroundWrapper>
         <div style={styles.container}>
             <div style={styles.header}>
                 <button onClick={handlePrevious} style={styles.navButton}>{"<"}</button>
                 <span style={styles.dateText}>{getDate(dateIndex)}</span>
                 <button onClick={handleNext} style={styles.navButton}>{">"}</button>
             </div>
-
 
             <div style={styles.content}>
                 <div style={styles.board}>
@@ -146,7 +139,7 @@ const Detail: React.FC = () => {
                     <span style={styles.subBoardLabel}>You saved ${dailySavingAmount} today!</span>
                 </div>
                 <BackgroundWrapper>
-                    <div style={{ ...styles.scrollView, width: '100%' ,}}>
+                    <div style={{ ...styles.scrollView, width: '100%' }}>
                         <span style={styles.dateTextForData}>{getDate(dateIndex)}</span>
                         {fetchedData.savingEntries.length > 0 ? (
                             fetchedData.savingEntries.map((entry, index) => {
@@ -157,7 +150,7 @@ const Detail: React.FC = () => {
                                         <div style={{ ...styles.data, backgroundColor: categoryInfo.color }}>
                                             <Image src={categoryInfo.iconName} alt={entry.category} width={30} height={30} />
                                             <div style={styles.dataText}>
-                                                <span style={styles.dataLabel}>{entry.description ? `${entry.category}: ${entry.description}` : entry.category}</span>
+                                                <span style={styles.dataLabel}>{entry.description ? `${categoryInfo.title}: ${entry.description}` : categoryInfo.title}</span>
                                                 <span style={styles.dataAmount}>${entry.moneyAdded}</span>
                                             </div>
                                         </div>
@@ -171,7 +164,7 @@ const Detail: React.FC = () => {
                 </BackgroundWrapper>
             </div>
         </div>
-// </BackgroundWrapper>
+        // </BackgroundWrapper>
     );
 }
 

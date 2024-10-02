@@ -19,7 +19,7 @@ const AddPage: React.FC = () => {
 
     const handleSave = () => {
         if (uid && selectedCategory) {
-            const formattedDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+            const formattedDate = date.toISOString().substr(0, 10); 
 
             // 保存数据到数据库
             addEntryToDatabase(uid, formattedDate, amount, selectedCategory, description)
