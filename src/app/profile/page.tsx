@@ -9,7 +9,6 @@ import {
   IconButton,
   ImageList,
   ImageListItem,
-  Modal,
   Stack,
 } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
@@ -128,6 +127,8 @@ function ProfilePage() {
         name: userInfo.name,
         gender: userInfo.gender,
         phone: userInfo.phone,
+        avatar: userInfo.avatar,
+        task: userInfo.task === undefined ? {goal: 0, setDtate: ''} : userInfo.task,
       });
 
 

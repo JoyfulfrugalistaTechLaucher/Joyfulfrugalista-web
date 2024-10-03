@@ -1,33 +1,46 @@
-"use client";
-import React, { useState } from "react";
+'use client';
+
+import React, { Fragment, useEffect, useState  } from 'react';
 import {
+  Avatar,
   AppBar,
   Box,
-  IconButton,
+  Button,
   Drawer,
-  Link,
+  IconButton,
   List,
   ListItem,
   ListItemText,
   ListItemButton,
+  ListItemIcon,
+  Menu,
+  MenuItem,
   Stack,
   Toolbar,
-  Typography,
-} from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import SmsIcon from "@mui/icons-material/Sms";
-import NotificationsIcon from "@mui/icons-material/Notifications";
+  Tooltip,
+} from '@mui/material';
+import {useMediaQuery, useTheme} from '@mui/material';
+import { styled } from '@mui/material/styles';
+import MenuIcon from '@mui/icons-material/Menu';
+import SmsIcon from '@mui/icons-material/Sms';
+import LogoutIcon from '@mui/icons-material/Logout';
+import NotificationsIcon from '@mui/icons-material/Notifications';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-
+import { signOut } from 'firebase/auth';
+import { useRouter } from 'next/navigation';
+import { auth } from '../config/firebaseConfig';
+import { useAuth } from '../context/AuthContext';
+import { User } from '../interface';
+import { DEFAULT_AVATAR, FB_URL } from '../constants';
+import { useUserData } from '../hooks/useUserData.ts';
 
 // Hamburger Menu for small screens
-const items: string[] = [
-  "Profile",
-  "Ledger",
-  "Stats",
-  "About",
+const appRoutes: string[] = [
+  'About',
+  'Ledger',
+  'Task',
+  'Stats',
 ];
-const MENU_HEIGHT: number = 48;
 
 function HamburgerMenu() {
 
@@ -38,107 +51,179 @@ function HamburgerMenu() {
     </Stack>
   );
 }
-const Navbar = () => {
-  const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const handleDrawerToggle = () => {
-    setDrawerOpen(!drawerOpen);
+
+function ProfileMenu() {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const { uid, isLoggedIn, setUid } = useAuth();
+  const { user, loading } = useUserData(uid);
+  const router = useRouter();
+
+  console.log("User: ", user);
+  // handlers
+  const handleClick = (e: React.MouseEvevnt<HTMLElement>) => {
+    setAnchorEl(e.currentTarget);
   };
 
-  const drawer = (
-    <div onClick={handleDrawerToggle} onKeyDown={handleDrawerToggle}>
-      <List>
-        {items.map((text) => (
-          <ListItem key={text}>
-            <ListItemButton>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-    </div>
-  );
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleProfile = () => {
+    router.replace("/profile");
+  }
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      setUid(null);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem("isLoggedIn", "false");
+      }
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
+
+
+  if (loading) {
+    return (
+      <Box>Login ...</Box>
+    );
+  }
+
+  if (!isLoggedIn) {
+    return  (
+      <Button variant="text" href="/login">
+        Login
+      </Button>
+    );
+  }
 
   return (
-    <Box component="nav" color="transparent">
-      <Toolbar className="nav-bar">
-        <Link href="/" className="nav-home">
-          <Typography color="primary" >
-            Joyful Savings Jar
-          </Typography>
-        </Link>
-        <IconButton
-          size="large"
-          edge="start"
-          color="primary"
-          aria-label="menu"
-          className="sm:hidden"
-          sx={{ mr: 2 }}
+    <Box>
+      <Tooltip title="Profile settings">
+        <Button
+          onClick={handleClick}
+          sx={{ ml: 2 }}
+          aria-controls={open ? 'profile-menu' : undefined}
+          aria-haspopup="true"
+          aria-expanded={open ? 'true' : undefined}
         >
-          <MenuIcon fontSize="inherit"/>
-        </IconButton>
+          <Avatar
+            src={user?.avatar || ''}
+            alt="user avatar"
+            sx={{ width: 36, height: 36 }}
+          ></Avatar>
+        </Button>
+      </Tooltip>
+      <Menu
+        anchorEl={anchorEl}
+        id="profile-menu"
+        open={open}
+        onClose={handleClose}
+        onClick={handleClose}
+      >
+
+        <MenuItem onClick={handleProfile}>
+          <ListItemIcon>
+            <AccountCircleIcon fontSize="small" />
+          </ListItemIcon>
+          Profile
+        </MenuItem>
+        <MenuItem onClick={handleLogout}>
+          <ListItemIcon>
+            <LogoutIcon fontSize="small" />
+          </ListItemIcon>
+          Logout
+        </MenuItem>
+      </Menu>
+    </Box>
+  );
+}
+
+
+const FlatAppBar = styled(AppBar)(() => ({
+  boxShadow: 'none',
+}));
+
+const NavButton = styled(Button)(({ theme }) => ({
+  textTransform: 'none',
+  fontWeight: 'normal',
+  fontSize: '16pt',
+  color: theme.palette.primary.main,
+}));
+
+
+
+function Navbar() {
+
+  const theme = useTheme();
+  const isSm = useMediaQuery(theme.breakpoints.down('sm'));
+
+  return (
+    <FlatAppBar component="nav" color="transparent" position="static">
+      <Toolbar className="nav-bar">
+        {isSm ? (
+          <IconButton
+            size="large"
+            edge="start"
+            color="primary"
+            aria-label="menu"
+            className="sm:hidden"
+            sx={{ mr: 2 }}
+          >
+            <MenuIcon fontSize="inherit"/>
+          </IconButton>
+        ) : (
+          <NavButton
+            variant="text"
+            href="/"
+            color="primary"
+            disableFocusRipple
+            disableRipple
+          >
+            Joyful Savings Jar
+          </NavButton>
+
+        )}
+
         <Box className="nav-routes">
-          <Link
-            href=""
-            className="text-gray-800 hover:text-primary"
-            style={{ textDecoration: "none" }}
+          <NavButton
+            href="/about"
+            variant="text"
+            color="primary"
           >
-            <Typography color="primary" >
-              About
-            </Typography>
-          </Link>
-          <Link
+            About
+          </NavButton>
+          <NavButton
             href="/ledger"
-            className="text-gray-800 hover:text-primary"
-            style={{ textDecoration: "none" }}
+            variant="text"
+            color="primary"
           >
-            <Typography color="primary">
               Ledger
-            </Typography>
-          </Link>
-          <Link
-            href="#"
-            className="text-gray-800 hover:text-primary"
-            style={{ textDecoration: "none" }}
+          </NavButton>
+          <NavButton
+            href="/stats"
+            variant="text"
+            color="primary"
           >
-            <Typography color="primary"
-            >
               Stats
-            </Typography>
-          </Link>
-          <Link
-            href="#"
-            className="text-gray-800 hover:text-primary"
-            style={{ textDecoration: "none" }}
+          </NavButton>
+          <NavButton
+            href="/task"
+            variant="text"
+            color="primary"
           >
-            <Typography color="primary" >
-              Community
-            </Typography>
-          </Link>
+            Task
+          </NavButton>
         </Box>
         <Box className="nav-icons">
-          <Link
-            className="text-gray-800 hover:text-primary"
-            style={{ textDecoration: "none" }}
-          >
-            <NotificationsIcon color="primary" sx={{ fontSize: 32 }}/>
-          </Link>
-          <Link
-            className="text-gray-800 hover:text-primary"
-            style={{ textDecoration: "none" }}
-          >
-            <SmsIcon color="primary" sx={{ fontSize: 32 }}/>
-          </Link>
-
-          <Link href="/profile"
-            className="text-gray-800 hover:text-primary"
-            style={{ textDecoration: "none" }}
-          >
-            <AccountCircleIcon color="primary" sx={{ fontSize: 32 }}/>
-          </Link>
+          <ProfileMenu />
         </Box>
       </Toolbar>
-    </Box>
+    </FlatAppBar>
   );
 };
 

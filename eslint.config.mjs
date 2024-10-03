@@ -9,9 +9,9 @@ export default tseslint.config(
       globals: {
         console: 'readonly',
         localStorage: 'readonly',
+        HTMLElement: 'readonly',
         HTMLInputElement: 'readonly',
         HTMLButtonElement: 'readonly',
-        // Add any other global variables you're using
       },
     },
     rules: {

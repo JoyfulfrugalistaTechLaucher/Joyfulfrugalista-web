@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import AddTaskIcon from '@mui/icons-material/AddTask';
-import { User } from '../_interface';
+import { User } from '../../interface';
 
 interface ProfileGoalProps {
   user: User,

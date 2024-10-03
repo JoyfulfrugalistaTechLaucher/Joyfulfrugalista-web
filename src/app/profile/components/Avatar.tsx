@@ -5,8 +5,8 @@ import {
   Avatar,
   Box,
 } from '@mui/material';
-import { User } from '../_interface';
-import { DEFAULT_AVATAR } from '../_constants';
+import { User } from '../../interface';
+import { DEFAULT_AVATAR } from '../../constants';
 
 export function UserAvatar(props: {user: User}) {
 

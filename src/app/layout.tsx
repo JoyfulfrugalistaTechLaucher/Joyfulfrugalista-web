@@ -21,9 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ThemeRegistry>
-          <AuthProvider>{children}</AuthProvider>
-        </ThemeRegistry>
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   );

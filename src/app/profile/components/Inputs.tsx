@@ -21,8 +21,10 @@ import { styled } from '@mui/material/styles';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
-import { User, UserProfileProps } from '../_interface';
-import { GENDERS, MAX_NAME_LEN } from '../_constants';
+import { User, UserProfileProps } from '../../interface';
+
+export const MAX_NAME_LEN = 30;
+export const GENDERS: string[] = ['Male', 'Female', 'Secret', 'Trans'];
 
 export function UserName({user, handler}: UserProfileProps) {
   const isValid = (value: string) => value.length <= MAX_NAME_LEN;
