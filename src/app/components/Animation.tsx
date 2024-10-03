@@ -1,4 +1,7 @@
+"use client";
+
 import React, { useState, useEffect } from 'react';
+import axios from "axios";
 
 interface AnimationProps {
     uid: string;
@@ -10,8 +13,8 @@ const Animation: React.FC<AnimationProps> = ({ uid }) => {
     useEffect(() => {
         const checkGoalStatus = async () => {
             try {
-                const response = await fetch(`http://localhost:3000/api/savings/${uid}`); // Fetch request
-                const data = await response.json(); // Get the dataset
+                const response = await axios.get(`http://localhost:3000/api/savings/${uid}`); // Fetch request
+                const data = response.data; // Get the dataset
                 const { goal, totalMoneyAdded } = data; // Get the target money & current savings
 
                 if (goal <= totalMoneyAdded) {
