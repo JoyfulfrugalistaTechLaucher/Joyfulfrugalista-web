@@ -36,6 +36,7 @@ import { UserMonthGoal } from './components/Goal';
 import { FB_URL } from '../constants';
 import { AVATARS, DUSER } from './_constants';
 import { User, UserProfileProps } from "./_interface";
+import Animation from "../components/Animation";
 
 // styles
 const AvatarButton = styled(Button)(() => ({
@@ -87,6 +88,7 @@ function ProfilePage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [editAvt, setEditAvt] = useState<boolean>(false);
   const [edited, setEdited] = useState<boolean>(false);
+  const [showAnimation, setShowAnimation] = useState<boolean>(true);
   const { uid, isLoggedIn, setUid } = useAuth();
   const router = useRouter();
 
@@ -159,6 +161,13 @@ function ProfilePage() {
     }
   };
 
+  // Handle animation toggle and save to localStorage
+  const handleAnimationToggle = () => {
+    const newShowAnimation = !showAnimation;
+    setShowAnimation(newShowAnimation);
+    localStorage.setItem('showAnimation', JSON.stringify(newShowAnimation));
+  };
+
   // start rendering the page
   // fetch user info from firebase rtdb
   useEffect(() => {
@@ -175,6 +184,11 @@ function ProfilePage() {
           setUserInfo({...DUSER, ...user});
           setUserOrigInfo({...DUSER, ...user});
           setLoading(false);
+
+          // Fetch animation preference from localStorage
+          const savedShowAnimation = localStorage.getItem('showAnimation');
+          setShowAnimation(savedShowAnimation === null ? true : JSON.parse(savedShowAnimation));
+  
         } catch (error) {
           console.error("Error fetching user data:", error);
           setLoading(false);
@@ -275,6 +289,18 @@ function ProfilePage() {
             </Button>
           </Stack>
         }
+
+        {/* Toggle for showing animation */}
+        <Button
+          variant="outlined"
+          onClick={handleAnimationToggle}
+          sx={{ mt: 4 }}
+        >
+          {showAnimation ? 'Hide Animation' : 'Show Animation'}
+        </Button>
+
+        {/* Animation component */}
+        {uid && showAnimation && <Animation uid={uid} />}
 
         {editAvt &&
           <Box
