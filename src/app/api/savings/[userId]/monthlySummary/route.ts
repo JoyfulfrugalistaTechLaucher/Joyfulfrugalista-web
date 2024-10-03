@@ -63,6 +63,7 @@ export async function GET(request: Request, context: { params: { userId: string 
         // Returns user data
         return NextResponse.json(responsePayload);
 
+
     } catch (error) {
         // Log error msg
         console.error('Error fetching user data:', error);

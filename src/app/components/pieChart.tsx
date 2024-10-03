@@ -5,7 +5,6 @@ import axios from 'axios';  // Use axios to request the API
 import { useAuth } from '../context/AuthContext';
 import { ChartData } from 'chart.js';
 
-
 // Elements and plugins required to register Chart.js
 ChartJS.register(ArcElement, Tooltip, Legend);
 interface PieChartComponentProps {
