@@ -16,6 +16,7 @@ const categories = [
     'Gifts', 'Christmas', 'Insurance', 'Childcare', 'Food', 'Health', 'Appearance', 'Lifestyle', 'Treat yourself'
 ];
 
+
 // Create a mapping of types and colors to ensure that colors also correspond to types one to one
 const categoryColorMap = {
     'Housing': '#FF6384',
