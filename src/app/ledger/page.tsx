@@ -40,7 +40,7 @@ const LedgerPage: React.FC = () => {
                 const { goal, totalMoneyAdded } = data; // Get the target money & current savings
 
                 const buttonIsClicked = true;
-                if (goal === totalMoneyAdded && buttonIsClicked) {
+                if (goal >= totalMoneyAdded && buttonIsClicked) {
                     setTargetReached(true);
                 }
             } catch (error) {
