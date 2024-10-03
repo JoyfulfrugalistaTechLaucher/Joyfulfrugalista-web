@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Detail from "../detail/page";
 import AddPage from "../addPage/page";
-import {useAuth} from "@/app/context/AuthContext";
 
 
 const LedgerPage: React.FC = () => {
@@ -26,48 +25,9 @@ const LedgerPage: React.FC = () => {
         }
     };
 
-    // -------------------------------
-    // Animation function
-    const [targetReached, setTargetReached] = useState(true);
-
-    const { uid } = useAuth(); // For test:
-
-    useEffect(() => {
-        const checkGoalStatus = async () => {
-            try {
-                const response = await fetch(`http://localhost:3000/api/savings/${uid}`); // sending requests to back-end
-                const data = await response.json(); // Get the dataset
-                const { goal, totalMoneyAdded } = data; // Get the target money & current savings
-
-                const buttonIsClicked = true;
-                if (goal <= totalMoneyAdded && buttonIsClicked) {
-                    setTargetReached(true);
-                    console.log("targetReached");
-                }
-            } catch (error) {
-                console.error("Error fetching goal status:", error);
-            }
-        };
-        checkGoalStatus();
-
-    }, [uid]);
 
     return (
         <div style={styles.container}>
-            {/* The animation */}
-            { targetReached && (
-                <div style={styles.animationOverlay}>
-                    <video
-                        src="/assets/targetReachedAnimation.mp4"
-                        autoPlay
-                        muted
-                        width="100%"
-                        height="100%"
-                        style={styles.fullscreenAnimation}
-                        onEnded={() => setTargetReached(false)} // Reset the target state
-                    />
-                </div>
-            )}
             {/* 背景图片 */}
             <div style={styles.backgroundContainer}>
                 <Image
@@ -177,25 +137,7 @@ const styles = {
         cursor: 'pointer',
         alignSelf: 'flex-end',
     } as React.CSSProperties,
-    animationOverlay: {
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
-        width: '100vw',
-        height: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        zIndex: 9999,
-    } as React.CSSProperties,
-    fullscreenAnimation: {
-        width: '75vw',
-        height: '75vh',
-        objectFit: 'contain',
-        borderRadius: '10px',
-        filter: 'blur(0)', // No blur on animation
-    } as React.CSSProperties,
+
 
 
 };
