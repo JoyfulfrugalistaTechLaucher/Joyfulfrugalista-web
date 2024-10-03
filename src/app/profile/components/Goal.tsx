@@ -10,7 +10,8 @@ import {
 } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import AddTaskIcon from '@mui/icons-material/AddTask';
-import { User } from '../../interface';
+import EditIcon from '@mui/icons-material/Edit';
+import { User } from '../_interface';
 
 interface ProfileGoalProps {
   user: User,
@@ -18,7 +19,7 @@ interface ProfileGoalProps {
 
 export function UserMonthGoal({ user }: ProfileGoalProps) {
   const route = useRouter();
-  const onSetGoal = () => {
+  const onSetOrEditGoal = () => {
     route.push('/task');
   };
 
@@ -29,7 +30,7 @@ export function UserMonthGoal({ user }: ProfileGoalProps) {
           variant="contained"
           aria-label="go to setting a goal"
           startIcon={<AddTaskIcon />}
-          onClick={onSetGoal}
+          onClick={onSetOrEditGoal}
         >
           Set Goal
         </Button>
@@ -37,6 +38,16 @@ export function UserMonthGoal({ user }: ProfileGoalProps) {
         <Stack className="profile-goal-container">
           <Box>GOAL</Box>
           <Box> ${user.task.goal || 0} month </Box>
+          <Box>
+            <Button
+              variant="outlined"
+              aria-label="edit goal"
+              startIcon={<EditIcon />}
+              onClick={onSetOrEditGoal}
+            >
+              Edit
+            </Button>
+          </Box>
         </Stack>
       )}
     </Fragment>
