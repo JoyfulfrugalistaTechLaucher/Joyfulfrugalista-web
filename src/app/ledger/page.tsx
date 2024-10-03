@@ -26,11 +26,11 @@ const LedgerPage: React.FC = () => {
         }
     };
 
-    const [targetReached, setTargetReached] = useState(false);
+    // -------------------------------
+    // Animation function
+    const [targetReached, setTargetReached] = useState(true);
 
-    const { uid } = useAuth(); // For test: 3DNh7orraCdeYJvXtRHCE425dYr1
-
-
+    const { uid } = useAuth(); // For test:
 
     useEffect(() => {
         const checkGoalStatus = async () => {
@@ -42,6 +42,7 @@ const LedgerPage: React.FC = () => {
                 const buttonIsClicked = true;
                 if (goal <= totalMoneyAdded && buttonIsClicked) {
                     setTargetReached(true);
+                    console.log("targetReached");
                 }
             } catch (error) {
                 console.error("Error fetching goal status:", error);
@@ -54,7 +55,7 @@ const LedgerPage: React.FC = () => {
     return (
         <div style={styles.container}>
             {/* The animation */}
-            {targetReached && (
+            { targetReached && (
                 <div style={styles.animationOverlay}>
                     <video
                         src="/assets/targetReachedAnimation.mp4"
@@ -180,15 +181,20 @@ const styles = {
         position: 'fixed',
         top: 0,
         left: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
         width: '100vw',
         height: '100vh',
-        backgroundColor: 'black',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
         zIndex: 9999,
     } as React.CSSProperties,
     fullscreenAnimation: {
-        objectFit: 'cover',
-        width: '100vw',
-        height: '100vh',
+        width: '75vw',
+        height: '75vh',
+        objectFit: 'contain',
+        borderRadius: '10px',
+        filter: 'blur(0)', // No blur on animation
     } as React.CSSProperties,
 
 
