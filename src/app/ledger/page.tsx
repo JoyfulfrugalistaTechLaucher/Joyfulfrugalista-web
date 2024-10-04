@@ -18,7 +18,7 @@ const LedgerPage: React.FC = () => {
     const togglePieChart = () => {
         setShowPieChart(!showPieChart);
     };
-    
+
 
     const closeModalAndRefresh = () => {
         setShowModal(false);
@@ -63,13 +63,12 @@ const LedgerPage: React.FC = () => {
             {/* Pie Chart Diagram 按钮*/}
             <div style={styles.pieChartButtonContainer}>
                 <button style={styles.pieChartButton} onClick={togglePieChart}>
-                    Monthly Pie Chart 
+                    Monthly Pie Chart
                 </button>
             </div>
 
-
             {/* Modal 弹窗 */}
-             {showModal && (
+            {showModal && (
                 <div style={styles.modalOverlay} onClick={closeModalOnClickOutside}>
                     <div style={styles.modalContent}>
                         <AddPage />
@@ -78,18 +77,18 @@ const LedgerPage: React.FC = () => {
                         </button>
                     </div>
                 </div>
-            )}            
-                    {/* Pie Chart Diagram Button */}
-                        <div style={styles.pieChartButtonContainer}>
+            )}
+            {/* Pie Chart Diagram Button */}
+            <div style={styles.pieChartButtonContainer}>
                 <button style={styles.pieChartButton} onClick={togglePieChart}>
-                    Monthly Pie Chart 
+                    Monthly Pie Chart
                 </button>
             </div>
-
             {/* Pie Chart Display */}
             {showPieChart && <PieChartComponent onClose={closePieChart} />}
-            
+
             {/* Existing Modal code omitted for brevity */}
+
         </div>
     );
 };
@@ -179,7 +178,9 @@ const styles = {
         cursor: 'pointer',
         alignSelf: 'flex-end',
     } as React.CSSProperties,
-};
 
+
+
+};
 
 export default LedgerPage;
