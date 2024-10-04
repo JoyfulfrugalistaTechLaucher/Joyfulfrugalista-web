@@ -20,28 +20,26 @@ const Animation: React.FC<AnimationProps> = ({ uid }) => {
     useEffect(() => {
         const checkGoalStatus = async () => {
             try {
-                const database = getDatabase();
-                const userGoalRef = ref(database, `users/${uid}/task`);
-                const userSavingsRef = ref(database, `addInfo/${uid}`);
+                const response = await fetch(`/api/savings/${uid}`);
                 
-                const goalSnapshot = await get(userGoalRef);
-                const savingsSnapshot = await get(userSavingsRef);
-        
-                if (goalSnapshot.exists() && savingsSnapshot.exists()) {
-                    const goal = goalSnapshot.val().goal;
-                    const savingsEntries = savingsSnapshot.val();
-                    const totalMoneyAdded = Object.values(savingsEntries).reduce((acc: number, entry: any) => acc + parseInt(entry.moneyAdded), 0);
-        
-                    if (goal <= totalMoneyAdded) {
-                        setTargetReached(true);
-                        console.log("Target reached!");
-                    }
+                if (!response.ok) {
+                    console.error('Error fetching goal status from API:', response.status);
+                    return;
                 }
+        
+                const data = await response.json();
+                
+                const { goal, totalMoneyAdded } = data;
+
+                if (goal <= totalMoneyAdded) {
+                    setTargetReached(true);
+                    console.log("Target reached!");
+                }
+                console.log("Total: " + totalMoneyAdded + "Goal: " + goal);
             } catch (error) {
-                console.error("Error fetching goal status from Firebase:", error);
+                console.error("Error fetching goal status from API:", error);
             }
         };
-
         checkGoalStatus();
     }, [uid]);
 

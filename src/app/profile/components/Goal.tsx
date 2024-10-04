@@ -26,31 +26,33 @@ export function UserMonthGoal({ user }: ProfileGoalProps) {
   // Fetch the user's total savings from Firebase
   useEffect(() => {
     const fetchTotalSavings = async () => {
-      if (!user || !user.task) return;
+      if (!user || !user.task || !uid) return;
 
       try {
-        const database = getDatabase();
-        const userSavingsRef = ref(database, `addInfo/${uid}`); // Assume `email` is used as an identifier
-        const snapshot = await get(userSavingsRef);
+        const response = await fetch(`/api/savings/${uid}`);
+        
+        if (!response.ok) {
+          console.error("Error fetching savings from API:", response.status);
+          return;
+        }
 
-        if (snapshot.exists()) {
-          const savingsEntries = snapshot.val();
-          const total = Object.values(savingsEntries).reduce((acc: number, entry: any) => acc + parseInt(entry.moneyAdded), 0);
-          setTotalSavings(total);
+        const data = await response.json();
+        const { totalMoneyAdded, goal } = data;
 
-          console.log(total);
+        setTotalSavings(totalMoneyAdded);
 
-          if (total >= user.task.goal) {
-            setGoalReached(true); // Set state if goal is reached
-          }
+        if (totalMoneyAdded >= goal) {
+          setGoalReached(true);
         }
       } catch (error) {
-        console.error('Error fetching total savings:', error);
+        console.error('Error fetching total savings from API:', error);
       }
     };
 
-    fetchTotalSavings();
-  }, [user]);
+    if (isLoggedIn && uid) {
+      fetchTotalSavings();
+    }
+  }, [user, uid, isLoggedIn]);
 
   const onSetOrEditGoal = () => {
     route.push('/task');

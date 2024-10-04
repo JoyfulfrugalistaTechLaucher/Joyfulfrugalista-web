@@ -20,15 +20,18 @@ function TaskPage() {
     const fetchUserGoal = async () => {
       if (!uid) return;
 
-      const database = getDatabase();
-      const userGoalRef = ref(database, `users/${uid}/task`);
-
       try {
-        const goalSnapshot = await get(userGoalRef);
-        if (goalSnapshot.exists()) {
-          const userTask = goalSnapshot.val();
-          setGoal(userTask.goal); // Pre-fill the input field with the existing goal
+        const response = await fetch(`/api/savings/${uid}`);
+        
+        if (!response.ok) {
+          console.error("Error fetching user goal from API:", response.status);
+          setError("Failed to fetch user goal.");
+          setLoading(false);
+          return;
         }
+
+        const data = await response.json();
+        setGoal(data.goal);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching user goal:", error);
@@ -43,6 +46,7 @@ function TaskPage() {
       router.replace('/login');
     }
   }, [isLoggedIn, uid, router]);
+
 
   const handleSaveGoal = async () => {
     setLoading(true);
