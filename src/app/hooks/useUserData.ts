@@ -2,16 +2,16 @@
 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useAuth } from './hooks/useAuthContext';
+import { useAuth } from './useAuthContext';
 import { User } from '../interface';
 import { FB_URL, DEFAULT_AVATAR } from '../constants';
 
 interface UserData {
-  user: User,
+  user: User | null,
   loading: boolean
 };
 
-export function useUserData(uid: string): UserData {
+export function useUserData(uid: string | null): UserData {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   useEffect(() => {

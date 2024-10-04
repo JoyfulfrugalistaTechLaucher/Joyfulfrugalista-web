@@ -19,6 +19,7 @@ import {
   Toolbar,
   Tooltip,
 } from '@mui/material';
+import { AppBarProps} from '@mui/material/AppBar';
 import {useMediaQuery, useTheme} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -32,7 +33,7 @@ import { auth } from '../config/firebaseConfig';
 import { useAuth } from '../context/AuthContext';
 import { User } from '../interface';
 import { DEFAULT_AVATAR, FB_URL } from '../constants';
-import { useUserData } from '../hooks/useUserData.ts';
+import { useUserData } from '../hooks/useUserData';
 
 // Hamburger Menu for small screens
 const appRoutes: string[] = [
@@ -62,7 +63,7 @@ function ProfileMenu() {
 
   console.log("User: ", user);
   // handlers
-  const handleClick = (e: React.MouseEvevnt<HTMLElement>) => {
+  const handleClick = (e: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(e.currentTarget);
   };
 
@@ -144,7 +145,7 @@ function ProfileMenu() {
 }
 
 
-const FlatAppBar = styled(AppBar)(() => ({
+const FlatAppBar = styled(AppBar)<AppBarProps>(() => ({
   boxShadow: 'none',
 }));
 

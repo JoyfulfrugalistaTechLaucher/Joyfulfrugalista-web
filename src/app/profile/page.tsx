@@ -23,6 +23,8 @@ import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { auth } from "../config/firebaseConfig";
 import MainLayout from "../layouts/MainLayout";
+import Animation from '../components/Animation';
+import { UserAvatar } from './components/Avatar';
 import Castle from "../components/Castle";
 import {
   UserEmail,
@@ -30,12 +32,9 @@ import {
   UserName,
   UserPhone,
 } from './components/Inputs';
-import { UserAvatar } from './components/Avatar';
 import { UserMonthGoal } from './components/Goal';
-import { FB_URL } from '../constants';
-import { AVATARS, DUSER } from './_constants';
-import { User, UserProfileProps } from "./_interface";
-import Animation from "../components/Animation";
+import { FB_URL, AVATARS, DUSER } from '../constants';
+import { User, UserProfileProps } from "../interface";
 
 // styles
 const AvatarButton = styled(Button)(() => ({
@@ -189,7 +188,7 @@ function ProfilePage() {
           // Fetch animation preference from localStorage
           const savedShowAnimation = localStorage.getItem('showAnimation');
           setShowAnimation(savedShowAnimation === null ? true : JSON.parse(savedShowAnimation));
-  
+
         } catch (error) {
           console.error("Error fetching user data:", error);
           setLoading(false);

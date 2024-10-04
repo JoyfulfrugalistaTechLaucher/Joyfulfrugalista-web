@@ -24,7 +24,7 @@ export const useAuth = () => {
   if (!context) {
     throw new Error("useAuth must be used within an AuthProvider");
   }
-  return useMemo(() => context, [context.uid, context.isLog]);
+  return useMemo(() => context, [context.uid, context.isLoggedIn]);
 };
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {

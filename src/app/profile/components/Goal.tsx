@@ -9,7 +9,7 @@ import {
 import { useRouter } from 'next/navigation';
 import AddTaskIcon from '@mui/icons-material/AddTask';
 import EditIcon from '@mui/icons-material/Edit';
-import { User } from '../_interface';
+import { User } from '../../interface';
 import { getDatabase, ref, get } from 'firebase/database'; // Import Firebase to fetch total savings
 import { useAuth } from '@/app/context/AuthContext';
 
@@ -30,7 +30,7 @@ export function UserMonthGoal({ user }: ProfileGoalProps) {
 
       try {
         const response = await fetch(`/api/savings/${uid}`);
-        
+
         if (!response.ok) {
           console.error("Error fetching savings from API:", response.status);
           return;
