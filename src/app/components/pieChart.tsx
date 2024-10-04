@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import axios from 'axios';  // 假设你用axios请求API
+import axios from 'axios';  // Use axios to request the API
 import { useAuth } from '../context/AuthContext';
 import { ChartData } from 'chart.js';
 
-
-// 注册 Chart.js 所需的元素和插件
+// Elements and plugins required to register Chart.js
 ChartJS.register(ArcElement, Tooltip, Legend);
 interface PieChartComponentProps {
     onClose: () => void;
@@ -17,10 +16,29 @@ const categories = [
     'Gifts', 'Christmas', 'Insurance', 'Childcare', 'Food', 'Health', 'Appearance', 'Lifestyle', 'Treat yourself'
 ];
 
-const categoryColors = [
-    '#FF6384', '#36A2EB', '#FFCE56', '#FF9F40', '#4BC0C0', '#9966FF', '#FF6384', '#36A2EB', '#FFCE56',
-    '#FF9F40', '#4BC0C0', '#9966FF', '#FF6384', '#36A2EB', '#FFCE56', '#FF9F40', '#4BC0C0', '#9966FF'
-];
+
+// Create a mapping of types and colors to ensure that colors also correspond to types one to one
+const categoryColorMap = {
+    'Housing': '#FF6384',
+    'Household': '#36A2EB',
+    'Utilities': '#FFCE56',
+    'Transport': '#FF9F40',
+    'Leisure': '#4BC0C0',
+    'Holidays': '#9966FF',
+    'Wellbeing': '#FF6384',
+    'Education': '#36A2EB',
+    'Grooming': '#FFCE56',
+    'Gifts': '#FF9F40',
+    'Christmas': '#4BC0C0',
+    'Insurance': '#9966FF',
+    'Childcare': '#FF6384',
+    'Food': '#36A2EB',
+    'Health': '#FFCE56',
+    'Appearance': '#FF9F40',
+    'Lifestyle': '#4BC0C0',
+    'Treat yourself': '#9966FF'
+};
+
 
 const styles: { [key: string]: React.CSSProperties } = {
     pieChartContainer: {
@@ -87,14 +105,14 @@ const styles: { [key: string]: React.CSSProperties } = {
 
 const PieChartComponent: React.FC<PieChartComponentProps> = ({ onClose }) => {
     const { uid } = useAuth();
-    const [rawData, setRawData] = useState<any>(null);  // 保存原始数据
+    const [rawData, setRawData] = useState<any>(null);  // Save the raw data
     const [year, setYear] = useState(new Date().getFullYear());
     const [month, setMonth] = useState(new Date().getMonth() + 1);
     const [chartData, setChartData] = useState<ChartData<'pie', number[], string>>({ datasets: [] });
 
     const fetchData = async (userId: string) => {
         try {
-            const apiUrl = `http://localhost:3000/api/savings/${userId}/monthlySummary`;
+            const apiUrl = `/api/savings/${userId}/monthlySummary`;
             const response = await axios.get(apiUrl);
             console.log('API Response:', response.data);
             setRawData(response.data);
@@ -118,14 +136,17 @@ const PieChartComponent: React.FC<PieChartComponentProps> = ({ onClose }) => {
             if (monthData) {
                 const labels = categories.filter((category) => monthData[category]);
                 const values = labels.map((label) => monthData[label]);
-               
+
+                // Use fixed color mapping
+                const backgroundColors = labels.map(label => categoryColorMap[label as keyof typeof categoryColorMap]);
+
                 setChartData({
                     labels,
                     datasets: [
                         {
                             data: values,
-                            backgroundColor: categoryColors.slice(0, labels.length),
-                            hoverBackgroundColor: categoryColors.slice(0, labels.length)
+                            backgroundColor: backgroundColors,  // Use a fixed color
+                            hoverBackgroundColor: backgroundColors // Use the same color as the hover color
                         }
                     ]
                 });

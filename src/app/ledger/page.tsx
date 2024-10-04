@@ -67,6 +67,7 @@ const LedgerPage: React.FC = () => {
                 </button>
             </div>
 
+
             {/* Modal 弹窗 */}
             {showModal && (
                 <div style={styles.modalOverlay} onClick={closeModalOnClickOutside}>
@@ -182,5 +183,6 @@ const styles = {
 
 
 };
+
 
 export default LedgerPage;
