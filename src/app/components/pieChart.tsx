@@ -112,7 +112,7 @@ const PieChartComponent: React.FC<PieChartComponentProps> = ({ onClose }) => {
 
     const fetchData = async (userId: string) => {
         try {
-            const apiUrl = `http://localhost:3000/api/savings/${userId}/monthlySummary`;
+            const apiUrl = `/api/savings/${userId}/monthlySummary`;
             const response = await axios.get(apiUrl);
             console.log('API Response:', response.data);
             setRawData(response.data);
