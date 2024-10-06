@@ -15,7 +15,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
             {children}
           </Box>
           <footer className="footer">
-            &copy; 2024 Joyful Savings Jar. All rights reserved.
+            &copy; 2024 乐存 版权所有
           </footer>
         </Container>
       </ThemeRegistry>

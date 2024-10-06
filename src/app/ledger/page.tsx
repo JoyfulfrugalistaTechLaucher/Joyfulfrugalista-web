@@ -63,7 +63,7 @@ const LedgerPage: React.FC = () => {
             {/* Pie Chart Diagram 按钮*/}
             <div style={styles.pieChartButtonContainer}>
                 <button style={styles.pieChartButton} onClick={togglePieChart}>
-                    Monthly Pie Chart
+                每月饼图统计
                 </button>
             </div>
 
@@ -74,7 +74,7 @@ const LedgerPage: React.FC = () => {
                     <div style={styles.modalContent}>
                         <AddPage />
                         <button style={styles.closeButton} onClick={closeModalAndRefresh}>
-                            Close
+                            关闭
                         </button>
                     </div>
                 </div>
@@ -82,7 +82,7 @@ const LedgerPage: React.FC = () => {
             {/* Pie Chart Diagram Button */}
             <div style={styles.pieChartButtonContainer}>
                 <button style={styles.pieChartButton} onClick={togglePieChart}>
-                    Monthly Pie Chart
+                每月饼图统计
                 </button>
             </div>
             {/* Pie Chart Display */}

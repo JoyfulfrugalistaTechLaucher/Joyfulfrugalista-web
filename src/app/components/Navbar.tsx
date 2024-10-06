@@ -90,14 +90,14 @@ function ProfileMenu() {
 
   if (loading) {
     return (
-      <Box>Login ...</Box>
+      <Box>登陆中 ...</Box>
     );
   }
 
   if (!isLoggedIn) {
     return  (
       <Button variant="text" href="/login">
-        Login
+        登录
       </Button>
     );
   }
@@ -131,13 +131,13 @@ function ProfileMenu() {
           <ListItemIcon>
             <AccountCircleIcon fontSize="small" />
           </ListItemIcon>
-          Profile
+          个人资料
         </MenuItem>
         <MenuItem onClick={handleLogout}>
           <ListItemIcon>
             <LogoutIcon fontSize="small" />
           </ListItemIcon>
-          Logout
+          退出
         </MenuItem>
       </Menu>
     </Box>
@@ -185,7 +185,7 @@ function Navbar() {
             disableFocusRipple
             disableRipple
           >
-            Joyful Savings Jar
+            乐存
           </NavButton>
 
         )}
@@ -196,28 +196,28 @@ function Navbar() {
             variant="text"
             color="primary"
           >
-            About
+            关于
           </NavButton>
           <NavButton
             href="/ledger"
             variant="text"
             color="primary"
           >
-              Ledger
+              记账本
           </NavButton>
           <NavButton
             href="/stats"
             variant="text"
             color="primary"
           >
-              Stats
+              数据
           </NavButton>
           <NavButton
             href="/task"
             variant="text"
             color="primary"
           >
-            Task
+            任务
           </NavButton>
         </Box>
         <Box className="nav-icons">

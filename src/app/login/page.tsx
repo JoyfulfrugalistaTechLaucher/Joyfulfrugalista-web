@@ -63,7 +63,7 @@ const LoginPage: React.FC = () => {
             variant="h4"
             sx={{letterSpacing: "0.1em"}}
           >
-            LOGIN
+            登录
           </Typography>
           <Box
             component="form"
@@ -140,7 +140,7 @@ const LoginPage: React.FC = () => {
                 borderRadius: 3,
               }}
             >
-              Log in
+              登录
             </Button>
             <Link
               variant="body2"
@@ -153,7 +153,7 @@ const LoginPage: React.FC = () => {
               }}
               onClick={() => router.push("/register")}
             >
-              Create Account
+              创建账号
             </Link>
           </Box>
         </Box>

@@ -24,7 +24,7 @@ const AddPage: React.FC = () => {
             // 保存数据到数据库
             addEntryToDatabase(uid, formattedDate, amount, selectedCategory, description)
                 .then(() => {
-                    toast.success('Added successfully!', {
+                    toast.success('已成功添加！', {
                         position: "top-center",
                         autoClose: 3000,
                         hideProgressBar: false,
@@ -39,7 +39,7 @@ const AddPage: React.FC = () => {
                     setDescription('');
                 })
                 .catch((error) => {
-                    toast.error(`Error adding entry: ${error.message}`, {
+                    toast.error(`添加条目出错： ${error.message}`, {
                         position: "top-center",
                         autoClose: 3000,
                         hideProgressBar: false,
@@ -50,7 +50,7 @@ const AddPage: React.FC = () => {
                     });
                 });
         } else {
-            toast.error('UID or selected category is missing', {
+            toast.error('缺少 UID 或所选类别', {
                 position: "top-center",
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -97,7 +97,7 @@ const AddPage: React.FC = () => {
                         <input
                             type="number"
                             style={styles.amountInput}
-                            placeholder="Amount"
+                            placeholder="数目"
                             value={amount}
                             onChange={(e) => setAmount(e.target.value)}
                         />
@@ -105,7 +105,7 @@ const AddPage: React.FC = () => {
                         <input
                             type="text"
                             style={styles.descriptionInput}
-                            placeholder="Description"
+                            placeholder="描述"
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
                         />
@@ -114,7 +114,7 @@ const AddPage: React.FC = () => {
                     {/* 保存按钮 */}
                     <div style={styles.saveButtonContainer}>
                         <button style={styles.saveButton} onClick={handleSave}>
-                            Save
+                            保存
                         </button>
                     </div>
 

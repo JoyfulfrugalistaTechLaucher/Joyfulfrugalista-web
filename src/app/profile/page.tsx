@@ -134,10 +134,10 @@ function ProfilePage() {
 
 
       setEdited(false);
-      console.log("Profile updated successfully");
+      console.log("个人信息已成功更新");
       // TODO: show a success message to the user
     } catch (error) {
-      console.error("Error updating profile: ", error);
+      console.error("更新个人信息出错： ", error);
       // TODO: show an error message to the user here
     } finally {
       setLoading(false);
@@ -147,7 +147,7 @@ function ProfilePage() {
   const onCancel = () => {
     setEdited(false);
     setUserInfo(origUserInfo);
-    console.log("Original profile: ", origUserInfo);
+    console.log("原始个人信息：", origUserInfo);
   };
 
   const handleLogout = async () => {

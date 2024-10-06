@@ -12,32 +12,31 @@ interface PieChartComponentProps {
 }
 
 const categories = [
-    'Housing', 'Household', 'Utilities', 'Transport', 'Leisure', 'Holidays', 'Wellbeing', 'Education', 'Grooming',
-    'Gifts', 'Christmas', 'Insurance', 'Childcare', 'Food', 'Health', 'Appearance', 'Lifestyle', 'Treat yourself'
+    '住房', '家居', '生活缴费', '交通', '休闲', '假期', '身心健康', '教育', '个人护理',
+    '礼物', '圣诞节', '保险', '托儿', '食品', '健康', '外貌', '生活方式', '犒劳自己'
 ];
 
-
-// Create a mapping of types and colors to ensure that colors also correspond to types one to one
 const categoryColorMap = {
-    'Housing': '#FF6384',
-    'Household': '#36A2EB',
-    'Utilities': '#FFCE56',
-    'Transport': '#FF9F40',
-    'Leisure': '#4BC0C0',
-    'Holidays': '#9966FF',
-    'Wellbeing': '#FF6384',
-    'Education': '#36A2EB',
-    'Grooming': '#FFCE56',
-    'Gifts': '#FF9F40',
-    'Christmas': '#4BC0C0',
-    'Insurance': '#9966FF',
-    'Childcare': '#FF6384',
-    'Food': '#36A2EB',
-    'Health': '#FFCE56',
-    'Appearance': '#FF9F40',
-    'Lifestyle': '#4BC0C0',
-    'Treat yourself': '#9966FF'
+    '住房': '#FF6384',
+    '家居': '#36A2EB',
+    '生活缴费': '#FFCE56',
+    '交通': '#FF9F40',
+    '休闲': '#4BC0C0',
+    '假期': '#9966FF',
+    '身心健康': '#FF6384',
+    '教育': '#36A2EB',
+    '个人护理': '#FFCE56',
+    '礼物': '#FF9F40',
+    '圣诞节': '#4BC0C0',
+    '保险': '#9966FF',
+    '托儿': '#FF6384',
+    '食品': '#36A2EB',
+    '健康': '#FFCE56',
+    '外貌': '#FF9F40',
+    '生活方式': '#4BC0C0',
+    '犒劳自己': '#9966FF'
 };
+
 
 
 const styles: { [key: string]: React.CSSProperties } = {

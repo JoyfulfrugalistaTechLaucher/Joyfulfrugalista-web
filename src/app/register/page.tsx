@@ -63,14 +63,14 @@ const RegisterPage: React.FC = () => {
 
       // 显示成功信息
       setSuccess(
-        "Registration successful! Please check your email for verification."
+        "注册成功！ 请检查您的电子邮件以进行验证"
       );
 
       // 跳转到主页
       setTimeout(() => router.push("/"), 3000); // 延迟跳转，让用户有时间看到成功消息
     } catch (err) {
-      setError("Registration failed. Please check your details and try again.");
-      console.error("Registration error:", err);
+      setError("注册失败。 请检查您的详细信息并重试");
+      console.error("注册错误：", err);
     }
   };
 
@@ -95,7 +95,7 @@ const RegisterPage: React.FC = () => {
               textTransform: "uppercase",
             }}
           >
-            Register
+            注册
           </Typography>
           <Box
             component="form"
@@ -234,7 +234,7 @@ const RegisterPage: React.FC = () => {
                 },
               }}
             >
-              Register
+              注册
             </Button>
             <Link
               href="#"
@@ -251,7 +251,7 @@ const RegisterPage: React.FC = () => {
               }}
               onClick={() => router.push("/login")}
             >
-              Already have an account? Log in
+              已有账户？ 登录
             </Link>
           </Box>
         </Box>

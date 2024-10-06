@@ -24,7 +24,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { User, UserProfileProps } from '../../interface';
 
 export const MAX_NAME_LEN = 30;
-export const GENDERS: string[] = ['Male', 'Female', 'Secret', 'Trans'];
+export const GENDERS: string[] = ['男', '女', '秘密', '跨性别'];
 
 export function UserName({user, handler}: UserProfileProps) {
   const isValid = (value: string) => value.length <= MAX_NAME_LEN;
@@ -38,12 +38,12 @@ export function UserName({user, handler}: UserProfileProps) {
      error={!isValid(user.name)}
      required
      autoComplete="off"
-     label="Name"
+     label="姓名"
      type="text"
      onChange={onChange}
      value={user.name}
-     placeholder="Joyful Jar"
-     helperText={isValid(user.name) ? "" : "Name length exceeds 30 characters"}
+     placeholder="乐存"
+     helperText={isValid(user.name) ? "" : "姓名长度超过 30 个字符"}
     />
   );
 }
@@ -85,11 +85,11 @@ export function UserPhone({user, handler}: UserProfileProps) {
       fullWidth
       error={!isValidPhoneNumber(fmtPhone)}
       autoComplete="off"
-      label="Mobile"
+      label="电话"
       type="tel"
       value={fmtPhone}
       onChange={onChange}
-      helperText={isValidPhoneNumber(fmtPhone) ? "" : "Mobile must be '04xx xxx xxx'"}
+      helperText={isValidPhoneNumber(fmtPhone) ? "" : "电话号码格式必须为 '04xx xxx xxx'"}
       placeholder="0412 356 789"
     />
   );
@@ -109,7 +109,7 @@ export function UserGender({user, handler}: UserProfileProps) {
         labelId="user-gender-label"
         id="user-gender-select"
         value={user.gender}
-        label="Gender"
+        label="性别"
         onChange={onSelect}
       >
         {GENDERS.map((gender) => (
@@ -160,11 +160,11 @@ export function UserEmail({user, handler}: UserProfileProps) {
   const onSave = () => {
     if (userEmail.trim() === '') {
       setValid(false);
-      setError("Email is required.");
+      setError("需要电子邮件");
     }
     else if (!isEmail(userEmail)) {
       setValid(false);
-      setError("Email address format is not valid.");
+      setError("电子邮件地址格式无效");
     } else {
       handler({ email: userEmail });
       setEditing(false);
@@ -182,11 +182,11 @@ export function UserEmail({user, handler}: UserProfileProps) {
 
     if (newEmail.trim().length === 0) {
       setValid(false);
-      setError("Email is required.");
+      setError("需要电子邮件");
     }
     else if (!isEmail(newEmail)) {
       setValid(false);
-      setError("Email address format is not valid.");
+      setError("电子邮件地址格式无效");
     }
     else {
       setValid(true);
@@ -205,13 +205,13 @@ export function UserEmail({user, handler}: UserProfileProps) {
         htmlFor="outlined-adornment-email"
         color="primary"
       >
-        Email
+        邮箱
       </InputLabel>
       <OutlinedInput
         id="outlined-adornment-email"
         error={!valid}
         autoComplete="off"
-        label="Email"
+        label="邮箱"
         type="email"
         onChange={onChange}
         value={userEmail}
@@ -249,7 +249,7 @@ export function UserEmail({user, handler}: UserProfileProps) {
                       onMouseUp={onMouseUpEmail}
                       onMouseDown={onMouseDownEmail}
                     >
-                      Cancel
+                      取消
                     </Button>
                     <Button
                       variant="contained"
@@ -257,7 +257,7 @@ export function UserEmail({user, handler}: UserProfileProps) {
                       onMouseUp={onMouseUpEmail}
                       onMouseDown={onMouseDownEmail}
                     >
-                      Save
+                      保存
                     </Button>
                   </Fragment>
                 )}
@@ -280,7 +280,7 @@ export function UserEmail({user, handler}: UserProfileProps) {
                   onMouseDown={onMouseDownEmail}
                   startIcon={<EditIcon />}
                 >
-                  Edit
+                  编辑
                 </Button>
               ))
             }

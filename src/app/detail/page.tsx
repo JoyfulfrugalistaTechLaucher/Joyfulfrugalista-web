@@ -132,11 +132,11 @@ const Detail: React.FC = () => {
 
             <div style={styles.content}>
                 <div style={styles.board}>
-                    <span style={styles.boardLabel}>You have saved</span>
+                    <span style={styles.boardLabel}>你已经存了</span>
                     <span style={styles.amount}>${totalSavingAmount}</span>
                 </div>
                 <div style={styles.subBoard}>
-                    <span style={styles.subBoardLabel}>You saved ${dailySavingAmount} today!</span>
+                    <span style={styles.subBoardLabel}>你今天已经存了 ${dailySavingAmount}</span>
                 </div>
                 <BackgroundWrapper>
                     <div style={{ ...styles.scrollView, width: '100%' }}>
@@ -158,7 +158,7 @@ const Detail: React.FC = () => {
                                 );
                             })
                         ) : (
-                            <span>No data available</span>
+                            <span>无数据</span>
                         )}
                     </div>
                 </BackgroundWrapper>

@@ -82,7 +82,7 @@ export function UserMonthGoal({ user }: ProfileGoalProps) {
               color={goalReached ? 'success' : 'primary'}
               sx={{ whiteSpace: 'nowrap', padding: '4px 8px', minWidth: 'fit-content' }}
             >
-              {goalReached ? 'Set New Goal' : 'Edit Goal'}
+              {goalReached ? '设定新目标' : '编辑目标'}
             </Button>
           </Box>
         </Stack>

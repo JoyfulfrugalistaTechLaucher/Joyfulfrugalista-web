@@ -51,7 +51,7 @@ function TaskPage() {
   const handleSaveGoal = async () => {
     setLoading(true);
     if (!uid || goal <= 0) {
-      setError('Invalid goal. Please enter a valid number.');
+      setError('无效目标。 请输入有效数字');
       setLoading(false);
       return;
     }
@@ -63,8 +63,8 @@ function TaskPage() {
       });
       router.push('/profile'); // Redirect back to profile page after saving
     } catch (error) {
-      console.error('Error setting goal:', error);
-      setError('Failed to update goal. Please try again.');
+      console.error('错误设置目标：', error);
+      setError('更新目标失败，请重试');
       setLoading(false);
     }
   };
@@ -93,14 +93,14 @@ function TaskPage() {
       >
         <Stack spacing={2}>
           <TextField
-            label="Total Saving Goal"
+            label="总储蓄目标"
             type="number"
             variant="outlined"
             fullWidth
             value={goal}
             onChange={(e) => setGoal(Number(e.target.value))}
             error={!!error}
-            helperText={error || 'Set your total savings goal in dollars'}
+            helperText={error || '设定以澳元为单位的总储蓄目标'}
           />
 
           <Stack direction="row" spacing={2} justifyContent="center" sx={{ mt: 4 }}>
@@ -110,13 +110,13 @@ function TaskPage() {
               onClick={handleSaveGoal}
               disabled={goal <= 0}
             >
-              Save Goal
+              保存目标
             </Button>
             <Button
               variant="outlined"
               onClick={() => router.push('/profile')}
             >
-              Cancel
+              取消
             </Button>
           </Stack>
         </Stack>

@@ -9,8 +9,8 @@ import ThemeRegistry from "./themeRegistry";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Joyful Savings Jar",
-  description: "Your ultimate savings companion",
+  title: "乐存",
+  description: "您的终极储蓄伴侣",
 };
 
 export default function RootLayout({

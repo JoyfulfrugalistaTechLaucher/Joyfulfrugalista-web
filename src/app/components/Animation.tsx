@@ -33,9 +33,9 @@ const Animation: React.FC<AnimationProps> = ({ uid }) => {
 
                 if (goal <= totalMoneyAdded) {
                     setTargetReached(true);
-                    console.log("Target reached!");
+                    console.log("达到目标！");
                 }
-                console.log("Total: " + totalMoneyAdded + "Goal: " + goal);
+                console.log("总计: " + totalMoneyAdded + "目标: " + goal);
             } catch (error) {
                 console.error("Error fetching goal status from API:", error);
             }
@@ -49,7 +49,7 @@ const Animation: React.FC<AnimationProps> = ({ uid }) => {
             {targetReached && animationPlaying && (
                 <div style={styles.animationOverlay} onClick={handleCloseAnimation}>
                     <div style={styles.messageContainer}>
-                        <h1 style={styles.congratsText}>You reached your goal!</h1>
+                        <h1 style={styles.congratsText}>你达到了目标！</h1>
                     </div>
                     <video
                         src="/assets/targetReachedAnimation.mp4"

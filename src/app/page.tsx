@@ -36,7 +36,7 @@ const HomePage = () => {
                 }
               }}
             >
-              Joyful Savings Jar will help you save.
+              乐存将帮助您储蓄
             </Typography>
           </Box>
           <Box>
@@ -47,13 +47,12 @@ const HomePage = () => {
                 }
               }}
             >
-              Track your spending and watch your savings grow.
-              Join our community of joyful savers now.
+              跟踪您的支出，见证您的储蓄增长。 现在就加入我们的乐存的社区！
             </Typography>
           </Box>
           <Box>
             <Button variant="outlined" color="primary">
-              Learn More
+              了解更多
             </Button>
           </Box>
         </Stack>
