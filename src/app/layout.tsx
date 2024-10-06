@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "./context/AuthContext";
 import { auth } from "./config/firebaseConfig";
 import { useEffect } from "react";
+import ThemeRegistry from "./themeRegistry";
 
 const inter = Inter({ subsets: ["latin"] });
 

@@ -13,17 +13,19 @@ import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
 } from "firebase/auth";
-import { auth } from "../config/firebaseConfig";
+import { auth,db} from "../config/firebaseConfig";
 import { useAuth } from "../context/AuthContext";
-import "@fontsource/montserrat"; // 导入 Montserrat 字体
-import BackgroundWrapper from "../components/BackgroundWrapper"; // 导入背景组件
+import { ref, set } from "firebase/database";
+import "@fontsource/montserrat";
+import MainLayout from "../layouts/MainLayout";
+
 
 const RegisterPage: React.FC = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [error, setError] = useState<string>("");
+  const [success, setSuccess] = useState<string>("");
 
   const { setUid } = useAuth();
   const router = useRouter();
@@ -48,6 +50,17 @@ const RegisterPage: React.FC = () => {
       // 保存 UID 到上下文
       setUid(user.uid);
 
+      //将用户信息保存到 Realtime Database
+      await set(ref(db, "users/" + user.uid), {
+        email: user.email,
+        name: "",
+        phone: "",
+        task: {
+          goal: 0,
+          setDate: "",
+        },
+      });
+
       // 显示成功信息
       setSuccess(
         "Registration successful! Please check your email for verification."
@@ -62,7 +75,7 @@ const RegisterPage: React.FC = () => {
   };
 
   return (
-    <BackgroundWrapper>
+    <MainLayout>
       <Container component="main" maxWidth="xs">
         <Box
           sx={{
@@ -243,7 +256,7 @@ const RegisterPage: React.FC = () => {
           </Box>
         </Box>
       </Container>
-    </BackgroundWrapper>
+    </MainLayout>
   );
 };
 

@@ -1,16 +1,18 @@
 import { ThemeOptions } from '@mui/material/styles';
 
+// Basic options for all dependecies
 export const themeOptions: ThemeOptions = {
   palette: {
     mode: 'light',
     primary: {
       main: '#603a6b',
+      light: '#9a7aa3',
     },
     secondary: {
       main: '#f3c875',
     },
     error: {
-      main: '#fc96bb',
+      main: '#ff2172',
     },
     warning: {
       main: '#ffc397',
