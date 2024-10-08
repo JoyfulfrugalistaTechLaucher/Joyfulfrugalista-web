@@ -1,19 +1,19 @@
 // Common interfaces
 export interface Task {
-  goal: number,
-  setDate: string,
+  goal: number;
+  setDate: string;
 };
 
 export interface User {
-  email: string,
-  name: string,
-  gender?: string,
-  phone?: string,
-  avatar?: string,
-  task?: Task,
+  email: string;
+  name: string;
+  gender?: string;
+  phone?: string;
+  avatar?: string;
+  task?: Task;
 };
 
 export interface UserProfileProps {
-  user: User,
+  user: User;
   handler: (update: Partial<User>) => void;
 };

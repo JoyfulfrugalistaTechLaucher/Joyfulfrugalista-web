@@ -24,21 +24,23 @@ body {
   margin: 0 auto;
 }
 
+/* background image container */
+.bgwrapper {
+  min-height: 100vh;
+  background-image: url("../../public/assets/background.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
 .header {
   background: transparent;
   padding: 10px 20px;
 }
 
 .nav-bar {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
+  @apply w-full flex justify-between items-center;
   margin: 1em auto;
-}
-
-.nav-home {
-  @apply flex justify-center max-sm:hidden no-underline;
-  flex: 1 0 auto;
 }
 
 .nav-routes {
@@ -47,13 +49,12 @@ body {
   flex: 4 0 auto;
 }
 
-
 .nav-routes li {
   cursor: pointer;
 }
 
 .nav-icons {
-  @apply flex justify-center items-center gap-x-2 pt-2;
+  @apply flex justify-center items-center gap-x-2;
 }
 
 .logo {
@@ -62,26 +63,20 @@ body {
 }
 
 .avatar-container {
-  @apply relative m-2 border border-2 border-black flex-none;
-  width: 140px;
-}
-
-.avatar {
-  height: 120px;
-  width: 120px;
-}
-
-.avatar img {
-  @apply h-full w-full;
+  @apply relative m-2 p-2 border border-2 border-black flex justify-center items-center;
 }
 
 .avatar-btn {
-  @apply absolute right-0 bottom-2;
+  @apply absolute right-0 bottom-4;
+}
+
+/* used by MUI `Container' which uses flexbox by default */
+.profile-page-layout {
+  @apply w-full m-4 relative;
 }
 
 .profile-goal-container {
-  @apply m-2 border-2 border-black rounded-md flex-none;
-  max-width: 100px;
+  @apply m-2 flex-none justify-center items-center;
 }
 
 .content {
@@ -96,8 +91,6 @@ body {
   justify-content: center;
   align-items: center;
   padding: 50px 20px;
-  /* background: url('/path-to-your-background-image.png') no-repeat center center;
-  background-size: cover; */
   width: 100%;
 }
 

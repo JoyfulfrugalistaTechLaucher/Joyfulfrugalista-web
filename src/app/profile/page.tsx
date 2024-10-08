@@ -24,7 +24,7 @@ import { useAuth } from "../context/AuthContext";
 import { auth } from "../config/firebaseConfig";
 import MainLayout from "../layouts/MainLayout";
 import Animation from '../components/Animation';
-import { UserAvatar } from './components/Avatar';
+import { CircImgBox } from '../components/ImgBox';
 import Castle from "../components/Castle";
 import {
   UserEmail,
@@ -49,12 +49,12 @@ const AvatarButton = styled(Button)(() => ({
 
 function AvatarSelection({user, handler}: UserProfileProps) {
   const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const sm = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
     <ImageList
       sx={{ width: 260, height: 380 }}
-      cols={ isSmallScreen ? 1 : 2}
+      cols={ sm ? 1 : 2}
       rowHeight={120}
       gap={2}
     >
@@ -86,12 +86,13 @@ function ProfilePage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [editAvt, setEditAvt] = useState<boolean>(false);
   const [edited, setEdited] = useState<boolean>(false);
-  const [showAnimation, setShowAnimation] = useState<boolean>(true);
-  const { uid, isLoggedIn, setUid } = useAuth();
+  const [showAnimation, setShowAnimation] = useState<boolean>(false);
+  const { uid, isLoggedIn } = useAuth();
   const router = useRouter();
 
   const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const sm = useMediaQuery(theme.breakpoints.down('sm'));
+  const md = useMediaQuery(theme.breakpoints.up('sm'));
 
   // handlers
   const handleUserInfoChange = (update: Partial<User>) => {
@@ -101,7 +102,7 @@ function ProfilePage() {
   };
 
   const onEditAvt = () => {
-      setEditAvt(!editAvt);
+    setEditAvt(!editAvt);
   }
 
   const onSave = async () => {
@@ -132,7 +133,6 @@ function ProfilePage() {
         task: userInfo.task === undefined ? {goal: 0, setDtate: ''} : userInfo.task,
       });
 
-
       setEdited(false);
       console.log("Profile updated successfully");
       // TODO: show a success message to the user
@@ -148,24 +148,6 @@ function ProfilePage() {
     setEdited(false);
     setUserInfo(origUserInfo);
     console.log("Original profile: ", origUserInfo);
-  };
-
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      setUid(null);
-      localStorage.setItem("isLoggedIn", "false");
-      router.replace("/login");
-    } catch (error) {
-      console.error("Error signing out:", error);
-    }
-  };
-
-  // Handle animation toggle and save to localStorage
-  const handleAnimationToggle = () => {
-    const newShowAnimation = !showAnimation;
-    setShowAnimation(newShowAnimation);
-    localStorage.setItem('showAnimation', JSON.stringify(newShowAnimation));
   };
 
   // start rendering the page
@@ -184,10 +166,6 @@ function ProfilePage() {
           setUserInfo({...DUSER, ...user});
           setUserOrigInfo({...DUSER, ...user});
           setLoading(false);
-
-          // Fetch animation preference from localStorage
-          const savedShowAnimation = localStorage.getItem('showAnimation');
-          setShowAnimation(savedShowAnimation === null ? true : JSON.parse(savedShowAnimation));
 
         } catch (error) {
           console.error("Error fetching user data:", error);
@@ -218,86 +196,73 @@ function ProfilePage() {
   return (
     <MainLayout>
       <Container
-        component="main"
-        maxWidth="lg"
-        sx={{ mt: 4, mb: 4, position: "relative" }}
+        component="div"
+        className="profile-page-layout"
       >
-        <Stack>
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="space-between"
-          >
-            <Box className="avatar-container">
-              <UserAvatar user={userInfo} />
-              {isSmallScreen ? (
-                <IconButton
-                  aria-label="select new profile image"
-                  onClick={onEditAvt}
-                  className="avatar-btn"
-                >
-                  <EditIcon fontSize="small" />
-                </IconButton>
-              ) : (
-                <AvatarButton
-                  component="label"
-                  variant="outlined"
-                  aria-label="upload new profile image"
-                  onClick={onEditAvt}
-                  startIcon={<EditIcon fontSize="small" />}
-                  size="small"
-                  className="avatar-btn"
-                >
-                  Edit
-                </AvatarButton>
-              )}
-            </Box>
+        <Stack direction="row" className="justify-between items-center">
+          {/* avatar */}
+          <Box className="avatar-container">
+            <CircImgBox
+              imgSrc={userInfo.avatar}
+              alt={`${userInfo.name}'s profile image`}
+              size={ sm ? 200 : 140}
+            />
+            <AvatarButton
+              component="label"
+              variant="outlined"
+              aria-label="upload new profile image"
+              onClick={onEditAvt}
+              startIcon={<EditIcon fontSize="small" />}
+              size="small"
+              className="avatar-btn"
+            >
+              Edit
+            </AvatarButton>
+          </Box>
 
-            <UserMonthGoal user={userInfo} />
-          </Stack>
-
-          <Stack spacing={2}>
-            {/* optional fields */}
-            <UserEmail user={userInfo} handler={handleUserInfoChange} />
-            <UserName user={userInfo} handler={handleUserInfoChange}/>
-
-            {/* optional fields */}
-            <Stack direction={isSmallScreen ? "column" : "row"} spacing={2}>
-              <UserGender user={userInfo} handler={handleUserInfoChange}/>
-              <UserPhone user={userInfo} handler={handleUserInfoChange} />
-            </Stack>
-          </Stack>
+          {/* goal display on midlle or large screens */}
+          {md && <UserMonthGoal
+                   user={userInfo}
+                   show={showAnimation}
+                   handleShow={setShowAnimation}
+          />}
         </Stack>
 
-        {edited &&
-          <Stack
-            direction="row"
-            justifyContent="center"
-            spacing={4}
-            sx={{ mt: 4 }}
-          >
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={onSave}
-            >Save
-            </Button>
-            <Button
-              variant="outlined"
-              onClick={onCancel}
-            >Cancel
-            </Button>
-          </Stack>
+        {/* goal display on smaller screens */}
+        {sm &&
+          <UserMonthGoal
+            user={userInfo}
+            show={showAnimation}
+            handleShow={setShowAnimation}
+          />
         }
 
-        {/* Toggle for showing animation */}
-        <Button
-          variant="outlined"
-          onClick={handleAnimationToggle}
-          sx={{ mt: 4 }}
+        {/* informatoin fields */}
+        <Stack className="mt-4" spacing={2}>
+          <UserEmail user={userInfo} handler={handleUserInfoChange} />
+          <UserName user={userInfo} handler={handleUserInfoChange}/>
+          <UserGender user={userInfo} handler={handleUserInfoChange}/>
+          <UserPhone user={userInfo} handler={handleUserInfoChange} />
+        </Stack>
+
+        {/* save and cancel buttons */}
+        <Stack
+          direction="row"
+          spacing={4}
+          className="justify-center items-center mt-4"
         >
-          {showAnimation ? 'Hide Animation' : 'Show Animation'}
-        </Button>
+          <Button
+            disabled={!edited}
+            variant="contained"
+            color="primary"
+            onClick={onSave}
+          >
+            Save
+          </Button>
+          <Button variant="outlined" onClick={onCancel}>
+            Cancel
+          </Button>
+        </Stack>
 
         {/* Animation component */}
         {uid && showAnimation && <Animation uid={uid} />}

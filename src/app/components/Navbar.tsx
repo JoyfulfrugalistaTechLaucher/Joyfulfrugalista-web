@@ -61,7 +61,6 @@ function ProfileMenu() {
   const { user, loading } = useUserData(uid);
   const router = useRouter();
 
-  console.log("User: ", user);
   // handlers
   const handleClick = (e: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(e.currentTarget);
@@ -156,17 +155,15 @@ const NavButton = styled(Button)(({ theme }) => ({
   color: theme.palette.primary.main,
 }));
 
-
-
 function Navbar() {
 
   const theme = useTheme();
-  const isSm = useMediaQuery(theme.breakpoints.down('sm'));
+  const sm = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
     <FlatAppBar component="nav" color="transparent" position="static">
       <Toolbar className="nav-bar">
-        {isSm ? (
+        {sm ? (
           <IconButton
             size="large"
             edge="start"

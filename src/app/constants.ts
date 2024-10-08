@@ -23,11 +23,11 @@ export const AVATARS: string[] = [
 export const DUSER: User = {
   email: 'example@com.au',
   name: 'Joyfule Jar',
-  gender: 'Secret',
+  gender: 'Prefer not to say',
   phone: '',
   avatar: DEFAULT_AVATAR,
   task: {
-    goal: 0,
-    setDate: '',
+    goal: 100,
+    setDate: '2024-10-08',
   },
 };
