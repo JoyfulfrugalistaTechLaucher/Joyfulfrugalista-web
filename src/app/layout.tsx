@@ -1,10 +1,8 @@
+import React from 'react';
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
+import "./styles/global.css";
 import { AuthProvider } from "./context/AuthContext";
-import { auth } from "./config/firebaseConfig";
-import { useEffect } from "react";
-import ThemeRegistry from "./themeRegistry";
 
 const inter = Inter({ subsets: ["latin"] });
 

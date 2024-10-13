@@ -15,6 +15,8 @@ export default tseslint.config(
         HTMLElement: 'readonly',
         HTMLInputElement: 'readonly',
         HTMLButtonElement: 'readonly',
+        requestAnimationFrame: 'readonly',
+        cancelAnimationFrame:  'readonly',
       },
     },
     rules: {

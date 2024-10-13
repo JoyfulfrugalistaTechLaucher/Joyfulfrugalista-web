@@ -1,15 +1,19 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Box, Button, CircularProgress, Container, Stack, TextField } from '@mui/material';
+import { Box, Button, CircularProgress, Container, Divider, Stack, TextField } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { ref, set, get, getDatabase } from 'firebase/database';
 import { db } from '../config/firebaseConfig';
-import { useAuth } from '../context/AuthContext';
-import MainLayout from '../layouts/MainLayout';
+import { useAuth } from '@/app/context/AuthContext';
+import MainLayout from '@/app/layouts/MainLayout';
+import { SemiCircGoalPanel } from '@/app/components/Goal';
 
 function TaskPage() {
   const [goal, setGoal] = useState<number>(0); // Initialize as 0
+  const [progress, setProgress] = useState<number>(0);
+  const [goalReached, setGoalReached] = useState<boolean>(false);
+  const [totalSavings, setTotalSavings] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const { uid, isLoggedIn } = useAuth();
@@ -22,7 +26,7 @@ function TaskPage() {
 
       try {
         const response = await fetch(`/api/savings/${uid}`);
-        
+
         if (!response.ok) {
           console.error("Error fetching user goal from API:", response.status);
           setError("Failed to fetch user goal.");
@@ -31,8 +35,18 @@ function TaskPage() {
         }
 
         const data = await response.json();
-        setGoal(data.goal);
+        const { totalMoneyAdded, goal } = data;
+        setGoal(goal);
         setLoading(false);
+        const prop = (totalMoneyAdded / goal) * 100;
+        const prog = prop < 1 ? 1 : Math.floor(prop);
+        setTotalSavings(totalMoneyAdded);
+        setProgress(prog);
+
+        if (totalMoneyAdded >= goal) {
+          setGoalReached(true);
+        }
+
       } catch (error) {
         console.error("Error fetching user goal:", error);
         setError("Failed to fetch user goal.");
@@ -91,7 +105,15 @@ function TaskPage() {
         maxWidth="sm"
         sx={{ mt: 4, mb: 4 }}
       >
-        <Stack spacing={2}>
+        <SemiCircGoalPanel
+          prog={progress}
+          total={totalSavings}
+          reached={goalReached}
+        />
+
+        <Divider variant="middle" />
+
+        <Stack spacing={2} className="mt-6">
           <TextField
             label="Total Saving Goal"
             type="number"
@@ -103,7 +125,12 @@ function TaskPage() {
             helperText={error || 'Set your total savings goal in dollars'}
           />
 
-          <Stack direction="row" spacing={2} justifyContent="center" sx={{ mt: 4 }}>
+          <Stack
+            direction="row"
+            spacing={2}
+            className="justify-center"
+            sx={{ mt: 4 }}
+          >
             <Button
               variant="contained"
               color="primary"

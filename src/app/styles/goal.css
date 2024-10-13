@@ -1,0 +1,33 @@
+/* styles for goal panels */
+.semi-progress {
+  @apply relative text-center m-4 items-center;
+  /* can be overriden */
+  --size: 80vw;
+  width: var(--size);
+  max-width: 540px;
+  /* adjust overflow */
+  height: calc(var(--size) / 2 + 14px);
+  margin: 10px auto;
+}
+
+.semi-progress-overflow {
+  @apply relative -mb-3.5 p-2 overflow-hidden;
+  width: var(--size);
+  height: calc(var(--size) / 2);
+}
+
+.semi-progress-bar {
+ @apply absolute top-0 left-0;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  border: 10px solid #aa96b0;
+  border-bottom-color: #603a6b;
+  border-right-color: #603a6b;
+}
+
+@media (min-width: 600px) {
+  .semi-progress {
+    --size: 500px;
+  }
+}

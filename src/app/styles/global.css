@@ -1,8 +1,10 @@
+/* tailwind */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* custom colors with alpha values */
+/* custom modules */
+@import 'goal.css';
 
 body {
   @apply font-sans;
@@ -27,7 +29,7 @@ body {
 /* background image container */
 .bgwrapper {
   min-height: 100vh;
-  background-image: url("../../public/assets/background.jpg");
+  background-image: url("../../../public/assets/background.jpg");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -86,48 +88,12 @@ body {
 }
 
 
-.home-hero-container {
-  display: flex; /* Ensure the container is a flex container */
-  justify-content: center;
-  align-items: center;
-  padding: 50px 20px;
-  width: 100%;
-}
-
-.home-hero {
-  max-width: 1200px; /* Set a max width for the hero content */
-  width: 100%; /* Ensure it takes the full width of its container */
-}
-
 .footer {
   text-align: center;
   padding: 10px;
   background: transparent;
   width: 100%; /* Ensure footer spans the full width */
   font-size: 1rem;
-}
-
-.hero-image {
-  flex: 1;
-}
-
-.hero-text {
-  flex: 2;
-  max-width: 600px;
-}
-
-.hero-text h1 {
-  font-size: 2.5rem;
-  margin-bottom: 20px;
-}
-
-.hero-text p {
-  font-size: 1.2rem;
-  margin-bottom: 10px;
-}
-
-.hero-text button {
-  margin-top: 20px;
 }
 
 .login-container {
@@ -139,48 +105,3 @@ body {
   text-align: center;
   color: white;
 }
-
-.separator {
-  margin: 20px 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.separator::before,
-.separator::after {
-  content: '';
-  flex: 1;
-  border-bottom: 1px solid white;
-}
-
-.separator::before {
-  margin-right: .25em;
-}
-
-.separator::after {
-  margin-left: .25em;
-}
-
-.terms {
-  margin-top: 20px;
-  font-size: 0.8rem;
-}
-
-
-
-.goal-container {
-  @apply rounded-md w-4/5;
-  background-color: rgba(41, 20, 74, 0.83);
-  height: 80px;
-  padding: .5em;
-}
-
-.prog-bar {
-  @apply rounded-md;
-  height: 20px;
-  background-color: rgba(242, 200, 117, 1);
-}
-
-/* background: rgba(217, 114, 157, 1);
- */

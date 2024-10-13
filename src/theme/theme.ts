@@ -30,6 +30,7 @@ export const themeOptions: ThemeOptions = {
       defaultProps: {
         variantMapping: {
           body2: 'span',
+          subtitle2: 'span',
         }
       },
       variants: [
@@ -38,6 +39,14 @@ export const themeOptions: ThemeOptions = {
           style: {
             fontSize: '0.875rem',
             lineHeight: '1.25rem',
+          }
+        },
+        {
+          props: { variant: 'subtitle2' },
+          style: {
+            fontSize: '1rem',
+            lineHeight: '1.5rem',
+            fontWeight: 'normal',
           }
         }
       ]
