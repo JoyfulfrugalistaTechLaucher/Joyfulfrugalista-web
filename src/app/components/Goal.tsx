@@ -23,7 +23,7 @@ import { User } from '@/app/interface';
 interface ProfileGoalProps {
   user: User;
   show: boolean;
-  handleShow: (show: boolean) => void;
+  handleShow: (hs: boolean) => void;
 }
 
 interface CircProgressProps {
@@ -109,6 +109,7 @@ function easeInOutQuad(time: number): number {
   return time < 0.5 ? 2 * time * time : -1 + (4 - 2 * time) * time;
 }
 
+// TODO: make font responds to screen sizes more smoothly
 // For task page.  Mui does not ship a default semi-circular progress
 // bar so we make our own one.
 export function SemiCircGoalPanel({reached, prog, total, size}: CircProgressProps) {
