@@ -137,7 +137,7 @@ function ProfileMenu() {
 
   if (!isLoggedIn) {
     return  (
-      <Button variant="text" href="/login">
+      <Button variant="outlined" href="/login">
         Login
       </Button>
     );
