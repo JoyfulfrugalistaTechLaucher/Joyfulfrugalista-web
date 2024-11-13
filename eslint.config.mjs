@@ -8,10 +8,15 @@ export default tseslint.config(
     languageOptions: {
       globals: {
         console: 'readonly',
+        fetch:   'readonly',
+        then:    'readonly',
+        window:  'readonly',
         localStorage: 'readonly',
         HTMLElement: 'readonly',
         HTMLInputElement: 'readonly',
         HTMLButtonElement: 'readonly',
+        requestAnimationFrame: 'readonly',
+        cancelAnimationFrame:  'readonly',
       },
     },
     rules: {

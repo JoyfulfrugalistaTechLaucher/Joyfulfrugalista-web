@@ -7,23 +7,11 @@ interface BackgroundWrapperProps {
 }
 
 const BackgroundWrapper: React.FC<BackgroundWrapperProps> = ({ children }) => {
-    return (
-        <Box
-            sx={{
-                minHeight: "100vh",
-                backgroundImage: "url('/assets/background.jpg')",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-            }}
-        >
-            {children}
-        </Box>
-    );
+  return (
+    <Box className="bgwrapper" >
+      {children}
+    </Box>
+  );
 };
 
 export default BackgroundWrapper;

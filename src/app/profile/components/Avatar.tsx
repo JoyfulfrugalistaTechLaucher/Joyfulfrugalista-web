@@ -15,7 +15,6 @@ export function UserAvatar(props: {user: User}) {
       <Avatar
         src={props.user.avatar || DEFAULT_AVATAR}
         alt={`${props.user.name}'s profile image`}
-        className="avatar"
       >
       </Avatar>
     </Box>

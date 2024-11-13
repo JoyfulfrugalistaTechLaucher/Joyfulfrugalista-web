@@ -19,14 +19,14 @@ const HomePage = () => {
     <MainLayout>
       <Stack direction={{ md: "row", sm: "column" }} spacing={{xs: 4, md: 8}}
         justifyContent="center" alignItems="center">
-          <Box
-            component="img"
-            className="rounded-lg"
-            src="/assets/saving_jar.png"
-            alt="Saving Jar Logo"
-            width={{ md: imgSize, xs: (imgSize * 0.8)}}
-            height={{ md: imgSize, xs: (imgSize * 0.8)}}
-          />
+        <Box
+          component="img"
+          className="rounded-lg"
+          src="/assets/saving_jar.png"
+          alt="Saving Jar Logo"
+          width={{ md: imgSize, xs: (imgSize * 0.8)}}
+          height={{ md: imgSize, xs: (imgSize * 0.8)}}
+        />
         <Stack spacing={{md: 4, xs: 2}}>
           <Box>
             <Typography variant="h3" color="primary.main"
@@ -36,7 +36,7 @@ const HomePage = () => {
                 }
               }}
             >
-              Joyful Savings Jar will help you save.
+               Joyful Savings Jar will help you save.
             </Typography>
           </Box>
           <Box>
@@ -47,13 +47,13 @@ const HomePage = () => {
                 }
               }}
             >
-              Track your spending and watch your savings grow.
-              Join our community of joyful savers now.
+               Track your spending and watch your savings grow.
+               Join our community of joyful savers now.
             </Typography>
           </Box>
           <Box>
             <Button variant="outlined" color="primary">
-              Learn More
+                                                         Learn More
             </Button>
           </Box>
         </Stack>

@@ -55,6 +55,7 @@ const RegisterPage: React.FC = () => {
         email: user.email,
         name: "",
         phone: "",
+        avatar: "assets/portrait.png",
         task: {
           goal: 0,
           setDate: "",

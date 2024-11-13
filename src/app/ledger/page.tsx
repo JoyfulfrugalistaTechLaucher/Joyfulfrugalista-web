@@ -1,15 +1,60 @@
 "use client";
-
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import Image from 'next/image';
 import Detail from "../detail/page";
 import AddPage from "../addPage/page";
 import PieChartComponent from '../components/pieChart';
+import { useRouter } from "next/navigation";
+import { useAuth } from "../context/AuthContext";
+import { auth } from "../config/firebaseConfig";
+import { signOut } from "firebase/auth";
+import BackgroundWrapper from "../components/BackgroundWrapper";
+import {
+    Container,
+    Box,
+    Typography,
+    CircularProgress,
+    Grid,
+    Avatar,
+  } from "@mui/material";
 
 const LedgerPage: React.FC = () => {
     const [showModal, setShowModal] = useState(false);
     const [refreshDetail, setRefreshDetail] = useState(false); // 用于控制 Detail 刷新
     const [showPieChart, setShowPieChart] = useState(false);
+    const router = useRouter();
+    const { uid, isLoggedIn, setUid } = useAuth();
+    const [loading, setLoading] = useState(true);
+
+     useEffect(() => {
+    console.log("uid" + uid);
+
+    if (!isLoggedIn) {
+        setLoading(false);
+
+      router.replace("/login");
+    } else if (uid) {
+      console.log("succeed");
+      setLoading(false);
+
+     
+    }
+  }, [isLoggedIn, uid, router]);
+
+  if (loading) {
+    return (
+      <BackgroundWrapper>
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          minHeight="100vh"
+        >
+          <CircularProgress />
+        </Box>
+      </BackgroundWrapper>
+    );
+  }
 
     const toggleModal = () => {
         setShowModal(!showModal);

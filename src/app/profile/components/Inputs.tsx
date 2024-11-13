@@ -24,7 +24,12 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { User, UserProfileProps } from '../../interface';
 
 export const MAX_NAME_LEN = 30;
-export const GENDERS: string[] = ['Male', 'Female', 'Secret', 'Trans'];
+export const GENDERS: string[] = [
+  'Male',
+  'Female',
+  'Non-binary',
+  'Prefer not to say'
+];
 
 export function UserName({user, handler}: UserProfileProps) {
   const isValid = (value: string) => value.length <= MAX_NAME_LEN;

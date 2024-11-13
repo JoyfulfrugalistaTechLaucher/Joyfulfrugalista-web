@@ -5,8 +5,9 @@ export const themeOptions: ThemeOptions = {
   palette: {
     mode: 'light',
     primary: {
-      main: '#603a6b',
-      light: '#9a7aa3',
+      main:  '#603a6b',
+      light: '#aa96b0',
+      dark:  '#530e66',
     },
     secondary: {
       main: '#f3c875',
@@ -23,5 +24,32 @@ export const themeOptions: ThemeOptions = {
     success: {
       main: '#a690fc',
     },
+  },
+  components: {
+    MuiTypography: {
+      defaultProps: {
+        variantMapping: {
+          body2: 'span',
+          subtitle2: 'span',
+        }
+      },
+      variants: [
+        {
+          props: { variant: 'body2' },
+          style: {
+            fontSize: '0.875rem',
+            lineHeight: '1.25rem',
+          }
+        },
+        {
+          props: { variant: 'subtitle2' },
+          style: {
+            fontSize: '1rem',
+            lineHeight: '1.5rem',
+            fontWeight: 'normal',
+          }
+        }
+      ]
+    }
   },
 };

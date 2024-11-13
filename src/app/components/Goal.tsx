@@ -1,6 +1,6 @@
 'use client';
 
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 import {
   Box,
   Button,
@@ -23,7 +23,7 @@ import { User } from '@/app/interface';
 interface ProfileGoalProps {
   user: User;
   show: boolean;
-  handleShow: (show: boolean) => void;
+  handleShow: (hs: boolean) => void;
 }
 
 interface CircProgressProps {
@@ -31,7 +31,7 @@ interface CircProgressProps {
   prog: number;
   // total savings
   total: number;
-  size?: number;
+  size?: number | string;
 }
 
 interface LinearProgressProps {
@@ -44,14 +44,14 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   marginRight: 2,
   borderRadius: 5,
   '& .MuiLineProgress-colorPrimary': {
-    backgroundColor: theme.palette.grey[200],
+    // backgroundColor: theme.palette.grey[200],
+    backgroundColor: theme.palette.primary.light,
   },
   '& .MuiLineProgress-bar': {
     borderRadius: 5,
     backgroundColor: theme.palette.primary.main,
   },
 }));
-
 
 const CircProgress = styled(CircularProgress)(({ theme }) => ({
   color: theme.palette.primary.main,
@@ -60,7 +60,6 @@ const CircProgress = styled(CircularProgress)(({ theme }) => ({
 const CircProgressRemainder = styled(CircularProgress)(({ theme }) => ({
   color: theme.palette.primary.light,
   position: 'absolute',
-  left: 0,
 }));
 
 const CompactButton = styled(Button)(({ theme }) => ({
@@ -72,9 +71,16 @@ const CompactButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-const GoalDoneIcon = styled(CheckCircleIcon)(({ theme }) => ({
+const SmallGoalDoneIcon = styled(CheckCircleIcon)(({ theme }) => ({
   fontSize: '1.5rem',
   color: theme.palette.primary.main,
+}));
+
+const LargeGoalDoneIcon = styled(CheckCircleIcon)(({ theme }) => ({
+  color: theme.palette.primary.main,
+  fontSize: '2.5rem',
+  position: 'absolute',
+  bottom: '1rem',
 }));
 
 // Format a given number to the contarcted form. For example, input 123,400
@@ -99,8 +105,96 @@ function formatValue(value: number | undefined): string {
   return (value / 1000_000_000).toString().concat('B');
 }
 
+function easeInOutQuad(time: number): number {
+  return time < 0.5 ? 2 * time * time : -1 + (4 - 2 * time) * time;
+}
+
+// TODO: make font responds to screen sizes more smoothly
+// For task page.  Mui does not ship a default semi-circular progress
+// bar so we make our own one.
+export function SemiCircGoalPanel({reached, prog, total, size}: CircProgressProps) {
+  const [currProg, setCurrProg] = useState<number>(0);
+  const reqRef = useRef<number | undefined>(0);
+  const startTimeRef = useRef<number | undefined>(0);
+
+  const theme = useTheme();
+  const md = useMediaQuery(theme.breakpoints.up('sm')); // default: 600px+
+
+  useEffect(() => {
+    const animate = (time: number) => {
+      if (startTimeRef.current === undefined) {
+        startTimeRef.current = time;
+      }
+
+      const elapsed = time - startTimeRef.current;
+      const duration = Math.min(elapsed / 3000, 1); // 3000ms duration
+      const easedProgress = easeInOutQuad(duration);
+      const newProg = Math.min(prog * easedProgress, Math.min(100, prog));
+
+      setCurrProg(newProg);
+
+      if (duration < 1) {
+        reqRef.current = requestAnimationFrame(animate);
+      }
+    };
+
+    reqRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (reqRef.current) {
+        cancelAnimationFrame(reqRef.current);
+      }
+    };
+  }, [prog]);
+
+  // 100% = 180° so: 1° = 1% * 1.8
+  // 45 is to add the needed rotation to have the borders at the bottom
+  const rotation = 45 + (currProg * 1.8);
+
+  return (
+    <Stack
+      className="semi-progress"
+      style={{ '--size': size} as React.CSSProperties }
+    >
+      <div className="semi-progress-overflow">
+        <Typography
+          variant={md ? 'h4' : 'h5'}
+          className="absolute left-0 right-0 font-semibold"
+          style={{
+            top: md ? '3.5rem' : '3rem',
+          }}
+        >
+          Saved
+        </Typography>
+        <Typography
+          variant={md ? 'h1' : 'h2'}
+          className="absolute left-0 right-0 font-bold"
+          style={{
+            top: md ? '5.2rem' : '4.8rem',
+          }}
+        >
+          ${total}
+        </Typography>
+        <div
+          className="semi-progress-bar"
+          style={{
+            transform: `rotate(${rotation}deg)`
+          }}
+        ></div>
+      </div>
+      {reached && !md && <SmallGoalDoneIcon /> }
+      {reached && md &&  <LargeGoalDoneIcon /> }
+      {!reached &&
+        <Typography className="sm:text-lg md:text-2xl text-base" >
+          {Math.min(100, currProg)}% of your goal
+        </Typography>
+      }
+    </Stack>
+  );
+}
+
 // For middle and large screens
-function CircProgressWithLabel({reached, prog, total }: CircProgressProps) {
+export function CircProgressWithLabel({reached, prog, total }: CircProgressProps) {
   return(
     <Stack className="relative justify-center">
       <CircProgressRemainder
@@ -108,11 +202,12 @@ function CircProgressWithLabel({reached, prog, total }: CircProgressProps) {
         size={120}
         value={100}
         thickness={2}
+        className="left-0 right-0"
       />
       <CircProgress
         variant="determinate"
         size={120}
-        value={prog >= 100 ? 100 : prog}
+        value={Math.min(100, prog)}
         thickness={2}
       />
       <Stack
@@ -120,24 +215,24 @@ function CircProgressWithLabel({reached, prog, total }: CircProgressProps) {
       >
         <Box className="text-base font-semibold">Saved</Box>
         <Box className="text-2xl font-bold">${formatValue(total)}</Box>
-        {reached && <GoalDoneIcon />}
+        {reached && <SmallGoalDoneIcon />}
       </Stack>
     </Stack>
   );
 }
 
 // For smaller screens
-function LinearProgressWithLabel({ prog }: LinearProgressProps) {
+export function LinearProgressWithLabel({ prog }: LinearProgressProps) {
   return (
     <Stack spacing={2} direction="row" className="w-full items-center mt-3">
       <BorderLinearProgress
           variant="determinate"
-          value={prog >= 100 ? 100 : prog}
+        value={Math.min(100, prog)}
       />
       <Typography
         variant="body2"
       >
-        {`${prog >= 100 ? 100 : prog}%`}
+        {`${Math.min(100, prog)}%`}
       </Typography>
     </Stack>
   );
