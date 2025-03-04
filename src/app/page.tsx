@@ -53,7 +53,7 @@ const HomePage = () => {
           </Box>
           <Box>
             <Button variant="outlined" color="primary">
-                                                         Learn More
+                Learn More
             </Button>
           </Box>
         </Stack>
