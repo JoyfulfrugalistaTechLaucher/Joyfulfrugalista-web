@@ -9,19 +9,21 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@emotion/react": "^11.13.3",
-    "@emotion/styled": "^11.13.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
     "@fontsource/montserrat": "^5.0.19",
-    "@mui/icons-material": "^5.16.7",
-    "@mui/material": "^5.16.7",
+    "@mui/icons-material": "^6.4.7",
+    "@mui/material": "^6.4.7",
+    "@mui/x-date-pickers": "^7.27.3",
     "axios": "^1.7.5",
     "chart.js": "^4.4.4",
+    "dayjs": "^1.11.13",
     "firebase": "^10.13.1",
     "luxon": "^3.5.0",
-    "next": "^14.2.24",
-    "react": "^18",
+    "next": "^15.2.2",
+    "react": "^19.0.0",
     "react-chartjs-2": "^5.2.0",
-    "react-dom": "^18",
+    "react-dom": "^19.0.0",
     "react-toastify": "^10.0.5"
   },
   "devDependencies": {
