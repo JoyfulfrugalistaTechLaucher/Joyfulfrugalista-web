@@ -10,22 +10,44 @@ import { auth } from "../config/firebaseConfig";
 import { signOut } from "firebase/auth";
 import MainLayout from "../layouts/MainLayout";
 import BackgroundWrapper from "../components/BackgroundWrapper";
+import { SummaryBox } from './components/SummaryBox';
 import {
-  Container,
+  Avatar,
   Box,
-  Typography,
+  Container,
   CircularProgress,
   Grid,
-  Avatar,
+  Stack,
+  Typography,
 } from "@mui/material";
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 
-const LedgerPage: React.FC = () => {
+function LedgerCalendar() {
+  return (
+    // TODO:
+    // 1. make this a controlled component
+    // 2. make the background darker and add border
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DateCalendar />
+    </LocalizationProvider>
+  );
+}
+
+
+
+function LedgerPage() {
   const [showModal, setShowModal] = useState(false);
   const [refreshDetail, setRefreshDetail] = useState(false); // 用于控制 Detail 刷新
   const [showPieChart, setShowPieChart] = useState(false);
   const router = useRouter();
   const { uid, isLoggedIn, setUid } = useAuth();
   const [loading, setLoading] = useState(true);
+  // detail of user's savings
+  const [savingEntries, setSavingEntries] = useState<SavingsRecord[]>([]);
+  const [totalSavingAmount, setTotalSavingAmount] = useState<number>(0);
+  const [dailySavingAmount, setDailySavingAmount] = useState<number>(0);
 
   useEffect(() => {
     console.log("uid" + uid);
@@ -37,8 +59,6 @@ const LedgerPage: React.FC = () => {
     } else if (uid) {
       console.log("succeed");
       setLoading(false);
-
-
     }
   }, [isLoggedIn, uid, router]);
 
@@ -68,7 +88,7 @@ const LedgerPage: React.FC = () => {
 
   const closeModalAndRefresh = () => {
     setShowModal(false);
-    setRefreshDetail(!refreshDetail); // 触发 Detail 组件的刷新
+    setRefreshDetail(!refreshDetail);
   };
 
   const closeModalOnClickOutside = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -83,27 +103,34 @@ const LedgerPage: React.FC = () => {
 
   return (
     <MainLayout>
+      {/* Three columns: Calender, Detail, Category (Add panel) */}
+      <Stack spacing={4} direction='row'>
+        <LedgerCalendar />
+
+      </Stack>
+
       <div style={styles.container}>
-        {/* Detail 组件 */}
+
+        {/* Detail */}
         <div style={styles.detailContainer}>
           <Detail key={refreshDetail ? 'refresh' : 'static'} />
         </div>
 
-        {/* Add Entry 按钮 */}
+        {/* Add Entry */}
         <div style={styles.addButtonContainer}>
           <button style={styles.addButton} onClick={toggleModal}>
             +
           </button>
         </div>
 
-        {/* Pie Chart Diagram 按钮*/}
+        {/* Pie Chart Diagram */}
         <div style={styles.pieChartButtonContainer}>
           <button style={styles.pieChartButton} onClick={togglePieChart}>
             Monthly Pie Chart
           </button>
         </div>
 
-        {/* Modal 弹窗 */}
+        {/* Modal */}
         {showModal && (
           <div style={styles.modalOverlay} onClick={closeModalOnClickOutside}>
             <div style={styles.modalContent}>
@@ -147,7 +174,7 @@ const styles = {
   detailContainer: {
     position: 'absolute',
     top: '25%',
-    left: '14%', // 左边距
+    left: '14%',
     width: '30%',
     height: '60%',
     zIndex: 2, // 确保 Detail 组件在图片上方
@@ -215,9 +242,6 @@ const styles = {
     cursor: 'pointer',
     alignSelf: 'flex-end',
   } as React.CSSProperties,
-
-
-
 };
 
 

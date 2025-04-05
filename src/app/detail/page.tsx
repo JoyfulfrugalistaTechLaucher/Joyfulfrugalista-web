@@ -62,7 +62,7 @@ const Detail: React.FC = () => {
         fetchDataAndUpdate();
     }, [dateIndex]);
 
-    const { uid, isLoggedIn } = useAuth(); // 从AuthContext中获取 uid 和 isLoggedIn
+    const { uid, isLoggedIn } = useAuth();
 
     const fetchDataAndUpdate = () => {
         if (isLoggedIn && uid) {
@@ -70,7 +70,6 @@ const Detail: React.FC = () => {
                 .then((data: any) => {
                     setTotalSavingAmount(data.totalSaved);
 
-                    // 将 savingEntries 对象传递给 categorizeSavingEntries
                     const categorizedData = categorizeSavingEntries(data.savingEntries);
                     const currentData = getEntriesForDate(categorizedData, getDate(dateIndex));
                     setDailySavingAmount(calculateDailySavingAmount(currentData));
@@ -132,11 +131,16 @@ const Detail: React.FC = () => {
 
             <div style={styles.content}>
                 <div style={styles.board}>
-                    <span style={styles.boardLabel}>You have saved</span>
+                    <span style={styles.boardLabel}>You saved</span>
                     <span style={styles.amount}>${totalSavingAmount}</span>
                 </div>
                 <div style={styles.subBoard}>
-                    <span style={styles.subBoardLabel}>You saved ${dailySavingAmount} today!</span>
+                  <span style={styles.subBoardLabel}>
+                    {dailySavingAmount === 0
+                      ? "No savings yet"
+                      : `You saved ${dailySavingAmount}`
+                    } today
+                  </span>
                 </div>
                 <BackgroundWrapper>
                     <div style={{ ...styles.scrollView, width: '100%' }}>
