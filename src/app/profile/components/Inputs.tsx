@@ -48,7 +48,7 @@ export function UserName({user, handler}: UserProfileProps) {
      onChange={onChange}
      value={user.name}
      placeholder="Joyful Jar"
-     helperText={isValid(user.name) ? "" : "Name length exceeds 30 characters"}
+     helperText={isValid(user.name) ? "" : 'Name length exceeds 30 characters'}
     />
   );
 }
@@ -94,7 +94,7 @@ export function UserPhone({user, handler}: UserProfileProps) {
       type="tel"
       value={fmtPhone}
       onChange={onChange}
-      helperText={isValidPhoneNumber(fmtPhone) ? "" : "Mobile must be '04xx xxx xxx'"}
+      helperText={isValidPhoneNumber(fmtPhone) ? '' : 'Mobile must be 04xx xxx xxx'}
       placeholder="0412 356 789"
     />
   );
@@ -165,11 +165,11 @@ export function UserEmail({user, handler}: UserProfileProps) {
   const onSave = () => {
     if (userEmail.trim() === '') {
       setValid(false);
-      setError("Email is required.");
+      setError('Email is required.');
     }
     else if (!isEmail(userEmail)) {
       setValid(false);
-      setError("Email address format is not valid.");
+      setError('Email address format is not valid.');
     } else {
       handler({ email: userEmail });
       setEditing(false);
@@ -187,11 +187,11 @@ export function UserEmail({user, handler}: UserProfileProps) {
 
     if (newEmail.trim().length === 0) {
       setValid(false);
-      setError("Email is required.");
+      setError('Email is required.');
     }
     else if (!isEmail(newEmail)) {
       setValid(false);
-      setError("Email address format is not valid.");
+      setError('Email address format is not valid.');
     }
     else {
       setValid(true);
