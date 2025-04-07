@@ -1,17 +1,11 @@
 'use client';
 import React, { useState,useEffect } from 'react';
 import Image from 'next/image';
-import Detail from '../detail/page';
 import AddPage from '../addPage/page';
-import { AddPanel, SavingsRecordProps } from './components/AddPanel';
-import PieChartComponent from '../components/pieChart';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../context/AuthContext';
 import { auth } from '../config/firebaseConfig';
 import { signOut } from 'firebase/auth';
-import MainLayout from '../layouts/MainLayout';
-import BackgroundWrapper from '../components/BackgroundWrapper';
-import { SummaryBox } from './components/SummaryBox';
 import {
   Avatar,
   Box,
@@ -24,14 +18,22 @@ import {
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+import MainLayout from '../layouts/MainLayout';
+import BackgroundWrapper from '../components/BackgroundWrapper';
+import { SummaryBox } from './components/SummaryBox';
+import { AddPanel, SavingsRecordProps } from './components/AddPanel';
 
 function LedgerCalendar() {
   return (
     // TODO:
     // 1. make this a controlled component
     // 2. make the background darker and add border
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DateCalendar />
+    <LocalizationProvider
+      dateAdapter={AdapterDayjs}
+    >
+      <DateCalendar
+        className="border rounded-md border-solid border-gray-300"
+      />
     </LocalizationProvider>
   );
 }
@@ -108,14 +110,14 @@ function LedgerPage() {
   }
   return (
     <MainLayout>
-      <Stack spacing={8} direction='row'>
+      <Stack spacing={6} direction='row'>
         {/* Column one: Calender + Summary */}
         <Stack
           spacing={4}
-          className="border-solid border border-gray-300 rounded-md p-2"
+          className="justify-between"
         >
           <LedgerCalendar />
-          {/*TODO: summary */}
+          <SummaryBox period={'day'} amount={37.5} />
         </Stack>
 
         {/* Column two: AddPanel */}
@@ -124,7 +126,7 @@ function LedgerPage() {
           className="border-solid border border-gray-300 rounded-md p-2"
         >
           <AddPanel record={fake} />
-          <AddPage />
+
         </Stack>
       </Stack>
     </MainLayout>

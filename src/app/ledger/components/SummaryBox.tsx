@@ -14,7 +14,7 @@ import { User } from '@/app/interface';
 import SavingsIcon from '@mui/icons-material/Savings';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 
-interface summaryBoxProps {
+type summaryBoxProps = {
   period: 'day' | 'week' | 'month';
   amount: number;
 }
@@ -32,17 +32,12 @@ export function SummaryBox({period, amount}: summaryBoxProps) {
   return (
     <Box
       component='div'
-      sx = {{
-        boxShadow: 1,
-        borderRadius: 2,
-        p: 2,
-        minWidth: 220
-      }}
+      className="p-2 rounded-md border border-solid border-gray-300"
     >
-      <Typography>Saved</Typography>
-      <Typography color='primary' sx={{ fontSize: 34, fontWeight: 'medium' }}>
+      <Typography>{savingLabel(period)}</Typography>
+      <Box component="div" color="primary" className="text-3xl font-bold">
         ${amount}
-      </Typography>
+      </Box>
     </Box>
   )
 }
