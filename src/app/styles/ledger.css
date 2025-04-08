@@ -1,0 +1,13 @@
+/* Styles for ledger page */
+
+.ledger-layout {
+    @apply gap-x-2;
+    display: flex;
+    flex: 2 1 auto;
+    max-height: 744px;
+    overflow-y: hidden;
+}
+
+.ledger-block-border {
+    @apply border border-solid border-gray-300 rounded-md;
+}

@@ -1,5 +1,6 @@
 type LoadRecords = {
     kind: 'loaded';
+    data: SavingsRecord[];
 }
 
 type AddRecord = {
@@ -17,7 +18,7 @@ type SortRecords = {
     key?: 'latest' | 'oldest' | 'increasing' | 'decreasing';
 }
 
-type Action = LoadRecords | AddRecord | FilterRecord | SortRecords
+type Action = LoadRecords | AddRecord | FilterRecord | SortRecords;
 
 export function recordsReducer(
     records: SavingsRecord[],
@@ -25,7 +26,7 @@ export function recordsReducer(
 ): SavingsRecord[] {
   switch(action.kind) {
       case 'loaded': {
-          return action.records;
+          return action.data;
       }
       case 'added': {
           return [

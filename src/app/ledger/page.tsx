@@ -23,6 +23,7 @@ import MainLayout from '../layouts/MainLayout';
 import BackgroundWrapper from '../components/BackgroundWrapper';
 import { SummaryBox } from './components/SummaryBox';
 import { AddPanel, SavingsRecordProps } from './components/AddPanel';
+import { RecordHistory } from './components/History';
 import { recordsReducer } from './reducers/recordsReducer';
 import { FB_URL } from '../constants';
 
@@ -44,7 +45,6 @@ function LedgerCalendar() {
       dateAdapter={AdapterDayjs}
     >
       <DateCalendar
-        className="border rounded-md border-solid border-gray-300"
         value={date}
         onChange={(newd) => setDate(newd)} />
     </LocalizationProvider>
@@ -107,7 +107,8 @@ function LedgerPage() {
               id,
               ...(data as SavingsRecord),
           })) : [];
-          recordReducer(records, {kind: 'loaded' });
+          dispatch({kind: 'loaded', data: records});
+          console.log('Loaded ', records.length, ' records');
           setLoading(false);
         } catch (error) {
           console.error('Error fetching user data:', error);
@@ -140,27 +141,25 @@ function LedgerPage() {
     moneyAdded: 20.5,
     description: 'Found a free online course'
   }
+
+  console.log(records);
   return (
     <MainLayout>
-      <Stack spacing={6} direction='row'>
-        {/* Column one: Calender + Summary */}
-        <Stack
-          spacing={4}
-          className="justify-between"
-        >
-          <LedgerCalendar />
-          <SummaryBox period={'day'} amount={37.5} />
-        </Stack>
-
-        {/* Column two: AddPanel */}
-        <Stack
-          spacing={4}
-          className="border-solid border border-gray-300 rounded-md p-2"
-        >
+      <div className="ledger-layout">
+        {/* Column one: Calender + Summary + AddPanel */}
+        <div className="flex-1 gap-x-2">
+          <div className="flex justify-between items-start ledger-block-border">
+            <LedgerCalendar />
+            <SummaryBox period={'day'} amount={37.5} />
+          </div>
           <AddPanel record={fake} />
+        </div>
 
-        </Stack>
-      </Stack>
+        {/* Column two: History */}
+        <div className="ledger-block-border p-2">
+          <RecordHistory records={records} />
+        </div>
+      </div>
     </MainLayout>
   );
 };

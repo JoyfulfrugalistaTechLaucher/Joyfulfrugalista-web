@@ -5,6 +5,7 @@
 
 /* custom modules */
 @import './goal.css';
+@import './ledger.css';
 
 body {
   @apply font-sans;

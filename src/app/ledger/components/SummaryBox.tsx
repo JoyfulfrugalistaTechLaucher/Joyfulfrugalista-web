@@ -32,7 +32,7 @@ export function SummaryBox({period, amount}: summaryBoxProps) {
   return (
     <Box
       component='div'
-      className="p-2 rounded-md border border-solid border-gray-300"
+      className="p-2"
     >
       <div className="flex justify-between items-center">
         <Typography component="h3">Summary</Typography>

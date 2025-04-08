@@ -1,7 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { category, categories } from '@/data/Category';
-import Image from 'next/image';
 import {
   Box,
   FormControl,
@@ -10,13 +9,9 @@ import {
   FormHelperText,
   OutlinedInput,
   Stack,
+  TextField,
   Typography
 } from '@mui/material';
-import StickyNote2RoundedIcon from '@mui/icons-material/StickyNote2Rounded';
-import MonetizationOnRoundedIcon from '@mui/icons-material/MonetizationOnRounded';
-import { fetchSavingData } from '../components/FirebaseDatabase';
-import { useAuth } from '../context/AuthContext';
-import BackgroundWrapper from "../components/DetailPageBackgroud";
 
 type SavingsRecordProps = {
   date: string;
@@ -42,12 +37,13 @@ function AmountForm(record: SavingsRecordProps) {
   }
 
   return (
-    <Stack spacing={2}>
+    <div className="m-1 w-full flex gap-x-2 justify-around items-center">
       {/* Amount */}
-      <FormControl className="m-1">
+      <FormControl className="m-1 flex-1">
         <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
         <OutlinedInput
-          id="outlined-adornment-amount"
+          id="outlined-amount"
+          required
           autoComplete="off"
           label="Amount"
           type="number"
@@ -58,30 +54,27 @@ function AmountForm(record: SavingsRecordProps) {
         />
       </FormControl>
       {/* Description */}
-      <FormControl className="m-1">
-        <InputLabel htmlFor="outlined-adornment-description">Description</InputLabel>
-        <OutlinedInput
-          id="outlined-adornment-description"
-          autoComplete="off"
-          label="Description"
-          type="text"
-          onChange={onDesChange}
-          value={des}
-          placeholder="(optional) Found a more affordable online course"
-        />
-      </FormControl>
-    </Stack>
+       <TextField
+         id="outlined-adornment-description"
+         autoComplete="off"
+         className="m-1 flex-1"
+         label="Description"
+         type="text"
+         onChange={onDesChange}
+         value={des}
+         placeholder="(optional) e.g. Used gift cards" />
+    </div>
   )
 }
 
 function CategoryPanel(record: SavingsRecordProps) {
 
   return (
-    <Box>
-      <Typography component="h3">Select a category</Typography>
+    <div>
+      <Typography component="h4">Category</Typography>
       <Stack
         direction="row"
-        className="my-2 flex-wrap items-center justify-center"
+        className="my-2 flex-wrap items-center justify-start"
       >
         { categories.map((category) => (
           <div
@@ -92,14 +85,14 @@ function CategoryPanel(record: SavingsRecordProps) {
           </div>
         )) }
       </Stack>
-    </Box>
+    </div>
   )
 }
 
 export function AddPanel(record: SavingsRecordProps) {
 
   return (
-    <Stack spacing={2}>
+    <Stack spacing={2} className="mt-2 p-2 ledger-block-border">
       <Typography component="h3">
         Add New Savings
       </Typography>
