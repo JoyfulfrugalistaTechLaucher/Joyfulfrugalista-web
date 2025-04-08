@@ -1,9 +1,14 @@
 'use client';
 import React, { useState, useEffect } from 'react';
+// import { db } from '../config/firebaseConfig';
+import axios from "axios";
+import { useAuth } from "@/app/context/AuthContext";
+import { auth } from "@/app/config/firebaseConfig";
 import { category, categories } from '@/data/Category';
 import {
   Box,
   Button,
+  CircularProgress,
   FormControl,
   InputAdornment,
   InputLabel,
@@ -15,6 +20,7 @@ import {
 } from '@mui/material';
 import { SavingsRecord, SavingsRecordProps } from '@/app/interface';
 import { formatDateString } from '@/app/utils';
+import { FB_URL } from '@/app/constants';
 
 // Form to submit new record of savings
 function NewRecordForm({ record, handler }: SavingsRecordProps) {
@@ -61,7 +67,6 @@ function NewRecordForm({ record, handler }: SavingsRecordProps) {
 }
 
 function CategoryPanel({record, handler}: {SavingsRecordProps}) {
-
   const onSelect = (category: string) => {
     handler({ category });
   };
@@ -88,19 +93,78 @@ function CategoryPanel({record, handler}: {SavingsRecordProps}) {
   )
 }
 
-export function AddPanel({selectedDate}: {selectedDate: string}) {
-  const [record, setRecord] = useState<SavingsRecord>({
+export function AddPanel({
+  selectedDate,
+  onAddRecord,
+  onRefresh
+}: {
+  selectedDate: string,
+  onAddRecord: (record: SavingsRecord) => Promise<boolean>,
+  onRefresh: () => Promise<void>
+}) {
+  const { uid } = useAuth(); // Get user ID for Firebase operations
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState<{text: string, type: 'success' | 'error'} | null>(null);
+
+  // Default record state with selectedDate
+  const defaultRecord = {
     date: selectedDate,
-    category: 'General',
-    moneyAdded: 0
-  });
+    category: 'General', // Set a default category
+    moneyAdded: 0,
+    description: ''
+  };
+
+  const [record, setRecord] = useState<SavingsRecord>(defaultRecord);
+
+  useEffect(() => {
+    // Update date when selectedDate changes
+    setRecord(prev => ({...prev, date: selectedDate}));
+  }, [selectedDate]);
 
   const updateRecord = (update: Partial<SavingsRecord>) => {
     setRecord(old => ({...old, ...update}));
   };
 
+  const clearForm = () => {
+    setRecord(defaultRecord);
+    setMessage(null);
+  };
+
+  const submitRecord = async () => {
+    // Validate the record
+    if (record.moneyAdded <= 0) {
+      setMessage({text: 'Please enter a valid amount', type: 'error'});
+      return;
+    }
+
+    if (!record.category) {
+      setMessage({text: 'Please select a category', type: 'error'});
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const success = await onAddRecord(record);
+
+      if (success) {
+        setMessage({text: 'Record saved successfully!', type: 'success'});
+        // Clear form after successful submission
+        clearForm();
+        // Refresh the records in parent component
+        await onRefresh();
+      } else {
+        setMessage({text: 'Failed to save record. Please try again.', type: 'error'});
+      }
+    } catch (error) {
+      console.error('Error saving record:', error);
+      setMessage({text: 'Failed to save record. Please try again.', type: 'error'});
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div spacing={2} className="mt-2 p-2 ledger-block-border">
+    <div className="mt-2 p-2 ledger-block-border">
       <div className="flex gap-x-2 items-center">
         <h4 className="font-semibold m-1"> Add New Savings </h4>
         <div className="text-sm text-gray-400">
@@ -109,6 +173,33 @@ export function AddPanel({selectedDate}: {selectedDate: string}) {
       </div>
       <NewRecordForm record={record} handler={updateRecord} />
       <CategoryPanel record={record} handler={updateRecord} />
+
+      {/* Status message */}
+      {message && (
+        <div className={`mt-2 p-2 rounded ${message.type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+          {message.text}
+        </div>
+      )}
+
+      {/* Action buttons */}
+      <div className="mt-3 flex justify-end gap-x-2">
+        <Button
+          variant="outlined"
+          color="secondary"
+          onClick={clearForm}
+          disabled={loading}
+        >
+          Clear
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={submitRecord}
+          disabled={loading}
+        >
+          {loading ? <CircularProgress size={24} /> : 'Add Record'}
+        </Button>
+      </div>
     </div>
   )
 }

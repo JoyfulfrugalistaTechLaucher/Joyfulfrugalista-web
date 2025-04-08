@@ -95,7 +95,7 @@ function LedgerPage() {
               id,
               ...(data as SavingsRecord),
           })) : [];
-          dispatch({kind: 'loaded', data: records});
+          dispatch({kind: 'loaded', data: records.reverse()});
           console.log('Loaded ', records.length, ' records');
           setLoading(false);
         } catch (error) {
@@ -107,6 +107,47 @@ function LedgerPage() {
       fetchSavingsRecords();
     }
   }, [isLoggedIn, uid, router]);
+
+  // Refresh records after adding
+  const refreshRecords = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${FB_URL}/addInfo/${uid}.json`);
+      const recordsData = response.data;
+      const records: SavingsRecord[] = recordsData ?
+        Object.entries(recordsData).map(([id, data]) => ({
+          id,
+          ...(data as SavingsRecord),
+        })) : [];
+      dispatch({kind: 'loaded', data: records});
+      console.log('Refreshed records: ', records.length);
+    } catch (error) {
+      console.error('Error refreshing records:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const addNewRecord = async (record: SavingsRecord) => {
+    try {
+      const response = await axios.post(`${FB_URL}/addInfo/${uid}.json`, record);
+      if (response.data && response.status === 200) {
+        // Add the new record to local state
+        const newRecord = {
+          ...record,
+          id: response.data.name // Firebase returns the new ID
+        };
+        dispatch({
+          kind: 'added',
+          record: newRecord
+        });
+        return true;
+      }
+    } catch (error) {
+      console.error('Error adding record:', error);
+    }
+    return false;
+  };
 
   if (loading) {
     return (
@@ -127,15 +168,19 @@ function LedgerPage() {
     <MainLayout>
       <div className="ledger-layout">
         {/* Column one: Calender + Summary + AddPanel */}
-        <div className="flex-1 gap-x-2">
-          <div className="flex justify-between items-start ledger-block-border">
+        <div className="flex-1 flex flex-col justify-between gap-x-2">
+          <div className="flex-1 flex justify-between items-start ledger-block-border">
             <LedgerCalendar
               date={selectedDate}
               handler={(newDate) => setSelectedDate(newDate)}
             />
             <SummaryBox period={'day'} amount={37.5} />
           </div>
-          <AddPanel selectedDate={selectedDate} />
+          <AddPanel
+            selectedDate={selectedDate}
+            onAddRecord={addNewRecord}
+            onRefresh={refreshRecords}
+          />
         </div>
 
         {/* Column two: History */}

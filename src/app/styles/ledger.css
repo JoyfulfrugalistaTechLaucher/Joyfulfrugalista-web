@@ -1,10 +1,9 @@
 /* Styles for ledger page */
 
 .ledger-layout {
-    @apply gap-x-2;
-    display: flex;
+    @apply flex gap-x-2 justify-between;
     flex: 2 1 auto;
-    max-height: 744px;
+    max-height: 795px;
     overflow-y: hidden;
 }
 
