@@ -29,7 +29,7 @@ export function RecordCard(
       <div className="text-sm">
         <div className="font-bold capitalize">{record.category}</div>
         <div>{formatDateString(record.date)}</div>
-        { record.description && <div>description</div> }
+        { record.description && <div>{record.description}</div> }
       </div>
       <div className="font-bold text-xl">${formatNumber(record.moneyAdded)}</div>
     </div>

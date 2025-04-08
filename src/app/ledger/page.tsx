@@ -168,7 +168,7 @@ function LedgerPage() {
     <MainLayout>
       <div className="ledger-layout">
         {/* Column one: Calender + Summary + AddPanel */}
-        <div className="flex-1 flex flex-col justify-between gap-x-2">
+        <div className="ledger-left-column">
           <div className="flex-1 flex justify-between items-start ledger-block-border">
             <LedgerCalendar
               date={selectedDate}
@@ -184,7 +184,7 @@ function LedgerPage() {
         </div>
 
         {/* Column two: History */}
-        <div className="ledger-block-border p-2">
+        <div className="ledger-right-column ledger-block-border">
           <RecordHistory records={records} />
         </div>
       </div>
