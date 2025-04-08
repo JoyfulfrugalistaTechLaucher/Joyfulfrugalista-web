@@ -25,28 +25,19 @@ import { SummaryBox } from './components/SummaryBox';
 import { AddPanel, SavingsRecordProps } from './components/AddPanel';
 import { RecordHistory } from './components/History';
 import { recordsReducer } from './reducers/recordsReducer';
-import { FB_URL } from '../constants';
+import { FB_URL } from '@/app/constants';
+import { SavingsRecord, SavingsRecordProps } from '@/app/interface';
 
-type SavingsRecord = {
-  id: string;                  // firebase record id
-  date: string;
-  category: string;
-  moneyAdded: number;
-  description?: string;
-}
-
-function LedgerCalendar() {
-  const [date, setDate] = useState<Dayjs | null>(dayjs())
+function LedgerCalendar(
+  {date, handler}: {date: string, handler: (date: string) => void}
+) {
   return (
-    // TODO:
-    // 1. make this a controlled component
-    // 2. make the background darker and add border
     <LocalizationProvider
       dateAdapter={AdapterDayjs}
     >
       <DateCalendar
-        value={date}
-        onChange={(newd) => setDate(newd)} />
+        value={dayjs(date)}
+        onChange={handler} />
     </LocalizationProvider>
   );
 }
@@ -77,15 +68,12 @@ function LedgerPage() {
   const { uid, isLoggedIn, setUid } = useAuth();
   const [loading, setLoading] = useState(true);
 
-
-  // detail of user's savings
-  const [totalSavingAmount, setTotalSavingAmount] = useState<number>(0);
-  const [dailySavingAmount, setDailySavingAmount] = useState<number>(0);
-
   const [records, dispatch] = useReducer(recordsReducer, []);
-  const [filteredRecrods, setFilteredRecords] = useState<SavingsRecord[]>([]);
   const today = new Date().toISOString().split('T')[0];
   const [selectedDate, setSelectedDate] = useState<string>(today);
+
+  const [totalSavingAmount, setTotalSavingAmount] = useState<number>(0);
+  const [dailySavingAmount, setDailySavingAmount] = useState<number>(0);
 
   useEffect(() => {
     console.log('uid' + uid);
@@ -135,24 +123,19 @@ function LedgerPage() {
     );
   }
 
-  const fake = {
-    date: today,
-    category: 'Education',
-    moneyAdded: 20.5,
-    description: 'Found a free online course'
-  }
-
-  console.log(records);
   return (
     <MainLayout>
       <div className="ledger-layout">
         {/* Column one: Calender + Summary + AddPanel */}
         <div className="flex-1 gap-x-2">
           <div className="flex justify-between items-start ledger-block-border">
-            <LedgerCalendar />
+            <LedgerCalendar
+              date={selectedDate}
+              handler={(newDate) => setSelectedDate(newDate)}
+            />
             <SummaryBox period={'day'} amount={37.5} />
           </div>
-          <AddPanel record={fake} />
+          <AddPanel selectedDate={selectedDate} />
         </div>
 
         {/* Column two: History */}

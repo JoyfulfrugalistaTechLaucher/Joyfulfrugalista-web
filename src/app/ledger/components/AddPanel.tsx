@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { category, categories } from '@/data/Category';
 import {
   Box,
+  Button,
   FormControl,
   InputAdornment,
   InputLabel,
@@ -12,28 +13,20 @@ import {
   TextField,
   Typography
 } from '@mui/material';
-
-type SavingsRecordProps = {
-  date: string;
-  category: string;
-  moneyAdded: number;
-  description?: string;
-}
+import { SavingsRecord, SavingsRecordProps } from '@/app/interface';
+import { formatDateString } from '@/app/utils';
 
 // Form to submit new record of savings
-function AmountForm(record: SavingsRecordProps) {
+function NewRecordForm({ record, handler }: SavingsRecordProps) {
   const { moneyAdded, description } = record
-  const [amt, updateAmt] = useState<number>(moneyAdded)
-  const [des, updateDes] = useState<string | undefined>(description)
 
   const onAmtChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newAmt = e.target.value
-    updateAmt(newAmt)
+    const newAmt = parseFloat(e.target.value) || 0;
+    handler({ moneyAdded: newAmt });
   }
 
   const onDesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newDes = e.target.value
-    updateDes(newDes)
+    handler({ description: e.target.value });
   }
 
   return (
@@ -48,7 +41,7 @@ function AmountForm(record: SavingsRecordProps) {
           label="Amount"
           type="number"
           onChange={onAmtChange}
-          value={amt}
+          value={moneyAdded}
           placeholder="0.00"
           startAdornment={<InputAdornment position="start">$</InputAdornment>}
         />
@@ -61,43 +54,61 @@ function AmountForm(record: SavingsRecordProps) {
          label="Description"
          type="text"
          onChange={onDesChange}
-         value={des}
+         value={description || ''}
          placeholder="(optional) e.g. Used gift cards" />
     </div>
   )
 }
 
-function CategoryPanel(record: SavingsRecordProps) {
+function CategoryPanel({record, handler}: {SavingsRecordProps}) {
+
+  const onSelect = (category: string) => {
+    handler({ category });
+  };
 
   return (
     <div>
       <Typography component="h4">Category</Typography>
-      <Stack
-        direction="row"
-        className="my-2 flex-wrap items-center justify-start"
+      <div
+        className="my-2 flex flex-wrap items-center justify-start gap-1"
       >
-        { categories.map((category) => (
-          <div
+        {categories.map((category) => (
+          <Button
             key={category.id}
-            className="p-1 m-1 rounded-md bg-slate-100"
+            variant={record.category === category.id ? "contained" : "outlined"}
+            onClick={() => onSelect(category.id)}
+            className="p-1 m-1 rounded-md"
+            size="small"
           >
             {category.id}
-          </div>
-        )) }
-      </Stack>
+          </Button>
+        ))}
+      </div>
     </div>
   )
 }
 
-export function AddPanel(record: SavingsRecordProps) {
+export function AddPanel({selectedDate}: {selectedDate: string}) {
+  const [record, setRecord] = useState<SavingsRecord>({
+    date: selectedDate,
+    category: 'General',
+    moneyAdded: 0
+  });
+
+  const updateRecord = (update: Partial<SavingsRecord>) => {
+    setRecord(old => ({...old, ...update}));
+  };
 
   return (
-    <Stack spacing={2} className="mt-2 p-2 ledger-block-border">
-      <Typography component="h3">
-        Add New Savings
-      </Typography>
-      <AmountForm record={record} />
-      <CategoryPanel record={record} />
-    </Stack>
-  );
+    <div spacing={2} className="mt-2 p-2 ledger-block-border">
+      <div className="flex gap-x-2 items-center">
+        <h4 className="font-semibold m-1"> Add New Savings </h4>
+        <div className="text-sm text-gray-400">
+          Selected Date: {formatDateString(selectedDate)}
+        </div>
+      </div>
+      <NewRecordForm record={record} handler={updateRecord} />
+      <CategoryPanel record={record} handler={updateRecord} />
+    </div>
+  )
 }
