@@ -1,7 +1,8 @@
 'use client';
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
+import dayjs, { Dayjs } from 'dayjs';
 import Image from 'next/image';
-import AddPage from '../addPage/page';
+import axios from "axios";
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../context/AuthContext';
 import { auth } from '../config/firebaseConfig';
@@ -22,8 +23,19 @@ import MainLayout from '../layouts/MainLayout';
 import BackgroundWrapper from '../components/BackgroundWrapper';
 import { SummaryBox } from './components/SummaryBox';
 import { AddPanel, SavingsRecordProps } from './components/AddPanel';
+import { recordsReducer } from './reducers/recordsReducer';
+import { FB_URL } from '../constants';
+
+type SavingsRecord = {
+  id: string;                  // firebase record id
+  date: string;
+  category: string;
+  moneyAdded: number;
+  description?: string;
+}
 
 function LedgerCalendar() {
+  const [date, setDate] = useState<Dayjs | null>(dayjs())
   return (
     // TODO:
     // 1. make this a controlled component
@@ -33,33 +45,77 @@ function LedgerCalendar() {
     >
       <DateCalendar
         className="border rounded-md border-solid border-gray-300"
-      />
+        value={date}
+        onChange={(newd) => setDate(newd)} />
     </LocalizationProvider>
   );
 }
 
+function filterRecords(filter: string) {
+  dispatch({
+    kind: 'filtered',
+    filter: filter
+  });
+}
+
+function sortRecords(key: 'latest' | 'oldest' | 'increasing' | 'decreasing') {
+  dispatch({
+    kind: 'sorted',
+    key: key
+  });
+}
+
+function addNewRecord(record: SavingsRecord) {
+  dispatch({
+    kind: 'added',
+    record: record
+  });
+}
+
 function LedgerPage() {
-  const [showModal, setShowModal] = useState(false);
-  const [refreshDetail, setRefreshDetail] = useState(false); // 用于控制 Detail 刷新
-  const [showPieChart, setShowPieChart] = useState(false);
   const router = useRouter();
   const { uid, isLoggedIn, setUid } = useAuth();
   const [loading, setLoading] = useState(true);
+
+
   // detail of user's savings
-  const [savingEntries, setSavingEntries] = useState<SavingsRecord[]>([]);
   const [totalSavingAmount, setTotalSavingAmount] = useState<number>(0);
   const [dailySavingAmount, setDailySavingAmount] = useState<number>(0);
 
+  const [records, setRecords] = useReducer<SavingsRecord[]>([], recordsReducer);
+  const [filteredRecrods, setFilteredRecords] = useState<SavingsRecord[]>([]);
+  const today = new Date().toISOString().split('T')[0];
+  const [selectedDate, setSelectedDate] = useState<string>(today);
+
   useEffect(() => {
-    console.log("uid" + uid);
+    console.log('uid' + uid);
 
     if (!isLoggedIn) {
       setLoading(false);
 
-      router.replace("/login");
+      router.replace('/login');
     } else if (uid) {
-      console.log("succeed");
-      setLoading(false);
+      console.log('User logged in successfully');
+      const fetchSavingsRecords = async () => {
+        try {
+          const response = await axios.get(`${FB_URL}/addInfo/${uid}.json`);
+
+          // Convert Firebase object to array
+          const recordsData = response.data;
+          const records: SavingsRecord[] = recordsData ?
+            Object.entries(recordsData).map(([id, data]) => ({
+              id,
+              ...(data as SavingsRecord),
+          })) : [];
+          setRecords(records);
+          setLoading(false);
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+          setLoading(false);
+        }
+      };
+
+      fetchSavingsRecords();
     }
   }, [isLoggedIn, uid, router]);
 
@@ -78,32 +134,8 @@ function LedgerPage() {
     );
   }
 
-  const toggleModal = () => {
-    setShowModal(!showModal);
-  };
-
-  const togglePieChart = () => {
-    setShowPieChart(!showPieChart);
-  };
-
-
-  const closeModalAndRefresh = () => {
-    setShowModal(false);
-    setRefreshDetail(!refreshDetail);
-  };
-
-  const closeModalOnClickOutside = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    if (event.target === event.currentTarget) {
-      closeModalAndRefresh();
-    }
-  };
-
-  const closePieChart = () => {
-    setShowPieChart(false);
-  };
-
   const fake = {
-    date: new Date(),
+    date: today,
     category: 'Education',
     moneyAdded: 20.5,
     description: 'Found a free online course'

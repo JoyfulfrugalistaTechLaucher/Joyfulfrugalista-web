@@ -34,10 +34,14 @@ export function SummaryBox({period, amount}: summaryBoxProps) {
       component='div'
       className="p-2 rounded-md border border-solid border-gray-300"
     >
-      <Typography>{savingLabel(period)}</Typography>
-      <Box component="div" color="primary" className="text-3xl font-bold">
+      <div className="flex justify-between items-center">
+        <Typography component="h3">Summary</Typography>
+        {/*TODO: make this tabs*/}
+        <div>Day | Week | Month </div>
+      </div>
+      <div component="div" className="text-3xl font-bold text-primary">
         ${amount}
-      </Box>
+      </div>
     </Box>
   )
 }

@@ -19,7 +19,7 @@ import { useAuth } from '../context/AuthContext';
 import BackgroundWrapper from "../components/DetailPageBackgroud";
 
 type SavingsRecordProps = {
-  date: Date;
+  date: string;
   category: string;
   moneyAdded: number;
   description?: string;
@@ -54,9 +54,7 @@ function AmountForm(record: SavingsRecordProps) {
           onChange={onAmtChange}
           value={amt}
           placeholder="0.00"
-          startAdornment={<InputAdornment position="start">
-                            <MonetizationOnRoundedIcon />
-                          </InputAdornment>}
+          startAdornment={<InputAdornment position="start">$</InputAdornment>}
         />
       </FormControl>
       {/* Description */}
@@ -70,9 +68,6 @@ function AmountForm(record: SavingsRecordProps) {
           onChange={onDesChange}
           value={des}
           placeholder="(optional) Found a more affordable online course"
-          startAdornment={<InputAdornment position="start">
-                            <StickyNote2RoundedIcon />
-                          </InputAdornment>}
         />
       </FormControl>
     </Stack>
@@ -83,7 +78,7 @@ function CategoryPanel(record: SavingsRecordProps) {
 
   return (
     <Box>
-      <Typography component="h2">Select a category</Typography>
+      <Typography component="h3">Select a category</Typography>
       <Stack
         direction="row"
         className="my-2 flex-wrap items-center justify-center"
@@ -105,7 +100,7 @@ export function AddPanel(record: SavingsRecordProps) {
 
   return (
     <Stack spacing={2}>
-      <Typography component="h2">
+      <Typography component="h3">
         Add New Savings
       </Typography>
       <AmountForm record={record} />
