@@ -82,7 +82,7 @@ function LedgerPage() {
   const [totalSavingAmount, setTotalSavingAmount] = useState<number>(0);
   const [dailySavingAmount, setDailySavingAmount] = useState<number>(0);
 
-  const [records, setRecords] = useReducer<SavingsRecord[]>([], recordsReducer);
+  const [records, dispatch] = useReducer(recordsReducer, []);
   const [filteredRecrods, setFilteredRecords] = useState<SavingsRecord[]>([]);
   const today = new Date().toISOString().split('T')[0];
   const [selectedDate, setSelectedDate] = useState<string>(today);
@@ -107,7 +107,7 @@ function LedgerPage() {
               id,
               ...(data as SavingsRecord),
           })) : [];
-          setRecords(records);
+          recordReducer(records, {kind: 'loaded' });
           setLoading(false);
         } catch (error) {
           console.error('Error fetching user data:', error);

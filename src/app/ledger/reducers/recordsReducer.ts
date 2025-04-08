@@ -1,15 +1,32 @@
-type Action = {
-  kind: 'added' | 'filtered' | 'sorted';
-  record?: SavingsRecord;
-  filter?: string;
-  key?: 'latest' | 'oldest' | 'increasing' | 'decreasing';
+type LoadRecords = {
+    kind: 'loaded';
 }
+
+type AddRecord = {
+    kind: 'added';
+    record: SavingsRecord;
+}
+
+type FilterRecord = {
+    kind: 'filtered';
+    filter: string
+}
+
+type SortRecords = {
+    kind: 'sorted';
+    key?: 'latest' | 'oldest' | 'increasing' | 'decreasing';
+}
+
+type Action = LoadRecords | AddRecord | FilterRecord | SortRecords
 
 export function recordsReducer(
     records: SavingsRecord[],
     action: Action
 ): SavingsRecord[] {
   switch(action.kind) {
+      case 'loaded': {
+          return action.records;
+      }
       case 'added': {
           return [
               action.record,
@@ -17,16 +34,9 @@ export function recordsReducer(
           ];
       }
       case 'filtered': {
-          if (!action.filter || action.filter === 'all') {
-              return records;
-          }
           return records.filter(record => record.category === action.filter);
       }
       case 'sorted': {
-          if (action.key === undefined) {
-              console.error('Sorting key is undefined');
-              return records;
-          }
           switch(action.key) {
               case 'latest': {
                   return [...records].sort((a, b) => b.date.localeCompare(a.date));
