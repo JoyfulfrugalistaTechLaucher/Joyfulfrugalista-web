@@ -19,6 +19,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { useAuth } from '@/app/contexts/AuthContext';
 import { User } from '@/app/interface';
+import { formatValue } from '@/app/utils';
 
 interface ProfileGoalProps {
   user: User;
@@ -78,32 +79,10 @@ const SmallGoalDoneIcon = styled(CheckCircleIcon)(({ theme }) => ({
 
 const LargeGoalDoneIcon = styled(CheckCircleIcon)(({ theme }) => ({
   color: theme.palette.primary.main,
-  fontSize: '2.5rem',
+  fontSize: '2.25rem',
   position: 'absolute',
   bottom: '1rem',
 }));
-
-// Format a given number to the contarcted form. For example, input 123,400
-// output 123.4 k.  Supports numbers no larger than one billion
-function formatValue(value: number | undefined): string {
-  if (value === undefined) return '';
-
-  if (value < 1000) {
-    return value.toString();
-  }
-
-  if (value < 1000_000) {
-    return (value / 1000).toString().concat('K');
-  }
-
-  if (value < 1000_000_000) {
-    return (value / 1000_000).toString().concat('M');
-  }
-
-  // else this must be a super billionare
-  // return 'Hello Billionare';
-  return (value / 1000_000_000).toString().concat('B');
-}
 
 function easeInOutQuad(time: number): number {
   return time < 0.5 ? 2 * time * time : -1 + (4 - 2 * time) * time;
@@ -161,16 +140,16 @@ export function SemiCircGoalPanel({reached, prog, total, size}: CircProgressProp
           variant={md ? 'h4' : 'h5'}
           className="absolute left-0 right-0 font-semibold"
           style={{
-            top: md ? '3.5rem' : '3rem',
+            top: md ? '3.25rem' : '3rem',
           }}
         >
           Saved
         </Typography>
         <Typography
-          variant={md ? 'h1' : 'h2'}
+          variant={md ? 'h2' : 'h3'}
           className="absolute left-0 right-0 font-bold"
           style={{
-            top: md ? '5.2rem' : '4.8rem',
+            top: md ? '5.2rem' : '4.5rem',
           }}
         >
           ${total}
