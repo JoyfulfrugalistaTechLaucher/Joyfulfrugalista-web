@@ -15,6 +15,23 @@ import SavingsIcon from '@mui/icons-material/Savings';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import { useRecords } from '@/app/contexts/RecordsContext';
 
+function getWeekBounds(date: Date): { start: Date, end: Date } {
+  const start = new Date(date);
+  const day = date.getDay(); // 0 is Sunday, 6 is Saturday
+
+  // Set to Sunday (start of week)
+  start.setDate(date.getDate() - day);
+
+  // Set to Saturday (end of week)
+  const end = new Date(start);
+  end.setDate(start.getDate() + 6);
+
+  // Reset time parts to start/end of day if needed
+  // start.setHours(0, 0, 0, 0);
+  // end.setHours(23, 59, 59, 999);
+  return { start, end };
+}
+
 function summary(records: SavingsRecord[], targetDate: Date, period: string): number {
   switch(period) {
   case 'day': {
@@ -28,26 +45,11 @@ function summary(records: SavingsRecord[], targetDate: Date, period: string): nu
       .reduce((acc, r) => acc + r.moneyAdded, 0);
   }
   case 'week': {
+    const { start, end } = getWeekBounds(targetDate);
     return records
       .filter((r) => {
         const recordDate = new Date(r.date);
-
-        // Get year and week number for both dates
-        const recordYear = recordDate.getFullYear();
-        const targetYear = targetDate.getFullYear();
-
-        // Get week numbers (using ISO week definition)
-        const getWeek = (d: Date) => {
-          const firstDayOfYear = new Date(d.getFullYear(), 0, 1);
-          const pastDaysOfYear = (d.getTime() - firstDayOfYear.getTime()) / 86400000;
-          return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
-        };
-
-        const recordWeek = getWeek(recordDate);
-        const targetWeek = getWeek(targetDate);
-
-        // Match if same year and week
-        return recordYear === targetYear && recordWeek === targetWeek;
+        return recordDate >= start && recordDate <= end;
       })
       .reduce((acc, r) => acc + r.moneyAdded, 0);
   }
