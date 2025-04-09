@@ -61,6 +61,14 @@ export function RecordHistory({ records }: { records: SavingsRecord[] }) {
     setSortKey(key);
     dispatch({kind: 'sorted', key: keys[key]});
   }
+
+  const onFilter = (event: React.SyntheticEvent, newValue: Category | null) => {
+    if (newValue) {
+      dispatch({ kind: 'filtered', filter: newValue.id });
+    } else {
+      dispatch({ kind: 'loaded', data: records });
+    }
+  }
   return (
     <>
       <h4 className="m-1">Savings History</h4>
@@ -72,6 +80,9 @@ export function RecordHistory({ records }: { records: SavingsRecord[] }) {
         filterOptions={filterOptions}
         renderInput={(params) => <TextField {...params}
                                    label="Filter by Category" />}
+        onChange={(event, newValue) => onFilter(event, newValue)}
+        clearOnBlur={false}
+        clearOnEscape
       />
       <div className="flex gap-x-1 mx-1 my-2">
         <Button
@@ -108,7 +119,7 @@ export function RecordHistory({ records }: { records: SavingsRecord[] }) {
         </Button>
 
       </div>
-      <div className="h-4/5 mt-2 overflow-y-scroll">
+      <div className="h-4/5 mt-2 overflow-y-auto">
         {
           history.map((record) => {
             return <RecordCard key={record.id} record={record} />
