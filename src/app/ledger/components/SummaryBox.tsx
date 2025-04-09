@@ -14,23 +14,7 @@ import {useMediaQuery, useTheme} from '@mui/material';
 import SavingsIcon from '@mui/icons-material/Savings';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import { useRecords } from '@/app/contexts/RecordsContext';
-
-function getWeekBounds(date: Date): { start: Date, end: Date } {
-  const start = new Date(date);
-  const day = date.getDay(); // 0 is Sunday, 6 is Saturday
-
-  // Set to Sunday (start of week)
-  start.setDate(date.getDate() - day);
-
-  // Set to Saturday (end of week)
-  const end = new Date(start);
-  end.setDate(start.getDate() + 6);
-
-  // Reset time parts to start/end of day if needed
-  // start.setHours(0, 0, 0, 0);
-  // end.setHours(23, 59, 59, 999);
-  return { start, end };
-}
+import { getWeekBounds, formatDate } from '@/app/utils';
 
 function summary(records: SavingsRecord[], targetDate: Date, period: string): number {
   switch(period) {
@@ -72,7 +56,6 @@ function summary(records: SavingsRecord[], targetDate: Date, period: string): nu
 export function SummaryBox({date}: {date: Date}) {
   const [period, setPeriod] = useState<'day' | 'week' | 'month'>('day');
   const { records } = useRecords();
-  console.log(records[0]);
   const onChange = (event: React.SyntheticEvent, newPeriod: string) => {
     setPeriod(newPeriod);
   }
@@ -95,10 +78,33 @@ export function SummaryBox({date}: {date: Date}) {
       </Tabs>
       <div
         component="div"
-        className="grid grid-cols-1 text-3xl font-bold text-primary h-full"
+        className="h-full my-4 pt-2"
       >
-        <div className="place-self-center">
-               ${summary(records, date, period)}
+        {/* Label */}
+        {period === 'day' && (
+          <div className="text-xs text-info text-center">
+            Total saved on { formatDate(date) }
+          </div>
+        )}
+        {period === 'week' && (
+          <div className="text-xs text-info text-center">
+            {(() => {
+              const { start, end } = getWeekBounds(date);
+              return (
+                <> Total saved in { formatDate(start, { month: 'long' }) } {start.getDate()}-{end.getDate()}, {start.getFullYear()}
+                </>
+              );
+            })()}
+          </div>
+        )}
+        {period === 'month' && (
+          <div className="text-xs text-info text-center">
+             Total saved in {formatDate(date, {month: 'long', year: 'numeric'})}
+          </div>
+        )}
+
+        <div className="m-2 text-3xl font-bold text-primary text-center">
+          ${summary(records, date, period)}
         </div>
       </div>
     </Box>
