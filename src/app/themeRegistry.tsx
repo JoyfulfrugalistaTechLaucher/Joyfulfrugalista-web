@@ -49,6 +49,13 @@ theme = createTheme(theme, {
           fontWeight: 'bold'
         },
       },
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: 'capitalize',
+        },
+      },
     }
   },
 });

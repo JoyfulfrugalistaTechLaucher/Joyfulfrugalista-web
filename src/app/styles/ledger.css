@@ -1,8 +1,7 @@
 /* Styles for ledger page */
 
 .ledger-layout {
-    @apply flex gap-x-2 justify-between;
-    flex: 2 1 auto;
+    @apply flex gap-x-1 justify-between;
     max-height: 795px;
     overflow-y: hidden;
 }
@@ -17,6 +16,6 @@
 }
 
 .ledger-right-column {
-    @apply w-[35%] p-2;
+    @apply w-[35%] p-1;
     overflow-y: auto;
 }

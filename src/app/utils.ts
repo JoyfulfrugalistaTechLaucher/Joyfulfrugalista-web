@@ -37,7 +37,6 @@ export function getWeekBounds(date: Date): { start: Date, end: Date } {
   return { start, end };
 }
 
-
 // Format a given number to the contarcted form. For example, input 123,400
 // output 123.4 k.  Supports numbers no larger than one billion
 export function formatNumber(value: number | undefined): string {

@@ -36,20 +36,6 @@ function LedgerCalendar(
   );
 }
 
-function filterRecords(filter: string) {
-  dispatch({
-    kind: 'filtered',
-    filter: filter
-  });
-}
-
-function sortRecords(key: 'latest' | 'oldest' | 'increasing' | 'decreasing') {
-  dispatch({
-    kind: 'sorted',
-    key: key
-  });
-}
-
 function LedgerPage() {
   const router = useRouter();
   const { isLoggedIn } = useAuth();
@@ -112,6 +98,5 @@ function LedgerPage() {
     </MainLayout>
   );
 };
-
 
 export default LedgerPage;
