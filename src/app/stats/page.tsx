@@ -1,10 +1,10 @@
 'use client';
 import React, { useState,useEffect } from 'react';
-import { useAuth } from "../contexts/AuthContext";
-import { signOut } from "firebase/auth";
-import { useRouter } from "next/navigation";
-import MainLayout from "../layouts/MainLayout";
-import BackgroundWrapper from "../components/BackgroundWrapper";
+import { signOut } from 'firebase/auth';
+import { useRouter } from 'next/navigation';
+import MainLayout from '@/app/layouts/MainLayout';
+import { useAuth } from '@/app/contexts/AuthContext';
+import BackgroundWrapper from '@/app/components/BackgroundWrapper';
 import {
   Avatar,
   Box,
@@ -14,23 +14,3 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-
-
-function Summary() {
-  return (
-    <Stack spacing={4} direction='row'>
-      <SummaryBox period='day' amount={108.5} />
-      <SummaryBox period='week' amount={876.43} />
-      <SummaryBox period='month' amount={900} />
-    </Stack>
-         );
-}
-
-function SummaryChart() {
-
-}
-
-// Only show latest 10 items history savings
-function LastestRecords() {
-
-}

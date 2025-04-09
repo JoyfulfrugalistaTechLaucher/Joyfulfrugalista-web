@@ -1,18 +1,12 @@
 'use client';
-
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
-  Button,
-  Stack,
   Tab,
   Tabs,
-  Typography
 } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import {useMediaQuery, useTheme} from '@mui/material';
-import SavingsIcon from '@mui/icons-material/Savings';
-import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+// import { styled } from '@mui/material/styles';
+// import {useMediaQuery, useTheme} from '@mui/material';
 import { useRecords } from '@/app/contexts/RecordsContext';
 import { getWeekBounds, formatDate } from '@/app/utils';
 

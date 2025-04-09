@@ -1,20 +1,13 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-// import { db } from '../config/firebaseConfig';
-import axios from "axios";
-import { useAuth } from "@/app/contexts/AuthContext";
-import { auth } from "@/app/config/firebaseConfig";
-import { category, categories } from '@/data/Category';
+import { categories } from '@/data/Category';
 import {
-  Box,
   Button,
   CircularProgress,
   FormControl,
   InputAdornment,
   InputLabel,
-  FormHelperText,
   OutlinedInput,
-  Stack,
   TextField,
   Typography
 } from '@mui/material';
@@ -102,7 +95,6 @@ export function AddPanel({
   onAddRecord: (record: SavingsRecord) => Promise<boolean>,
   onRefresh: () => Promise<void>
 }) {
-  const { uid } = useAuth(); // Get user ID for Firebase operations
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{text: string, type: 'success' | 'error'} | null>(null);
 

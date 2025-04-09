@@ -1,6 +1,6 @@
 'use client';
 
-import React, { Fragment, useEffect, useState  } from 'react';
+import React, { useState  } from 'react';
 import {
   Avatar,
   AppBar,
@@ -27,14 +27,12 @@ import BookIcon from '@mui/icons-material/Book';
 import HomeIcon from '@mui/icons-material/Home';
 import LogoutIcon from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import SmsIcon from '@mui/icons-material/Sms';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import { signOut } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
-import { auth } from '../config/firebaseConfig';
-import { useAuth } from '../contexts/AuthContext';
-import { useUserData } from '../hooks/useUserData';
+import { auth } from '@/app/config/firebaseConfig';
+import { useAuth } from '@/app/contexts/AuthContext';
+import { useUserData } from '@/app/hooks/useUserData';
 
 const menuItems = ['about', 'ledger', 'task', 'stats', 'profile'];
 const menuIconsMap: { [key: string]: React.ElementType} = {

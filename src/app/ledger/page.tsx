@@ -1,7 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
-import axios from "axios";
 import { useRouter } from 'next/navigation';
 import {
   Box,
@@ -13,11 +12,7 @@ import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import MainLayout from '@/app/layouts/MainLayout';
 import { useAuth } from '@/app/contexts/AuthContext';
 import { useRecords } from '@/app/contexts/RecordsContext';
-import { recordsReducer } from '@/app/reducers/recordsReducer';
-import { auth } from '@/app/config/firebaseConfig';
 import BackgroundWrapper from '@/app/components/BackgroundWrapper';
-import { FB_URL } from '@/app/constants';
-import { SavingsRecord, SavingsRecordProps } from '@/app/interface';
 import { SummaryBox } from './components/SummaryBox';
 import { AddPanel } from './components/AddPanel';
 import { RecordHistory } from './components/History';

@@ -1,24 +1,15 @@
 'use client';
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useState, useReducer } from 'react';
 import { Category, categories } from '@/data/Category';
 import {
-  Box,
   Button,
-  FormControl,
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  FormHelperText,
-  OutlinedInput,
-  Stack,
   TextField,
-  Typography
 } from '@mui/material';
 import VerticalAlignBottomIcon from '@mui/icons-material/VerticalAlignBottom';
 import VerticalAlignTopIcon from '@mui/icons-material/VerticalAlignTop';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import { SavingsRecord } from '@/app/interface';
-import { Action, recordsReducer } from '@/app/reducers/recordsReducer';
+import { recordsReducer } from '@/app/reducers/recordsReducer';
 import {
   formatDate,
   formatNumber

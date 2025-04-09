@@ -2,15 +2,15 @@
 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useAuth } from './useAuthContext';
-import { User } from '../interface';
-import { FB_URL, DEFAULT_AVATAR } from '../constants';
+import { User } from '@/app/interface';
+import { FB_URL, DEFAULT_AVATAR } from '@/app/constants';
 
 interface UserData {
   user: User | null,
   loading: boolean
 };
 
+// TODO: move this logic to auth context
 export function useUserData(uid: string | null): UserData {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);

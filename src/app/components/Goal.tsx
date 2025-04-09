@@ -21,21 +21,20 @@ import { useAuth } from '@/app/contexts/AuthContext';
 import { User } from '@/app/interface';
 import { formatNumber } from '@/app/utils';
 
-interface ProfileGoalProps {
+type ProfileGoalProps = {
   user: User;
   show: boolean;
   handleShow: (hs: boolean) => void;
 }
 
-interface CircProgressProps {
+type CircProgressProps = {
   reached: boolean,
   prog: number;
-  // total savings
   total: number;
   size?: number | string;
 }
 
-interface LinearProgressProps {
+type LinearProgressProps = {
   prog: number;
 }
 
@@ -45,7 +44,6 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   marginRight: 2,
   borderRadius: 5,
   '& .MuiLineProgress-colorPrimary': {
-    // backgroundColor: theme.palette.grey[200],
     backgroundColor: theme.palette.primary.light,
   },
   '& .MuiLineProgress-bar': {

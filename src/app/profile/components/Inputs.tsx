@@ -2,7 +2,6 @@
 
 import React, { Fragment, useState } from 'react';
 import {
-  Box,
   Button,
   FormControl,
   FormHelperText,
@@ -17,11 +16,11 @@ import {
 } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material/Select';
 import {useMediaQuery, useTheme} from '@mui/material';
-import { styled } from '@mui/material/styles';
+// import { styled } from '@mui/material/styles';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
-import { User, UserProfileProps } from '../../interface';
+import { UserProfileProps } from '@/app/interface';
 
 export const MAX_NAME_LEN = 30;
 export const GENDERS: string[] = [
