@@ -5,7 +5,7 @@ import { Box, Button, CircularProgress, Container, Divider, Stack, TextField } f
 import { useRouter } from 'next/navigation';
 import { ref, set, get, getDatabase } from 'firebase/database';
 import { db } from '../config/firebaseConfig';
-import { useAuth } from '@/app/context/AuthContext';
+import { useAuth } from '@/app/contexts/AuthContext';
 import MainLayout from '@/app/layouts/MainLayout';
 import { SemiCircGoalPanel } from '@/app/components/Goal';
 

@@ -9,7 +9,6 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import {useMediaQuery, useTheme} from '@mui/material';
-import { useAuth } from '@/app/context/AuthContext';
 import { User } from '@/app/interface';
 import SavingsIcon from '@mui/icons-material/Savings';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';

@@ -14,7 +14,7 @@ import {
   sendEmailVerification,
 } from "firebase/auth";
 import { auth,db} from "../config/firebaseConfig";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../contexts/AuthContext";
 import { ref, set } from "firebase/database";
 import "@fontsource/montserrat";
 import MainLayout from "../layouts/MainLayout";

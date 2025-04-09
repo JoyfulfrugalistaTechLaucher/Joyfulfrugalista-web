@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 // import { db } from '../config/firebaseConfig';
 import axios from "axios";
-import { useAuth } from "@/app/context/AuthContext";
+import { useAuth } from "@/app/contexts/AuthContext";
 import { auth } from "@/app/config/firebaseConfig";
 import { category, categories } from '@/data/Category';
 import {

@@ -1,6 +1,6 @@
 'use client';
 import React, { useState,useEffect } from 'react';
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../contexts/AuthContext";
 import { signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import MainLayout from "../layouts/MainLayout";

@@ -20,7 +20,7 @@ import { signOut } from "firebase/auth";
 import { ref, set } from 'firebase/database';
 import { db } from '../config/firebaseConfig';
 import axios from "axios";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../contexts/AuthContext";
 import { auth } from "../config/firebaseConfig";
 import MainLayout from "../layouts/MainLayout";
 import Animation from '../components/Animation';

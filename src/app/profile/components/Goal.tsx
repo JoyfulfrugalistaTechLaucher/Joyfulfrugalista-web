@@ -17,7 +17,7 @@ import {useMediaQuery, useTheme} from '@mui/material';
 import { useRouter } from 'next/navigation';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { useAuth } from '@/app/context/AuthContext';
+import { useAuth } from '@/app/contexts/AuthContext';
 import { User } from '@/app/interface';
 
 interface ProfileGoalProps {

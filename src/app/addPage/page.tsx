@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../contexts/AuthContext';
 import { addEntryToDatabase } from '../components/FirebaseDatabase';
 import BackgroundWrapper from "../components/BackgroundWrapper";
 import { ToastContainer, toast } from 'react-toastify';

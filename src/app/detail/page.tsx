@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { categories } from '@/data/Category';
 import Image from 'next/image';
 import { fetchSavingData } from '../components/FirebaseDatabase';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../contexts/AuthContext';
 import BackgroundWrapper from "../components/DetailPageBackgroud";
 
 interface FetchedData {

@@ -33,7 +33,7 @@ import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import { signOut } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import { auth } from '../config/firebaseConfig';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../contexts/AuthContext';
 import { useUserData } from '../hooks/useUserData';
 
 const menuItems = ['about', 'ledger', 'task', 'stats', 'profile'];
