@@ -73,7 +73,7 @@ export function RecordHistory({ records }: { records: SavingsRecord[] }) {
         renderInput={(params) => <TextField {...params}
                                    label="Filter by Category" />}
       />
-      <div className="flex gap-x-1 m-1">
+      <div className="flex gap-x-1 mx-1 my-2">
         <Button
           variant={sortKey === 0 ? "contained" : "outlined"}
           onClick={() => onClickSort(0)}
@@ -108,9 +108,9 @@ export function RecordHistory({ records }: { records: SavingsRecord[] }) {
         </Button>
 
       </div>
-      <div className="h-4/5 overflow-y-scroll">
+      <div className="h-4/5 mt-2 overflow-y-scroll">
         {
-          records.map((record) => {
+          history.map((record) => {
             return <RecordCard key={record.id} record={record} />
           })
         }

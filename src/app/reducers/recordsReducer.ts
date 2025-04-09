@@ -42,16 +42,20 @@ export function recordsReducer(
     case 'sorted': {
       switch(action.key) {
         case 'latest': {
-          return [...records].sort((a, b) => b.date.localeCompare(a.date));
+          return [...records].sort((a, b) =>
+            new Date(b.date).getTime() - new Date(a.date).getTime());
         }
         case 'oldest': {
-          return [...records].sort((a, b) => a.date.localeCompare(b.date));
+          return [...records].sort((a, b) =>
+            new Date(a.date).getTime() - new Date(b.date).getTime());
         }
         case 'largest': {
-          return [...records].sort((a, b) => a.moneyAdded - b.moneyAdded);
+          // Descending
+          return [...records].sort((a, b) => b.moneyAdded - a.moneyAdded);
         }
         case 'smallest': {
-          return [...records].sort((a, b) => b.moneyAdded - a.moneyAdded);
+          // Ascending
+          return [...records].sort((a, b) => a.moneyAdded - b.moneyAdded);
         }
         default: {
           console.error('Unknown sorting key: ' + action.key);
