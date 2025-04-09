@@ -1,6 +1,5 @@
 // Helpers
-export function formatDateString(isoDateString: string): string {
-  const date = new Date(isoDateString);
+export function formatDateString(date: Date): string {
   return new Intl.DateTimeFormat('en-US', {
     month: 'long',
     day: 'numeric',

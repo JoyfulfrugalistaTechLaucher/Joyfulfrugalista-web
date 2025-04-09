@@ -98,7 +98,7 @@ export function AddPanel({
   onAddRecord,
   onRefresh
 }: {
-  selectedDate: string,
+  selectedDate: Date,
   onAddRecord: (record: SavingsRecord) => Promise<boolean>,
   onRefresh: () => Promise<void>
 }) {

@@ -20,7 +20,7 @@ export interface UserProfileProps {
 
 export type SavingsRecord = {
   id?: string;
-  date: string;
+  date: Date;
   category: string;
   moneyAdded: number;
   description?: string;

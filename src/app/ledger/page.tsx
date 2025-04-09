@@ -52,11 +52,9 @@ function sortRecords(key: 'latest' | 'oldest' | 'increasing' | 'decreasing') {
 
 function LedgerPage() {
   const router = useRouter();
-  // const { uid, isLoggedIn } = useAuth();
-  // const [loading, setLoading] = useState(true);
   const { isLoggedIn } = useAuth();
   const { records, loading, error, addRecord, refreshRecords } = useRecords();
-  const today = new Date().toISOString().split('T')[0];
+  const today = new Date();
   const [selectedDate, setSelectedDate] = useState<string>(today);
 
   const [totalSavingAmount, setTotalSavingAmount] = useState<number>(0);
