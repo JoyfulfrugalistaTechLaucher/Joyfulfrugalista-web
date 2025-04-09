@@ -23,7 +23,7 @@ import { AddPanel } from './components/AddPanel';
 import { RecordHistory } from './components/History';
 
 function LedgerCalendar(
-  {date, handler}: {date: string, handler: (date: string) => void}
+  {date, handler}: {date: Date, handler: (date: Date) => void}
 ) {
   return (
     <LocalizationProvider
@@ -55,16 +55,20 @@ function LedgerPage() {
   const { isLoggedIn } = useAuth();
   const { records, loading, error, addRecord, refreshRecords } = useRecords();
   const today = new Date();
-  const [selectedDate, setSelectedDate] = useState<string>(today);
-
-  const [totalSavingAmount, setTotalSavingAmount] = useState<number>(0);
-  const [dailySavingAmount, setDailySavingAmount] = useState<number>(0);
+  const [selectedDate, setSelectedDate] = useState<Date>(today);
 
   useEffect(() => {
     if (!isLoggedIn) {
       router.replace('/login');
     }
   }, [isLoggedIn, router]);
+
+  // TODO: need to handle null?
+  const handleDateChange = (newDate: Dayjs) => {
+    if (newDate && newDate.isValid()) {
+      setSelectedDate(newDate.toDate());
+    }
+  }
 
   if (loading) {
     return (
@@ -89,9 +93,9 @@ function LedgerPage() {
           <div className="flex-1 flex justify-between items-start ledger-block-border">
             <LedgerCalendar
               date={selectedDate}
-              handler={(newDate) => setSelectedDate(newDate)}
+              handler={handleDateChange}
             />
-            <SummaryBox period={'day'} amount={37.5} />
+            <SummaryBox date={selectedDate}/>
           </div>
           <AddPanel
             selectedDate={selectedDate}

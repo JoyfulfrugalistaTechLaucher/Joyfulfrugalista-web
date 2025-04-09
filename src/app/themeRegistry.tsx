@@ -2,7 +2,7 @@
 
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import { themeOptions } from "../theme/theme";
+import { themeOptions } from "@/theme/theme";
 import React from "react";
 
 // Get basic theme options
@@ -41,6 +41,15 @@ theme = createTheme(theme, {
         },
       },
     },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          textTransform: 'none',
+          fontSize: '1rem',
+          fontWeight: 'bold'
+        },
+      },
+    }
   },
 });
 

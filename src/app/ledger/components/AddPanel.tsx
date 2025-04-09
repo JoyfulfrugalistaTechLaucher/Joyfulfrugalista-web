@@ -19,7 +19,7 @@ import {
   Typography
 } from '@mui/material';
 import { SavingsRecord, SavingsRecordProps } from '@/app/interface';
-import { formatDateString } from '@/app/utils';
+import { formatDate } from '@/app/utils';
 import { FB_URL } from '@/app/constants';
 
 // Form to submit new record of savings
@@ -168,7 +168,7 @@ export function AddPanel({
       <div className="flex gap-x-2 items-center">
         <h4 className="font-semibold m-1"> Add New Savings </h4>
         <div className="text-sm text-gray-400">
-          Selected Date: {formatDateString(selectedDate)}
+          Selected Date: {formatDate(selectedDate)}
         </div>
       </div>
       <NewRecordForm record={record} handler={updateRecord} />
