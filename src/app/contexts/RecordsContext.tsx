@@ -22,6 +22,7 @@ type RecordsContextType = {
 }
 
 const RecordsContext = createContext<RecordsContextType | undefined>(undefined);
+// const RecordsDispatchContext = createContext(null);
 
 // convenient helper to use the context
 export const useRecords = () => {
@@ -38,24 +39,8 @@ export const RecordsProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Load records from cache initially (optional)
-  useEffect(() => {
-    if (isLoggedIn && uid) {
-      const cachedRecords = localStorage.getItem(`records_${uid}`);
-      if (cachedRecords) {
-        try {
-          const parsedRecords = JSON.parse(cachedRecords);
-          dispatch({ kind: 'loaded', data: parsedRecords });
-        } catch (e) {
-          console.error('Error parsing cached records');
-        }
-      }
-      // Even with cached data, we'll still fetch fresh data
-      refreshRecords();
-    }
-  }, [isLoggedIn, uid]);
-
-  const refreshRecords = async () => {
+  // Use useCallback to memoize the refreshRecords function
+  const refreshRecords = React.useCallback(async () => {
     if (!isLoggedIn || !uid) return;
 
     setLoading(true);
@@ -83,9 +68,50 @@ export const RecordsProvider = ({ children }: { children: ReactNode }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [isLoggedIn, uid]);
 
-  const addRecord = async (record: SavingsRecord): Promise<boolean> => {
+  // Load records from cache initially
+  useEffect(() => {
+    let mounted = true;
+
+    if (isLoggedIn && uid) {
+      const cachedRecords = localStorage.getItem(`records_${uid}`);
+      if (cachedRecords && mounted) {
+        try {
+          const parsedRecords = JSON.parse(cachedRecords);
+          dispatch({ kind: 'loaded', data: parsedRecords });
+        } catch (e) {
+          console.error('Error parsing cached records');
+        }
+      }
+    }
+
+    return () => {
+      mounted = false;
+    };
+  }, [isLoggedIn, uid]);
+
+  // Separate effect for data fetching
+  useEffect(() => {
+    let isMounted = true;
+
+    // Use a small delay to ensure component is mounted
+    const fetchTimer = setTimeout(() => {
+      if (isLoggedIn && uid && isMounted) {
+        const fetchTimer = setTimeout(() => {
+          refreshRecords();
+        }, 10);
+      }
+    }, 10);
+
+    return () => {
+      isMounted = false;
+      clearTimeout(fetchTimer);
+    };
+  }, [isLoggedIn, uid, refreshRecords]);
+
+  // Use callback for addRecord too
+  const addRecord = React.useCallback(async (record: SavingsRecord): Promise<boolean> => {
     if (!isLoggedIn || !uid) return false;
 
     try {
@@ -109,7 +135,7 @@ export const RecordsProvider = ({ children }: { children: ReactNode }) => {
       setError('Failed to add your savings record');
     }
     return false;
-  };
+  }, [isLoggedIn, uid, records]);
 
   const value = {
     records,

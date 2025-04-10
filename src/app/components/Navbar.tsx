@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState  } from 'react';
+import React, { useState, useEffect  } from 'react';
 import {
   Avatar,
   AppBar,
@@ -32,7 +32,6 @@ import { signOut } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import { auth } from '@/app/config/firebaseConfig';
 import { useAuth } from '@/app/contexts/AuthContext';
-import { useUserData } from '@/app/hooks/useUserData';
 
 const menuItems = ['about', 'ledger', 'task', 'stats', 'profile'];
 const menuIconsMap: { [key: string]: React.ElementType} = {
@@ -42,7 +41,6 @@ const menuIconsMap: { [key: string]: React.ElementType} = {
   'stats': BarChartIcon,
   'profile': AccountCircleIcon,
 };
-
 
 function DrawerMenu() {
   const [open, setOpen] = useState<boolean>(false);
@@ -97,10 +95,8 @@ function DrawerMenu() {
 function ProfileMenu() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const { uid, isLoggedIn, setUid } = useAuth();
-  const { user, loading } = useUserData(uid);
+  const { uid, user, isLoggedIn, setUid } = useAuth();
   const router = useRouter();
-
   // handlers
   const handleClick = (e: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(e.currentTarget);
@@ -126,11 +122,16 @@ function ProfileMenu() {
     }
   };
 
+  // Use a client-side only initial render
+  const [mounted, setMounted] = useState(false);
 
-  if (loading) {
-    return (
-      <Box>Login ...</Box>
-    );
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Return null on server-side
+  if (!mounted) {
+    return null;
   }
 
   if (!isLoggedIn) {
