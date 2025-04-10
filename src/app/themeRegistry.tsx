@@ -2,7 +2,7 @@
 
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import { themeOptions } from "../theme/theme";
+import { themeOptions } from "@/theme/theme";
 import React from "react";
 
 // Get basic theme options
@@ -41,6 +41,47 @@ theme = createTheme(theme, {
         },
       },
     },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          textTransform: 'none',
+          fontSize: '1rem',
+          fontWeight: 'bold'
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: 'capitalize',
+        },
+      },
+    },
+    MuiTypography: {
+      defaultProps: {
+        variantMapping: {
+          body2: 'span',
+          subtitle2: 'span',
+        }
+      },
+      variants: [
+        {
+          props: { variant: 'body2' },
+          style: {
+            fontSize: '0.875rem',
+            lineHeight: '1.25rem',
+          }
+        },
+        {
+          props: { variant: 'subtitle2' },
+          style: {
+            fontSize: '1rem',
+            lineHeight: '1.5rem',
+            fontWeight: 'normal',
+          }
+        }
+      ]
+    }
   },
 });
 

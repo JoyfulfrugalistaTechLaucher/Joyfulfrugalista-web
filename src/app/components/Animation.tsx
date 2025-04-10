@@ -1,9 +1,5 @@
 "use client";
-
 import React, { useState, useEffect } from 'react';
-import axios from "axios";
-import { getDatabase, ref, get } from 'firebase/database'; 
-
 
 interface AnimationProps {
     uid: string;
@@ -21,14 +17,14 @@ const Animation: React.FC<AnimationProps> = ({ uid }) => {
         const checkGoalStatus = async () => {
             try {
                 const response = await fetch(`/api/savings/${uid}`);
-                
+
                 if (!response.ok) {
                     console.error('Error fetching goal status from API:', response.status);
                     return;
                 }
-        
+
                 const data = await response.json();
-                
+
                 const { goal, totalMoneyAdded } = data;
 
                 if (goal <= totalMoneyAdded) {

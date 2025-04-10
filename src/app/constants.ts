@@ -31,3 +31,5 @@ export const DUSER: User = {
     setDate: '2024-10-08',
   },
 };
+
+export type SortKey = 'latest' | 'oldest' | 'largest' | 'smallest';

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Animation from '../components/Animation';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../contexts/AuthContext';
 
 const TestPage: React.FC = () => {
     const { uid } = useAuth();

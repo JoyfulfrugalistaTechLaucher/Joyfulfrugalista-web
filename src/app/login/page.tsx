@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { auth } from "../config/firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import "@fontsource/montserrat";
 import MainLayout from "../layouts/MainLayout";

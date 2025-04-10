@@ -22,7 +22,6 @@ export default tseslint.config(
     rules: {
      '@typescript-eslint/no-unused-vars': 1,
      'no-unused-vars': 1,
-     'no-undef': 2,
     }
   },
 );
