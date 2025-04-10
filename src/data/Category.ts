@@ -6,6 +6,7 @@ export interface Category {
 }
 
 export const categories: Category[] = [
+  { id: 'General', title: 'General', iconName: '/assets/housing.png', color: '#D0C6E1' },
   { id: 'Housing', title: 'Housing', iconName: '/assets/housing.png', color: '#D0C6E1' },
   { id: 'Household', title: 'Household', iconName: '/assets/household.png', color: '#F1EBF2' },
   { id: 'Utilities', title: 'Utilities', iconName: '/assets/utilities.png', color: '#C4D3EB' },

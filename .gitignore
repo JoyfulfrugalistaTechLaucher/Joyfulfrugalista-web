@@ -21,6 +21,7 @@
 *.pem
 .idea/
 .dir-locals.el
+tags
 
 # debug
 npm-debug.log*

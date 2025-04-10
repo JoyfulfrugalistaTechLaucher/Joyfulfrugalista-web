@@ -6,14 +6,18 @@ import React, {
   useEffect,
   ReactNode,
 } from "react";
+import axios from 'axios';
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../config/firebaseConfig";
+import { User } from '@/app/interface';
+import { FB_URL } from '@/app/constants';
 
-
-interface AuthContextType {
+// TODO: Add avatar to this context and drop the user data hook
+type AuthContextType = {
   uid: string | null;
   setUid: (uid: string | null) => void;
   isLoggedIn: boolean;
+  user: User | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -26,9 +30,8 @@ export const useAuth = () => {
   return context;
 };
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
+export function AuthProvider({ children }: { children: ReactNode }) {
   const [uid, setUid] = useState<string | null>(() => {
-    // 从 localStorage 恢复 uid
     if (typeof window !== "undefined") {
       return localStorage.getItem("uid");
     }
@@ -40,30 +43,47 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
     return false;
   });
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    // 检查并恢复用户状态
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUid(user.uid);
         setIsLoggedIn(true);
-        localStorage.setItem("uid", user.uid); // 保存 uid
-        localStorage.setItem("isLoggedIn", "true"); // 设置登录标志
+        localStorage.setItem("uid", user.uid);
+        localStorage.setItem("isLoggedIn", "true");
       } else {
         setUid(null);
         setIsLoggedIn(false);
-        localStorage.removeItem("uid"); // 移除 uid
-        localStorage.removeItem("isLoggedIn"); // 移除登录标志
+        localStorage.removeItem("uid");
+        localStorage.removeItem("isLoggedIn");
       }
     });
 
     return () => unsubscribe();
   }, []);
 
+  // Fetch user data when uid changes
+  useEffect(() => {
+    if (uid) {
+      const fetchProfile = async () => {
+        try {
+          const response = await axios.get<User>(`${FB_URL}/users/${uid}.json`);
+          setUser(response.data || null);
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+          setUser(null);
+        }
+      };
+
+      fetchProfile();
+    }
+  }, [uid]);
+
+
   return (
-      <AuthContext.Provider value={{ uid, setUid, isLoggedIn }}>
-        {children}
-      </AuthContext.Provider>
+    <AuthContext.Provider value={{ uid, user, isLoggedIn, setUid }}>
+      {children}
+    </AuthContext.Provider>
   );
 };
-

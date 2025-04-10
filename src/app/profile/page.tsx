@@ -16,16 +16,16 @@ import CloseIcon from '@mui/icons-material/Close';
 import {useMediaQuery, useTheme} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useRouter } from "next/navigation";
-import { signOut } from "firebase/auth";
 import { ref, set } from 'firebase/database';
-import { db } from '../config/firebaseConfig';
+import { db } from '@/app/config/firebaseConfig';
 import axios from "axios";
-import { useAuth } from "../context/AuthContext";
-import { auth } from "../config/firebaseConfig";
-import MainLayout from "../layouts/MainLayout";
-import Animation from '../components/Animation';
-import { CircImgBox } from '../components/ImgBox';
-import Castle from "../components/Castle";
+import { useAuth } from "@/app/contexts/AuthContext";
+import MainLayout from "@/app/layouts/MainLayout";
+import Animation from '@/app/components/Animation';
+import { CircImgBox } from '@/app/components/ImgBox';
+import Castle from "@/app/components/Castle";
+import { FB_URL, AVATARS, DUSER } from '@/app/constants';
+import { User, UserProfileProps } from "@/app/interface";
 import {
   UserEmail,
   UserGender,
@@ -33,8 +33,6 @@ import {
   UserPhone,
 } from './components/Inputs';
 import { UserMonthGoal } from './components/Goal';
-import { FB_URL, AVATARS, DUSER } from '../constants';
-import { User, UserProfileProps } from "../interface";
 
 // styles
 const AvatarButton = styled(Button)(() => ({

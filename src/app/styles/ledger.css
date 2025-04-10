@@ -1,0 +1,29 @@
+/* Styles for ledger page */
+
+.ledger-layout-desktop {
+    @apply flex gap-x-1 justify-between;
+    max-height: 795px;
+    overflow-y: hidden;
+}
+
+.ledger-layout-mobile {
+    @apply w-full m-2;
+}
+
+.ledger-block-border {
+    @apply border border-solid border-gray-300 rounded-md;
+}
+
+.ledger-left-column {
+    @apply w-[65%] flex-1 flex flex-col justify-between gap-x-2;
+    overflow-y: auto;
+}
+
+.ledger-right-column {
+    @apply w-[35%] p-1;
+    overflow-y: auto;
+}
+
+.ledger-inputs-form {
+    @apply m-1 w-full flex flex-col sm:flex-row gap-2 justify-between items-center;
+}

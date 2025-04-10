@@ -4,7 +4,8 @@
 @tailwind utilities;
 
 /* custom modules */
-@import 'goal.css';
+@import './goal.css';
+@import './ledger.css';
 
 body {
   @apply font-sans;
@@ -89,11 +90,11 @@ body {
 
 
 .footer {
+  @apply text-xs sm:text-sm md:text-base;
   text-align: center;
   padding: 10px;
   background: transparent;
   width: 100%; /* Ensure footer spans the full width */
-  font-size: 1rem;
 }
 
 .login-container {

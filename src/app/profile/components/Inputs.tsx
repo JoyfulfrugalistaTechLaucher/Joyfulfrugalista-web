@@ -2,7 +2,6 @@
 
 import React, { Fragment, useState } from 'react';
 import {
-  Box,
   Button,
   FormControl,
   FormHelperText,
@@ -17,11 +16,11 @@ import {
 } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material/Select';
 import {useMediaQuery, useTheme} from '@mui/material';
-import { styled } from '@mui/material/styles';
+// import { styled } from '@mui/material/styles';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
-import { User, UserProfileProps } from '../../interface';
+import { UserProfileProps } from '@/app/interface';
 
 export const MAX_NAME_LEN = 30;
 export const GENDERS: string[] = [
@@ -48,7 +47,7 @@ export function UserName({user, handler}: UserProfileProps) {
      onChange={onChange}
      value={user.name}
      placeholder="Joyful Jar"
-     helperText={isValid(user.name) ? "" : "Name length exceeds 30 characters"}
+     helperText={isValid(user.name) ? "" : 'Name length exceeds 30 characters'}
     />
   );
 }
@@ -94,7 +93,7 @@ export function UserPhone({user, handler}: UserProfileProps) {
       type="tel"
       value={fmtPhone}
       onChange={onChange}
-      helperText={isValidPhoneNumber(fmtPhone) ? "" : "Mobile must be '04xx xxx xxx'"}
+      helperText={isValidPhoneNumber(fmtPhone) ? '' : 'Mobile must be 04xx xxx xxx'}
       placeholder="0412 356 789"
     />
   );
@@ -165,11 +164,11 @@ export function UserEmail({user, handler}: UserProfileProps) {
   const onSave = () => {
     if (userEmail.trim() === '') {
       setValid(false);
-      setError("Email is required.");
+      setError('Email is required.');
     }
     else if (!isEmail(userEmail)) {
       setValid(false);
-      setError("Email address format is not valid.");
+      setError('Email address format is not valid.');
     } else {
       handler({ email: userEmail });
       setEditing(false);
@@ -187,11 +186,11 @@ export function UserEmail({user, handler}: UserProfileProps) {
 
     if (newEmail.trim().length === 0) {
       setValid(false);
-      setError("Email is required.");
+      setError('Email is required.');
     }
     else if (!isEmail(newEmail)) {
       setValid(false);
-      setError("Email address format is not valid.");
+      setError('Email address format is not valid.');
     }
     else {
       setValid(true);

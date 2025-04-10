@@ -17,24 +17,24 @@ import {useMediaQuery, useTheme} from '@mui/material';
 import { useRouter } from 'next/navigation';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { useAuth } from '@/app/context/AuthContext';
+import { useAuth } from '@/app/contexts/AuthContext';
 import { User } from '@/app/interface';
+import { formatNumber } from '@/app/utils';
 
-interface ProfileGoalProps {
+type ProfileGoalProps = {
   user: User;
   show: boolean;
   handleShow: (hs: boolean) => void;
 }
 
-interface CircProgressProps {
+type CircProgressProps = {
   reached: boolean,
   prog: number;
-  // total savings
   total: number;
   size?: number | string;
 }
 
-interface LinearProgressProps {
+type LinearProgressProps = {
   prog: number;
 }
 
@@ -44,7 +44,6 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   marginRight: 2,
   borderRadius: 5,
   '& .MuiLineProgress-colorPrimary': {
-    // backgroundColor: theme.palette.grey[200],
     backgroundColor: theme.palette.primary.light,
   },
   '& .MuiLineProgress-bar': {
@@ -78,32 +77,10 @@ const SmallGoalDoneIcon = styled(CheckCircleIcon)(({ theme }) => ({
 
 const LargeGoalDoneIcon = styled(CheckCircleIcon)(({ theme }) => ({
   color: theme.palette.primary.main,
-  fontSize: '2.5rem',
+  fontSize: '2.25rem',
   position: 'absolute',
   bottom: '1rem',
 }));
-
-// Format a given number to the contarcted form. For example, input 123,400
-// output 123.4 k.  Supports numbers no larger than one billion
-function formatValue(value: number | undefined): string {
-  if (value === undefined) return '';
-
-  if (value < 1000) {
-    return value.toString();
-  }
-
-  if (value < 1000_000) {
-    return (value / 1000).toString().concat('K');
-  }
-
-  if (value < 1000_000_000) {
-    return (value / 1000_000).toString().concat('M');
-  }
-
-  // else this must be a super billionare
-  // return 'Hello Billionare';
-  return (value / 1000_000_000).toString().concat('B');
-}
 
 function easeInOutQuad(time: number): number {
   return time < 0.5 ? 2 * time * time : -1 + (4 - 2 * time) * time;
@@ -161,16 +138,16 @@ export function SemiCircGoalPanel({reached, prog, total, size}: CircProgressProp
           variant={md ? 'h4' : 'h5'}
           className="absolute left-0 right-0 font-semibold"
           style={{
-            top: md ? '3.5rem' : '3rem',
+            top: md ? '3.25rem' : '3rem',
           }}
         >
           Saved
         </Typography>
         <Typography
-          variant={md ? 'h1' : 'h2'}
+          variant={md ? 'h2' : 'h3'}
           className="absolute left-0 right-0 font-bold"
           style={{
-            top: md ? '5.2rem' : '4.8rem',
+            top: md ? '5.2rem' : '4.5rem',
           }}
         >
           ${total}
@@ -214,7 +191,7 @@ export function CircProgressWithLabel({reached, prog, total }: CircProgressProps
         className="absolute left-0 right-0 justify-center items-center"
       >
         <Box className="text-base font-semibold">Saved</Box>
-        <Box className="text-2xl font-bold">${formatValue(total)}</Box>
+        <Box className="text-2xl font-bold">${formatNumber(total)}</Box>
         {reached && <SmallGoalDoneIcon />}
       </Stack>
     </Stack>
@@ -318,7 +295,7 @@ export function UserMonthGoal({ user, show, handleShow }: ProfileGoalProps) {
             <Stack spacing={0} className="pt-1">
               <Box className="text-xs font-light">Your Monthly Goal</Box>
               <Box className="text-2xl font-normal">
-                ${hasGoal ? formatValue(user.task?.goal) : 0}
+                ${hasGoal ? formatNumber(user.task?.goal) : 0}
               </Box>
             </Stack>
             <CompactButton
@@ -344,10 +321,10 @@ export function UserMonthGoal({ user, show, handleShow }: ProfileGoalProps) {
         <Box className="w-full">
           <Stack direction="row" className="justify-between items-center">
             <Box className="text-base font-semibold">
-              Saved ${formatValue(totalSavings)}
+              Saved ${formatNumber(totalSavings)}
             </Box>
             <Box className="text-base font-semibold">
-              Your Monthily Goal ${hasGoal ? formatValue(user.task?.goal) : 0}
+              Your Monthily Goal ${hasGoal ? formatNumber(user.task?.goal) : 0}
             </Box>
           </Stack>
           <LinearProgressWithLabel prog={progress} />
