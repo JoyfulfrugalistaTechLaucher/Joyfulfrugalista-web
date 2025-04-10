@@ -14,6 +14,7 @@ import {
 import { SavingsRecord, SavingsRecordProps } from '@/app/interface';
 import { formatDate } from '@/app/utils';
 import { FB_URL } from '@/app/constants';
+import CategoryPanel from './CategoryPanel';
 
 // Form to submit new record of savings
 function NewRecordForm({ record, handler }: SavingsRecordProps) {
@@ -29,9 +30,9 @@ function NewRecordForm({ record, handler }: SavingsRecordProps) {
   }
 
   return (
-    <div className="m-1 w-full flex gap-x-2 justify-around items-center">
+    <div className="ledger-inputs-form">
       {/* Amount */}
-      <FormControl className="m-1 flex-1">
+      <FormControl className="flex-1 w-full">
         <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
         <OutlinedInput
           id="outlined-amount"
@@ -46,42 +47,18 @@ function NewRecordForm({ record, handler }: SavingsRecordProps) {
         />
       </FormControl>
       {/* Description */}
-       <TextField
-         id="outlined-adornment-description"
-         autoComplete="off"
-         className="m-1 flex-1"
-         label="Description"
-         type="text"
-         onChange={onDesChange}
-         value={description || ''}
-         placeholder="(optional) e.g. Used gift cards" />
-    </div>
-  )
-}
-
-function CategoryPanel({record, handler}: {SavingsRecordProps}) {
-  const onSelect = (category: string) => {
-    handler({ category });
-  };
-
-  return (
-    <div>
-      <Typography component="h4">Category</Typography>
-      <div
-        className="my-2 flex flex-wrap items-center justify-start gap-1"
-      >
-        {categories.map((category) => (
-          <Button
-            key={category.id}
-            variant={record.category === category.id ? "contained" : "outlined"}
-            onClick={() => onSelect(category.id)}
-            className="p-1 m-1 rounded-md"
-            size="small"
-          >
-            {category.id}
-          </Button>
-        ))}
-      </div>
+      <FormControl className="flex-1 w-full">
+        <InputLabel htmlFor="outlined-adornment-description">Description</InputLabel>
+        <OutlinedInput
+          id="outlined-adornment-description"
+          autoComplete="off"
+          label="Description"
+          type="text"
+          onChange={onDesChange}
+          value={description || ''}
+          placeholder="(optional) e.g. Used gift cards"
+        />
+      </FormControl>
     </div>
   )
 }
@@ -156,8 +133,8 @@ export function AddPanel({
   };
 
   return (
-    <div className="mt-2 p-2 ledger-block-border">
-      <div className="flex gap-x-2 items-center">
+    <div className="mt-2 p-2 w-full ledger-block-border">
+      <div className="mx-1 mb-3 flex flex-col sm:flex-row gap-x-2 items-center">
         <h4 className="font-semibold m-1"> Add New Savings </h4>
         <div className="text-sm text-gray-400">
           Selected Date: {formatDate(selectedDate)}
@@ -174,12 +151,20 @@ export function AddPanel({
       )}
 
       {/* Action buttons */}
-      <div className="mt-3 flex justify-end gap-x-2">
+      <div className="mt-3 flex justify-center md:justify-end gap-x-2">
         <Button
           variant="outlined"
           color="secondary"
           onClick={clearForm}
           disabled={loading}
+          sx={{
+            borderColor: 'secondary.dark',
+            color: 'secondary.dark',
+            '&:hover': {
+              borderColor: 'secondary.dark',
+              backgroundColor: 'rgba(147, 116, 0, 0.04)'
+            }
+          }}
         >
           Clear
         </Button>

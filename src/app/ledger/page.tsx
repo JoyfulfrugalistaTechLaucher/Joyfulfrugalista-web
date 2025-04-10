@@ -19,6 +19,7 @@ import { SummaryBox } from './components/SummaryBox';
 import { AddPanel } from './components/AddPanel';
 import { RecordHistory } from './components/History';
 import DesktopView from './views/Desktop';
+import MobileView from './views/Mobile';
 
 function LedgerCalendar(
   {date, handler}: {date: Date, handler: (date: Date) => void}
@@ -40,7 +41,7 @@ function LedgerPage() {
 
   if (small) {
     return (
-      <div>Working on this</div>
+      <MobileView />
     )
   }
 

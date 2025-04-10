@@ -11,6 +11,7 @@ export const themeOptions: ThemeOptions = {
     },
     secondary: {
       main: '#f3c875',
+      dark: '#937400'
     },
     error: {
       main: '#ff2172',

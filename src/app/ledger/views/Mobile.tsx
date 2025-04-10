@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import {
+  useTheme,
+  useMediaQuery,
   Box,
   CircularProgress,
 } from '@mui/material';
@@ -12,14 +14,16 @@ import BackgroundWrapper from '@/app/components/BackgroundWrapper';
 import { SummaryBox } from '../components/SummaryBox';
 import { AddPanel } from '../components/AddPanel';
 import { RecordHistory } from '../components/History';
-import { LedgerCalendarDesktop } from '../components/Calendar';
+import { LedgerCalendarMobile, LedgerCalendarDesktop } from '../components/Calendar';
 
-function DesktopView() {
+function MobileView() {
   const router = useRouter();
   const { isLoggedIn } = useAuth();
   const { records, loading, error, addRecord, refreshRecords } = useRecords();
   const today = new Date();
   const [selectedDate, setSelectedDate] = useState<Date>(today);
+  const theme = useTheme();
+  const md = useMediaQuery(theme.breakpoints.up('sm'));
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -51,30 +55,38 @@ function DesktopView() {
 
   return (
     <MainLayout>
-      <div className="ledger-layout-desktop">
-        {/* Column one: Calender + Summary + AddPanel */}
-        <div className="ledger-left-column">
-          <div className="flex-1 flex justify-between items-start ledger-block-border">
+      <div className="ledger-layout-mobile">
+
+        { md ? (
+          <div className="ledger-block-border my-2 flex flex-row gap-2">
             <LedgerCalendarDesktop
               date={selectedDate}
               handler={handleDateChange}
             />
             <SummaryBox date={selectedDate}/>
           </div>
-          <AddPanel
-            selectedDate={selectedDate}
-            onAddRecord={addRecord}
-            onRefresh={refreshRecords}
-          />
-        </div>
+        ) : (
+          <>
+            <div className="mb-2 ledger-block-border">
+              <SummaryBox date={selectedDate}/>
+            </div>
+            <LedgerCalendarMobile
+              date={selectedDate}
+              handler={handleDateChange}
+            />
+          </>
+        )
+        }
 
-        {/* Column two: History */}
-        <div className="ledger-right-column ledger-block-border">
-          <RecordHistory records={records} />
-        </div>
+        <AddPanel
+          selectedDate={selectedDate}
+          onAddRecord={addRecord}
+          onRefresh={refreshRecords}
+        />
+
       </div>
     </MainLayout>
   );
-};
+}
 
-export default DesktopView;
+export default MobileView;
