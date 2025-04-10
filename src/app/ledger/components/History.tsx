@@ -42,6 +42,8 @@ const filterOptions = createFilterOptions({
 
 const keys: SortKey[] = ['latest', 'oldest', 'largest', 'smallest'];
 
+// A simple list of full history records for the login user to view, filter, sort
+// For the single-page version, see ledger/history/page.tsx
 export function RecordHistory({ records }: { records: SavingsRecord[] }) {
   const [history, dispatch] = useReducer(recordsReducer, records);
   const [sortKey, setSortKey] = useState<number>(0);

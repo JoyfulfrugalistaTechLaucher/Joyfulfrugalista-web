@@ -21,6 +21,7 @@ export const themeOptions: ThemeOptions = {
     },
     info: {
       main: '#6dc1dc',
+      dark: '#006080'
     },
     success: {
       main: '#a690fc',

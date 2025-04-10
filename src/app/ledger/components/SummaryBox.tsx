@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import {
   Box,
+  Link,
   Tab,
   Tabs,
 } from '@mui/material';
@@ -75,31 +76,38 @@ export function SummaryBox({date}: {date: Date}) {
         className="h-full my-4 pt-2"
       >
         {/* Label */}
-        {period === 'day' && (
-          <div className="text-xs text-info text-center">
-            Total saved on { formatDate(date) }
-          </div>
-        )}
-        {period === 'week' && (
-          <div className="text-xs text-info text-center">
-            {(() => {
-              const { start, end } = getWeekBounds(date);
-              return (
-                <> Total saved in { formatDate(start, { month: 'long' }) } {start.getDate()}-{end.getDate()}, {start.getFullYear()}
-                </>
-              );
-            })()}
-          </div>
-        )}
-        {period === 'month' && (
-          <div className="text-xs text-info text-center">
-             Total saved in {formatDate(date, {month: 'long', year: 'numeric'})}
-          </div>
-        )}
-
+        <div className="text-sm text-center">
+          { period === 'day' && (
+            <span>Total saved on { formatDate(date) }</span>
+          )}
+          { period === 'week' && (() => {
+            const { start, end } = getWeekBounds(date);
+            return (
+              <span> Total saved in { formatDate(start, { month: 'long' }) } {start.getDate()}-{end.getDate()}, {start.getFullYear()}
+              </span>
+            );
+          })()}
+          { period === 'month' && (
+            <span>
+              Total saved in {formatDate(date, {month: 'long', year: 'numeric'})}
+            </span>
+          )}
+        </div>
+        {/* Summary */}
         <div className="m-2 text-3xl font-bold text-primary text-center">
           ${summary(records, date, period)}
         </div>
+
+        {/* History entry */}
+        <Link
+          href="/ledger/history"
+          underline="hover"
+          variant="caption"
+          display="block"
+          align="center"
+        >
+          <span>View full savings history &gt; </span>
+        </Link>
       </div>
     </Box>
   )

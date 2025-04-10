@@ -20,6 +20,15 @@ export function formatDate(date: Date, format?: DateFormatOptions): string {
   ).format(date);
 }
 
+// Format a date object into the form of `mm/dd/yyyy`
+export function formatNumericDate(date: Date): string {
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  const year = date.getFullYear();
+
+  return `${day}/${month}/${year}`;
+}
+
 export function getWeekBounds(date: Date): { start: Date, end: Date } {
   const start = new Date(date);
   const day = date.getDay(); // 0 is Sunday, 6 is Saturday
