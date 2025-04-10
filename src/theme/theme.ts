@@ -25,31 +25,17 @@ export const themeOptions: ThemeOptions = {
       main: '#a690fc',
     },
   },
-  components: {
-    MuiTypography: {
-      defaultProps: {
-        variantMapping: {
-          body2: 'span',
-          subtitle2: 'span',
-        }
-      },
-      variants: [
-        {
-          props: { variant: 'body2' },
-          style: {
-            fontSize: '0.875rem',
-            lineHeight: '1.25rem',
-          }
-        },
-        {
-          props: { variant: 'subtitle2' },
-          style: {
-            fontSize: '1rem',
-            lineHeight: '1.5rem',
-            fontWeight: 'normal',
-          }
-        }
-      ]
+  // by default equal to those of the defaul tailwincss
+  // 1. https://v3.tailwindcss.com/docs/responsive-design
+  // 2. https://mui.com/material-ui/customization/breakpoints/
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 640,
+      md: 768,
+      lg: 1024,
+      xl: 1280,
+      '2xl': 1536,
     }
   },
 };

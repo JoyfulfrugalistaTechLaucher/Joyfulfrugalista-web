@@ -56,6 +56,31 @@ theme = createTheme(theme, {
           textTransform: 'capitalize',
         },
       },
+    },
+    MuiTypography: {
+      defaultProps: {
+        variantMapping: {
+          body2: 'span',
+          subtitle2: 'span',
+        }
+      },
+      variants: [
+        {
+          props: { variant: 'body2' },
+          style: {
+            fontSize: '0.875rem',
+            lineHeight: '1.25rem',
+          }
+        },
+        {
+          props: { variant: 'subtitle2' },
+          style: {
+            fontSize: '1rem',
+            lineHeight: '1.5rem',
+            fontWeight: 'normal',
+          }
+        }
+      ]
     }
   },
 });
