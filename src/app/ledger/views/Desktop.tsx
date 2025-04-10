@@ -68,7 +68,7 @@ function DesktopView() {
 
   return (
     <MainLayout>
-      <div className="ledger-layout">
+      <div className="ledger-layout-desktop">
         {/* Column one: Calender + Summary + AddPanel */}
         <div className="ledger-left-column">
           <div className="flex-1 flex justify-between items-start ledger-block-border">

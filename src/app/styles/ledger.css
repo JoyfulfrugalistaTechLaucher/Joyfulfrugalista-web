@@ -1,9 +1,13 @@
 /* Styles for ledger page */
 
-.ledger-layout {
+.ledger-layout-desktop {
     @apply flex gap-x-1 justify-between;
     max-height: 795px;
     overflow-y: hidden;
+}
+
+.ledger-layout-mobile {
+    @apply w-full m-2;
 }
 
 .ledger-block-border {
@@ -18,4 +22,8 @@
 .ledger-right-column {
     @apply w-[35%] p-1;
     overflow-y: auto;
+}
+
+.ledger-inputs-form {
+    @apply m-1 w-full flex flex-col sm:flex-row gap-2 justify-between items-center;
 }
