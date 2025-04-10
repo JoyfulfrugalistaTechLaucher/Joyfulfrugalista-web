@@ -53,7 +53,7 @@ export const RecordsProvider = ({ children }: { children: ReactNode }) => {
         ? Object.entries(recordsData).map(([id, data]) => ({
           id,
           ...(data as SavingsRecord),
-          date: new Date(data.date)
+          date: new Date((data as SavingsRecord).date)
           }))
         : [];
 

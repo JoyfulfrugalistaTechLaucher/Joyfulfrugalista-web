@@ -1,10 +1,8 @@
 'use client';
 import React, { useState,useEffect } from 'react';
-import { signOut } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import MainLayout from '@/app/layouts/MainLayout';
 import { useAuth } from '@/app/contexts/AuthContext';
-import BackgroundWrapper from '@/app/components/BackgroundWrapper';
 import {
   Avatar,
   Box,
@@ -14,3 +12,23 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+
+function Stats() {
+  const router = useRouter();
+  const { isLoggedIn } = useAuth();
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      router.replace('/login');
+    }
+  }, [isLoggedIn, router]);
+
+  return (
+
+    <MainLayout>
+      <div>Work in progress</div>
+    </MainLayout>
+  )
+}
+
+export default Stats;

@@ -13,13 +13,12 @@ import { useRecords } from '@/app/contexts/RecordsContext';
 import BackgroundWrapper from '@/app/components/BackgroundWrapper';
 import { SummaryBox } from '../components/SummaryBox';
 import { AddPanel } from '../components/AddPanel';
-import { RecordHistory } from '../components/History';
 import { LedgerCalendarMobile, LedgerCalendarDesktop } from '../components/Calendar';
 
 function MobileView() {
   const router = useRouter();
   const { isLoggedIn } = useAuth();
-  const { records, loading, error, addRecord, refreshRecords } = useRecords();
+  const { loading, addRecord, refreshRecords } = useRecords();
   const today = new Date();
   const [selectedDate, setSelectedDate] = useState<Date>(today);
   const theme = useTheme();
@@ -32,10 +31,13 @@ function MobileView() {
   }, [isLoggedIn, router]);
 
   // TODO: need to handle null?
-  const handleDateChange = (newDate: Dayjs) => {
-    if (newDate && newDate.isValid()) {
-      setSelectedDate(newDate.toDate());
-    }
+  // const handleDateChange = (newDate: Dayjs) => {
+  //   if (newDate && newDate.isValid()) {
+  //     setSelectedDate(newDate.toDate());
+  //   }
+  // }
+  const handleDateChange = (newDate: Date) => {
+    setSelectedDate(newDate);
   }
 
   if (loading) {

@@ -10,8 +10,13 @@ import {
 // import {useMediaQuery, useTheme} from '@mui/material';
 import { useRecords } from '@/app/contexts/RecordsContext';
 import { getWeekBounds, formatDate } from '@/app/utils';
+import { SavingsRecord } from '@/app/interface';
 
-function summary(records: SavingsRecord[], targetDate: Date, period: string): number {
+function summary(
+  records: SavingsRecord[],
+  targetDate: Date,
+  period: string
+): number {
   switch(period) {
   case 'day': {
     return records
@@ -51,8 +56,10 @@ function summary(records: SavingsRecord[], targetDate: Date, period: string): nu
 export function SummaryBox({date}: {date: Date}) {
   const [period, setPeriod] = useState<'day' | 'week' | 'month'>('day');
   const { records } = useRecords();
-  const onChange = (event: React.SyntheticEvent, newPeriod: string) => {
-    setPeriod(newPeriod);
+  const onChange = (
+    event: React.SyntheticEvent,
+    newPeriod: 'day' | 'week' | 'month') => {
+      setPeriod(newPeriod);
   }
 
   return (
@@ -71,10 +78,7 @@ export function SummaryBox({date}: {date: Date}) {
         <Tab value="week" label="Week"></Tab>
         <Tab value="month" label="Month"></Tab>
       </Tabs>
-      <div
-        component="div"
-        className="h-full my-4 pt-2"
-      >
+      <div className="h-full my-4 pt-2" >
         {/* Label */}
         <div className="text-sm text-center">
           { period === 'day' && (

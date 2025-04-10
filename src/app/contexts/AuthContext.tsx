@@ -10,7 +10,7 @@ import axios from 'axios';
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../config/firebaseConfig";
 import { User } from '@/app/interface';
-import { FB_URL, DEFAULT_AVATAR } from '@/app/constants';
+import { FB_URL } from '@/app/constants';
 
 // TODO: Add avatar to this context and drop the user data hook
 type AuthContextType = {
@@ -30,8 +30,7 @@ export const useAuth = () => {
   return context;
 };
 
-export function AuthProvider({ children }: { children: ReactNode }): AuthContextType
-{
+export function AuthProvider({ children }: { children: ReactNode }) {
   const [uid, setUid] = useState<string | null>(() => {
     if (typeof window !== "undefined") {
       return localStorage.getItem("uid");

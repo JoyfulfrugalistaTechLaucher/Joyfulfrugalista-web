@@ -1,6 +1,6 @@
 'use client';
 import { useEffect } from 'react';
-import { DataGrid, GridRowsProp, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import MainLayout from '@/app/layouts/MainLayout';
 import { useRouter } from 'next/navigation';
 import { useRecords } from '@/app/contexts/RecordsContext';

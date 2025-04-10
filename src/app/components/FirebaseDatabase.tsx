@@ -1,5 +1,5 @@
 import { getDatabase, ref, push, get, set } from 'firebase/database'
-
+import { SavingsRecord } from '@/app/interface';
 
 export const addEntryToDatabase = (uid: string, date: string, moneyAdded: string, category: string, description: string) => {
     return new Promise<void>((resolve, reject) => {
@@ -30,8 +30,11 @@ export const fetchSavingData = (uid: string) => {
     return new Promise((resolve, reject) => {
         get(userAddInfoRef).then((snapshot) => {
             if (snapshot.exists()) {
-                const savingEntries = snapshot.val();
-                const totalSaved = Object.values(savingEntries).reduce((acc:any, entry:any) => acc + parseInt(entry.moneyAdded), 0);
+              const savingEntries = snapshot.val();
+              const totalSaved = Object
+                .values(savingEntries as Record<string, SavingsRecord>)
+                .reduce((acc: number, entry: SavingsRecord) =>
+                  acc + entry.moneyAdded, 0);
                 resolve({ savingEntries, totalSaved });
             } else {
                 // Handle case when no data exists

@@ -1,6 +1,5 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { categories } from '@/data/Category';
 import {
   Button,
   CircularProgress,
@@ -8,12 +7,9 @@ import {
   InputAdornment,
   InputLabel,
   OutlinedInput,
-  TextField,
-  Typography
 } from '@mui/material';
 import { SavingsRecord, SavingsRecordProps } from '@/app/interface';
 import { formatDate } from '@/app/utils';
-import { FB_URL } from '@/app/constants';
 import CategoryPanel from './CategoryPanel';
 
 // Form to submit new record of savings

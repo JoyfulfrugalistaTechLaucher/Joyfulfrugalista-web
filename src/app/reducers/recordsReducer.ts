@@ -1,4 +1,5 @@
 import { SortKey } from '@/app/constants';
+import { SavingsRecord } from '@/app/interface';
 
 type LoadRecords = {
   kind: 'loaded';

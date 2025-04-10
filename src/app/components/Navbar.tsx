@@ -95,7 +95,7 @@ function DrawerMenu() {
 function ProfileMenu() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const { uid, user, isLoggedIn, setUid } = useAuth();
+  const { user, isLoggedIn, setUid } = useAuth();
   const router = useRouter();
   // handlers
   const handleClick = (e: React.MouseEvent<HTMLElement>) => {

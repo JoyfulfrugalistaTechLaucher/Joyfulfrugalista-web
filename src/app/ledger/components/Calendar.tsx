@@ -1,5 +1,5 @@
 'use client';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -14,7 +14,11 @@ function LedgerCalendarMobile(
     >
       <DatePicker
         value={dayjs(date)}
-        onChange={handler}
+        onChange={(value, context) => {
+          if (value) {
+            handler(value.toDate());
+          }
+        }}
         views={['year', 'month', 'day']}
         sx={{
           width: '100%',
@@ -39,7 +43,11 @@ function LedgerCalendarDesktop(
     >
       <DateCalendar
         value={dayjs(date)}
-        onChange={handler} />
+        onChange={(value) => {
+          if (value) {
+            handler(value.toDate());
+          }
+        }} />
     </LocalizationProvider>
   );
 }

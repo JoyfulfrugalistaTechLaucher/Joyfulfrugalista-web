@@ -12,7 +12,7 @@ import {
 import { categories } from '@/data/Category';
 import { SavingsRecordProps } from '@/app/interface';
 
-function CategoryPanel({record, handler}: {SavingsRecordProps}) {
+function CategoryPanel({record, handler}: SavingsRecordProps) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 

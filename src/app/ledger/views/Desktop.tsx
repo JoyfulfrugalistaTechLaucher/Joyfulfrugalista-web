@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
+import { Dayjs } from 'dayjs';
 import { useRouter } from 'next/navigation';
 import {
   Box,
@@ -28,11 +29,15 @@ function DesktopView() {
   }, [isLoggedIn, router]);
 
   // TODO: need to handle null?
-  const handleDateChange = (newDate: Dayjs) => {
-    if (newDate && newDate.isValid()) {
-      setSelectedDate(newDate.toDate());
-    }
+  // const handleDateChange = (newDate: Dayjs) => {
+  //   if (newDate && newDate.isValid()) {
+  //     setSelectedDate(newDate.toDate());
+  //   }
+  // }
+  const handleDateChange = (newDate: Date) => {
+    setSelectedDate(newDate);
   }
+
 
   if (loading) {
     return (
