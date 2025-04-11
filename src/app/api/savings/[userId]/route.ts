@@ -70,7 +70,7 @@ export async function GET(
           });
           console.log(record);
 
-          totalMoneyAdded += record.moneyAdded || 0;  // Accumulate total money added
+          totalMoneyAdded += record.saved || 0;  // Accumulate total money added
         }
       });
 

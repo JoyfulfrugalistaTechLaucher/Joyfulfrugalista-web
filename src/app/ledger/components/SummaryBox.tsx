@@ -6,8 +6,8 @@ import {
   Tab,
   Tabs,
 } from '@mui/material';
-// import { styled } from '@mui/material/styles';
-// import {useMediaQuery, useTheme} from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useRecords } from '@/app/contexts/RecordsContext';
 import { getWeekBounds, formatDate } from '@/app/utils';
 import { SavingsRecord } from '@/app/interface';
@@ -26,7 +26,7 @@ function summary(
           recordDate.getMonth() === targetDate.getMonth() &&
           recordDate.getDate() === targetDate.getDate();
       })
-      .reduce((acc, r) => acc + r.moneyAdded, 0);
+      .reduce((acc, r) => acc + r.saved, 0);
   }
   case 'week': {
     const { start, end } = getWeekBounds(targetDate);
@@ -35,7 +35,7 @@ function summary(
         const recordDate = new Date(r.date);
         return recordDate >= start && recordDate <= end;
       })
-      .reduce((acc, r) => acc + r.moneyAdded, 0);
+      .reduce((acc, r) => acc + r.saved, 0);
   }
   case 'month': {
     return records
@@ -44,7 +44,7 @@ function summary(
         return recordDate.getFullYear() === targetDate.getFullYear() &&
           recordDate.getMonth() === targetDate.getMonth();
       })
-      .reduce((acc, r) => acc + r.moneyAdded, 0);
+      .reduce((acc, r) => acc + r.saved, 0);
   }
   default: {
     console.error('Unknow period: ', period);
@@ -56,6 +56,9 @@ function summary(
 export function SummaryBox({date}: {date: Date}) {
   const [period, setPeriod] = useState<'day' | 'week' | 'month'>('day');
   const { records } = useRecords();
+  const theme = useTheme();
+  const mid = useMediaQuery(theme.breakpoints.down('lg'));
+
   const onChange = (
     event: React.SyntheticEvent,
     newPeriod: 'day' | 'week' | 'month') => {
@@ -103,15 +106,17 @@ export function SummaryBox({date}: {date: Date}) {
         </div>
 
         {/* History entry */}
-        <Link
-          href="/ledger/history"
-          underline="hover"
-          variant="caption"
-          display="block"
-          align="center"
-        >
-          <span>View full savings history &gt; </span>
-        </Link>
+        { mid &&
+          <Link
+            href="/ledger/history"
+            underline="hover"
+            variant="caption"
+            display="block"
+            align="center"
+          >
+            <span>View full savings history &gt; </span>
+          </Link>
+        }
       </div>
     </Box>
   )

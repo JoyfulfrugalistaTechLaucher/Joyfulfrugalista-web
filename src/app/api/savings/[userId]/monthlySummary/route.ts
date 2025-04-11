@@ -59,7 +59,7 @@ export async function GET(
       // Summary amounts by category
       const category = record.category;
         groupedByMonth[month][category] = (groupedByMonth[month][category] || 0)
-          + record.moneyAdded;
+          + record.saved;
     });
 
     // Return monthly results
