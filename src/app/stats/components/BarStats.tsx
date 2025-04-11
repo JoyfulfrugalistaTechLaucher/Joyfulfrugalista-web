@@ -23,6 +23,7 @@ import {
 } from '@mui/material';
 import { formatCurrency } from '@/app/utils';
 import { useTheme, useMediaQuery } from '@mui/material';
+import { TimeRange } from '@/app/constants';
 
 // Register ChartJS components
 ChartJS.register(
@@ -33,8 +34,6 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-
-type TimeRange = 'Today' | '1Week' | '1Month' | '1Year';
 
 function BarStats({ records }: { records: SavingsRecord[] }) {
   const currentYear = DateTime.now().year;

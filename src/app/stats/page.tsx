@@ -14,7 +14,8 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import BarChat from './components/BarStats';
+import BarStats from './components/BarStats';
+import PieStats from './components/PieStats';
 
 function Stats() {
   const router = useRouter();
@@ -45,7 +46,10 @@ function Stats() {
   return (
 
     <MainLayout>
-      <BarChat records={records} />
+      <div className="flex flex-col md:flex-col gap-2 justify-between items-center">
+        <PieStats records={records} />
+        <BarStats records={records} />
+      </div>
     </MainLayout>
   )
 }

@@ -14,7 +14,7 @@ import {
   formatDate,
   formatNumber
 } from '@/app/utils';
-import { SortKey } from '@/app/constants';
+import { SortKey } from '@/app/contants';
 
 export function RecordCard({ record }: { record: SavingsRecord }) {
   return (

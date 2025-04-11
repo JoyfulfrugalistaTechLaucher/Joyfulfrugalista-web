@@ -32,4 +32,6 @@ export const DUSER: User = {
   },
 };
 
+// constant types
+export type TimeRange = 'Today' | '1Week' | '1Month' | '1Year';
 export type SortKey = 'latest' | 'oldest' | 'largest' | 'smallest';
