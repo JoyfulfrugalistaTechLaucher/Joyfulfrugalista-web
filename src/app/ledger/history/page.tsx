@@ -9,7 +9,7 @@ import { formatNumericDate } from '@/app/utils';
 
 const cols: GridColDef[] = [
   { field: 'category', headerName: 'Type', width: 130 },
-  { field: 'moneyAdded', headerName: 'Saved', width: 140 },
+  { field: 'saved', headerName: 'Saved', width: 140 },
   { field: 'date',
     headerName: 'Date',
     width: 130,

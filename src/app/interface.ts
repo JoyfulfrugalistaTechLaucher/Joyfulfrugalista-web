@@ -22,7 +22,7 @@ export type SavingsRecord = {
   id?: string;
   date: Date;
   category: string;
-  moneyAdded: number;
+  saved: number;
   description?: string;
 }
 

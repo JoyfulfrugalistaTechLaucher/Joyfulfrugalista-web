@@ -77,7 +77,7 @@ function BarStats({ records }: { records: SavingsRecord[] }) {
 
     return records.filter(record => {
       // Skip records with invalid data
-      if (!record.date || record.moneyAdded < 0) {
+      if (!record.date || record.saved < 0) {
         return false;
       }
 
@@ -126,7 +126,7 @@ function BarStats({ records }: { records: SavingsRecord[] }) {
         if (!categoryTotals[record.category]) {
           categoryTotals[record.category] = 0;
         }
-        categoryTotals[record.category] += record.moneyAdded;
+        categoryTotals[record.category] += record.saved;
       });
 
       const labels = Object.keys(categoryTotals);
@@ -196,7 +196,7 @@ function BarStats({ records }: { records: SavingsRecord[] }) {
         groupedData[dateKey][record.category] = 0;
       }
 
-      groupedData[dateKey][record.category] += record.moneyAdded;
+      groupedData[dateKey][record.category] += record.saved;
       uniqueCategories.add(record.category);
     });
 

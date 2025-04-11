@@ -14,11 +14,11 @@ import CategoryPanel from './CategoryPanel';
 
 // Form to submit new record of savings
 function NewRecordForm({ record, handler }: SavingsRecordProps) {
-  const { moneyAdded, description } = record
+  const { saved, description } = record
 
   const onAmtChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newAmt = parseFloat(e.target.value) || 0;
-    handler({ moneyAdded: newAmt });
+    handler({ saved: newAmt });
   }
 
   const onDesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,7 +37,7 @@ function NewRecordForm({ record, handler }: SavingsRecordProps) {
           label="Amount"
           type="number"
           onChange={onAmtChange}
-          value={moneyAdded}
+          value={saved}
           placeholder="0.00"
           startAdornment={<InputAdornment position="start">$</InputAdornment>}
         />
@@ -75,7 +75,7 @@ export function AddPanel({
   const defaultRecord = {
     date: selectedDate,
     category: 'General', // Set a default category
-    moneyAdded: 0,
+    saved: 0,
     description: ''
   };
 
@@ -97,7 +97,7 @@ export function AddPanel({
 
   const submitRecord = async () => {
     // Validate the record
-    if (record.moneyAdded <= 0) {
+    if (record.saved <= 0) {
       setMessage({text: 'Please enter a valid amount', type: 'error'});
       return;
     }

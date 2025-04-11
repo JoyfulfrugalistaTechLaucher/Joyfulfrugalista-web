@@ -16,6 +16,9 @@
 # production
 /build
 
+# firebase scripts
+fbadmin/
+
 # misc
 .DS_Store
 *.pem

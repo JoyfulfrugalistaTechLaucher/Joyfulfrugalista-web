@@ -26,7 +26,7 @@ function summary(
           recordDate.getMonth() === targetDate.getMonth() &&
           recordDate.getDate() === targetDate.getDate();
       })
-      .reduce((acc, r) => acc + r.moneyAdded, 0);
+      .reduce((acc, r) => acc + r.saved, 0);
   }
   case 'week': {
     const { start, end } = getWeekBounds(targetDate);
@@ -35,7 +35,7 @@ function summary(
         const recordDate = new Date(r.date);
         return recordDate >= start && recordDate <= end;
       })
-      .reduce((acc, r) => acc + r.moneyAdded, 0);
+      .reduce((acc, r) => acc + r.saved, 0);
   }
   case 'month': {
     return records
@@ -44,7 +44,7 @@ function summary(
         return recordDate.getFullYear() === targetDate.getFullYear() &&
           recordDate.getMonth() === targetDate.getMonth();
       })
-      .reduce((acc, r) => acc + r.moneyAdded, 0);
+      .reduce((acc, r) => acc + r.saved, 0);
   }
   default: {
     console.error('Unknow period: ', period);

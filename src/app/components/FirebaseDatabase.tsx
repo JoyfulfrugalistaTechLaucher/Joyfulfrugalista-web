@@ -1,7 +1,7 @@
 import { getDatabase, ref, push, get, set } from 'firebase/database'
 import { SavingsRecord } from '@/app/interface';
 
-export const addEntryToDatabase = (uid: string, date: string, moneyAdded: string, category: string, description: string) => {
+export const addEntryToDatabase = (uid: string, date: string, saved: string, category: string, description: string) => {
     return new Promise<void>((resolve, reject) => {
         const database = getDatabase();
         const userAddInfoRef = ref(database, `addInfo/${uid}`);
@@ -9,7 +9,7 @@ export const addEntryToDatabase = (uid: string, date: string, moneyAdded: string
 
         set(newRecordRef, {
             date,
-            moneyAdded,
+            saved,
             category,
             description
         })
@@ -34,7 +34,7 @@ export const fetchSavingData = (uid: string) => {
               const totalSaved = Object
                 .values(savingEntries as Record<string, SavingsRecord>)
                 .reduce((acc: number, entry: SavingsRecord) =>
-                  acc + entry.moneyAdded, 0);
+                  acc + entry.saved, 0);
                 resolve({ savingEntries, totalSaved });
             } else {
                 // Handle case when no data exists

@@ -52,11 +52,11 @@ export function recordsReducer(
         }
         case 'largest': {
           // Descending
-          return [...records].sort((a, b) => b.moneyAdded - a.moneyAdded);
+          return [...records].sort((a, b) => b.saved - a.saved);
         }
         case 'smallest': {
           // Ascending
-          return [...records].sort((a, b) => a.moneyAdded - b.moneyAdded);
+          return [...records].sort((a, b) => a.saved - b.saved);
         }
         default: {
           console.error('Unknown sorting key: ' + action.key);
