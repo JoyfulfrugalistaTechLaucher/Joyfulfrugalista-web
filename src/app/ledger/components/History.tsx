@@ -16,9 +16,7 @@ import {
 } from '@/app/utils';
 import { SortKey } from '@/app/constants';
 
-export function RecordCard(
-  { record }: { record: SavingsRecord }
-) {
+export function RecordCard({ record }: { record: SavingsRecord }) {
   return (
     <div
       className="ledger-block-border p-2 my-1 mr-1 bg-slate-100 flex justify-between items-center"
