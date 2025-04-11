@@ -29,15 +29,9 @@ function DesktopView() {
   }, [isLoggedIn, router]);
 
   // TODO: need to handle null?
-  // const handleDateChange = (newDate: Dayjs) => {
-  //   if (newDate && newDate.isValid()) {
-  //     setSelectedDate(newDate.toDate());
-  //   }
-  // }
   const handleDateChange = (newDate: Date) => {
     setSelectedDate(newDate);
   }
-
 
   if (loading) {
     return (

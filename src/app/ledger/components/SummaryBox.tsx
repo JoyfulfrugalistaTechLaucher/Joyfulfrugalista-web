@@ -6,8 +6,8 @@ import {
   Tab,
   Tabs,
 } from '@mui/material';
-// import { styled } from '@mui/material/styles';
-// import {useMediaQuery, useTheme} from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useRecords } from '@/app/contexts/RecordsContext';
 import { getWeekBounds, formatDate } from '@/app/utils';
 import { SavingsRecord } from '@/app/interface';
@@ -56,6 +56,9 @@ function summary(
 export function SummaryBox({date}: {date: Date}) {
   const [period, setPeriod] = useState<'day' | 'week' | 'month'>('day');
   const { records } = useRecords();
+  const theme = useTheme();
+  const mid = useMediaQuery(theme.breakpoints.down('lg'));
+
   const onChange = (
     event: React.SyntheticEvent,
     newPeriod: 'day' | 'week' | 'month') => {
@@ -103,15 +106,17 @@ export function SummaryBox({date}: {date: Date}) {
         </div>
 
         {/* History entry */}
-        <Link
-          href="/ledger/history"
-          underline="hover"
-          variant="caption"
-          display="block"
-          align="center"
-        >
-          <span>View full savings history &gt; </span>
-        </Link>
+        { mid &&
+          <Link
+            href="/ledger/history"
+            underline="hover"
+            variant="caption"
+            display="block"
+            align="center"
+          >
+            <span>View full savings history &gt; </span>
+          </Link>
+        }
       </div>
     </Box>
   )
