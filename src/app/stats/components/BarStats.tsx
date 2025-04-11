@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Category, categories } from '@/data/Category';
 import { SavingsRecord } from '@/app/interface';
 import {
@@ -9,6 +9,7 @@ import {
   BarElement,
   Title,
   Tooltip,
+  TooltipItem,
   Legend
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
@@ -52,7 +53,11 @@ function BarStats({ records }: { records: SavingsRecord[] }) {
     records.forEach(record => {
       const recordDate = record.date instanceof Date
         ? DateTime.fromJSDate(record.date)
-        : DateTime.fromISO(record.date.toString());
+        : typeof record.date === 'string'
+          ? DateTime.fromISO(record.date)
+          : typeof record.date === 'number'
+            ? DateTime.fromMillis(record.date)
+            : DateTime.invalid('Invalid date format');
 
       if (recordDate.isValid) {
         years.add(recordDate.year);
@@ -82,7 +87,11 @@ function BarStats({ records }: { records: SavingsRecord[] }) {
 
       const recordDate = record.date instanceof Date
         ? DateTime.fromJSDate(record.date)
-        : DateTime.fromISO(record.date.toString());
+        : typeof record.date === 'string'
+          ? DateTime.fromISO(record.date)
+          : typeof record.date === 'number'
+            ? DateTime.fromMillis(record.date)
+            : DateTime.invalid('Invalid date format');
 
       if (!recordDate.isValid) {
         return false;
@@ -175,7 +184,11 @@ function BarStats({ records }: { records: SavingsRecord[] }) {
     filteredRecords.forEach(record => {
       const recordDate = record.date instanceof Date
         ? DateTime.fromJSDate(record.date)
-        : DateTime.fromISO(record.date.toString());
+        : typeof record.date === 'string'
+          ? DateTime.fromISO(record.date)
+          : typeof record.date === 'number'
+            ? DateTime.fromMillis(record.date)
+            : DateTime.invalid('Invalid date format');
 
       let dateKey: string;
 
@@ -213,6 +226,22 @@ function BarStats({ records }: { records: SavingsRecord[] }) {
     return { labels, datasets };
   }, [filteredRecords, timeRange, categoryMap, selectedYear]);
 
+
+  // Force chart update when window size changes
+  useEffect(() => {
+    const handleResize = () => {
+      const chart = ChartJS.getChart("bar-chart");
+      if (chart) {
+        chart.resize();
+        chart.update('none'); // force update without animation
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    // call resize handler immediately to ensure initial sizing is correct
+    handleResize();
+    return () => window.removeEventListener('resize', handleResize);
+  }, [isSmallScreen]);
+
   // Handle year change
   const handleYearChange = (event: SelectChangeEvent<number>) => {
     setSelectedYear(Number(event.target.value));
@@ -222,6 +251,7 @@ function BarStats({ records }: { records: SavingsRecord[] }) {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
+    resizeDelay: 0,
     scales: {
       x: {
         stacked: timeRange !== 'Today',
@@ -230,8 +260,8 @@ function BarStats({ records }: { records: SavingsRecord[] }) {
         stacked: timeRange !== 'Today',
         beginAtZero: true,
         ticks: {
-          callback: function(value: number) {
-            return formatCurrency(value);
+          callback: function(value: string | number ) {
+            return formatCurrency(Number(value));
           }
         }
       },
@@ -243,8 +273,8 @@ function BarStats({ records }: { records: SavingsRecord[] }) {
       },
       tooltip: {
         callbacks: {
-          label: function(context: any) {
-            return `${context.dataset.label}: ${formatCurrency(context.raw)}`;
+          label: function(context: TooltipItem<'bar'>) {
+            return `${context.dataset.label}: ${formatCurrency(context.raw as number)}`;
           }
         }
       }
@@ -252,7 +282,7 @@ function BarStats({ records }: { records: SavingsRecord[] }) {
   };
 
   return (
-    <div className="w-full p-2">
+    <div className="p-2">
       <div className="mb-4 flex flex-col md:flex-row gap-4 justify-between items-center">
         <div className="flex space-x-2 md:space-x-4">
           {(['Today', '1Week', '1Month', '1Year'] as TimeRange[]).map(range => (
@@ -296,7 +326,7 @@ function BarStats({ records }: { records: SavingsRecord[] }) {
 
       <div className="h-[400px]">
         {filteredRecords.length > 0 ? (
-          <Bar data={chartData} options={options} />
+          <Bar data={chartData} options={options} id="bar-chart" />
         ) : (
           <div className="flex items-center justify-center h-full">
             <p className="text-gray-500">

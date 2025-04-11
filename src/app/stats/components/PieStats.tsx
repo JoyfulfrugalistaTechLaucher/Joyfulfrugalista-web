@@ -6,6 +6,7 @@ import {
   Chart as ChartJS,
   ArcElement,
   Tooltip,
+  TooltipItem,
   Legend
 } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
@@ -17,9 +18,7 @@ import {
   Select,
   MenuItem,
   SelectChangeEvent,
-  Paper,
   Typography,
-  Box,
   useTheme,
   useMediaQuery
 } from '@mui/material';
@@ -43,16 +42,13 @@ type SummaryBoxProps = {
     percentage: number;
     color: string;
   }[];
-  comparison?: { amount: number; percentage: number };
 }
 
-// Summary Box Component
 function SummaryBox({
   timeRange,
   selectedYear,
   totalAmount,
   categoryData,
-  comparison
 }: SummaryBoxProps ) {
   const now = DateTime.now();
 
@@ -79,8 +75,8 @@ function SummaryBox({
   }, [categoryData]);
 
   return (
-    <div className="w-full h-full p-4">
-      <div>
+    <div className="p-4">
+      <div className="mx-auto">
         <h2 className="text-xl text-center font-semibold my-2">Summary</h2>
         <p className="text-sm text-center my-3">
           {timeInfo}
@@ -91,11 +87,14 @@ function SummaryBox({
 
         {topCategories.length > 0 ? (
           <>
-           <p className="text-sm font-medium mb-2">Top Categories:</p>
+           <p className="text-sm text-center font-medium mb-2">Top Categories:</p>
 
             {topCategories.map(category => (
-             <div key={category.id} className="flex justify-between mb-1 text-sm">
-               <div className="flex items-center justify-start">
+              <div
+                key={category.id}
+                className="flex justify-between mb-1 gap-4 text-sm"
+              >
+               <div className="flex flex-row items-center">
                  <div
                    className="w-3 h-3 rounded-full mr-2"
                    style={{ backgroundColor: category.color }}
@@ -127,7 +126,7 @@ function PieStats({ records }: { records: SavingsRecord[] }) {
   const [timeRange, setTimeRange] = useState<TimeRange>('Today');
   const [selectedYear, setSelectedYear] = useState<number>(currentYear);
   const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('lg'));
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
   // Generate year options
   const yearOptions = useMemo(() => {
@@ -139,7 +138,11 @@ function PieStats({ records }: { records: SavingsRecord[] }) {
     records.forEach(record => {
       const recordDate = record.date instanceof Date
         ? DateTime.fromJSDate(record.date)
-        : DateTime.fromISO(record.date.toString());
+        : typeof record.date === 'string'
+          ? DateTime.fromISO(record.date)
+          : typeof record.date === 'number'
+            ? DateTime.fromMillis(record.date)
+            : DateTime.invalid('Invalid date format');
 
       if (recordDate.isValid) {
         years.add(recordDate.year);
@@ -169,7 +172,11 @@ function PieStats({ records }: { records: SavingsRecord[] }) {
 
       const recordDate = record.date instanceof Date
         ? DateTime.fromJSDate(record.date)
-        : DateTime.fromISO(record.date.toString());
+        : typeof record.date === 'string'
+          ? DateTime.fromISO(record.date)
+          : typeof record.date === 'number'
+            ? DateTime.fromMillis(record.date)
+            : DateTime.invalid('Invalid date format');
 
       if (!recordDate.isValid) {
         return false;
@@ -196,78 +203,6 @@ function PieStats({ records }: { records: SavingsRecord[] }) {
       }
     });
   }, [records, timeRange, selectedYear]);
-
-  // Calculate previous period comparison
-  const comparisonData = useMemo(() => {
-    if (filteredRecords.length === 0) return undefined;
-
-    const now = DateTime.now();
-    let previousPeriodRecords: SavingsRecord[] = [];
-
-    // Define previous period based on current time range
-    switch (timeRange) {
-      case 'Today': {
-        // Yesterday
-        const yesterday = now.minus({ days: 1 });
-        previousPeriodRecords = records.filter(record => {
-          const recordDate = record.date instanceof Date
-            ? DateTime.fromJSDate(record.date)
-            : DateTime.fromISO(record.date.toString());
-          return recordDate.hasSame(yesterday, 'day');
-        });
-        break;
-      }
-      case '1Week': {
-        // Previous week
-        const startOfPrevWeek = now.startOf('week').minus({ weeks: 1 });
-        const endOfPrevWeek = startOfPrevWeek.plus({ days: 6 });
-        previousPeriodRecords = records.filter(record => {
-          const recordDate = record.date instanceof Date
-            ? DateTime.fromJSDate(record.date)
-            : DateTime.fromISO(record.date.toString());
-          return recordDate >= startOfPrevWeek && recordDate <= endOfPrevWeek;
-        });
-        break;
-      }
-      case '1Month': {
-        // Previous month
-        const prevMonth = now.minus({ months: 1 });
-        previousPeriodRecords = records.filter(record => {
-          const recordDate = record.date instanceof Date
-            ? DateTime.fromJSDate(record.date)
-            : DateTime.fromISO(record.date.toString());
-          return recordDate.year === prevMonth.year && recordDate.month === prevMonth.month;
-        });
-        break;
-      }
-      case '1Year': {
-        // Previous year
-        const prevYear = selectedYear - 1;
-        previousPeriodRecords = records.filter(record => {
-          const recordDate = record.date instanceof Date
-            ? DateTime.fromJSDate(record.date)
-            : DateTime.fromISO(record.date.toString());
-          return recordDate.year === prevYear;
-        });
-        break;
-      }
-    }
-
-    // Calculate totals
-    const currentTotal = filteredRecords.reduce((sum, record) => sum + record.saved, 0);
-    const previousTotal = previousPeriodRecords.reduce((sum, record) => sum + record.saved, 0);
-
-    // Calculate percentage change
-    let percentageChange = 0;
-    if (previousTotal > 0) {
-      percentageChange = Math.round(((currentTotal - previousTotal) / previousTotal) * 100);
-    }
-
-    return {
-      amount: previousTotal,
-      percentage: percentageChange
-    };
-  }, [filteredRecords, records, timeRange, selectedYear]);
 
   // Prepare pie chart data
   const { chartData, categoryData, totalAmount } = useMemo(() => {
@@ -326,10 +261,10 @@ function PieStats({ records }: { records: SavingsRecord[] }) {
       },
       tooltip: {
         callbacks: {
-          label: function(context: any) {
-            const label = context.label || '';
-            const value = context.raw || 0;
-            const total = context.chart.getDatasetMeta(0).total;
+          label: function(context: TooltipItem<'pie'>) {
+            const label = context.label as string || '';
+            const value = context.raw as number || 0;
+            const total = context.chart.data.datasets[0].data?.reduce((sum: number, value) => sum + (value as number), 0) || 0;
             const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
             return `${label}: ${formatCurrency(value)} (${percentage}%)`;
           }
@@ -339,7 +274,7 @@ function PieStats({ records }: { records: SavingsRecord[] }) {
   };
 
   return (
-    <div className="w-full p-2 mb-6">
+    <div className="p-2 mb-6">
       <div className="mb-4 flex flex-col md:flex-row gap-4 justify-between items-center">
         <div className="flex space-x-2 md:space-x-4">
           {(['Today', '1Week', '1Month', '1Year'] as TimeRange[]).map(range => (
@@ -389,7 +324,6 @@ function PieStats({ records }: { records: SavingsRecord[] }) {
               selectedYear={selectedYear}
               totalAmount={totalAmount}
               categoryData={categoryData}
-              comparison={comparisonData}
             />
           </div>
         )}
@@ -415,7 +349,6 @@ function PieStats({ records }: { records: SavingsRecord[] }) {
               selectedYear={selectedYear}
               totalAmount={totalAmount}
               categoryData={categoryData}
-              comparison={comparisonData}
             />
           </div>
         )}

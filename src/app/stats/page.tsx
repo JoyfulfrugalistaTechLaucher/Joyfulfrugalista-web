@@ -1,18 +1,13 @@
 'use client';
-import React, { useState,useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useRecords } from '@/app/contexts/RecordsContext';
 import MainLayout from '@/app/layouts/MainLayout';
 import BackgroundWrapper from '@/app/components/BackgroundWrapper';
 import { useAuth } from '@/app/contexts/AuthContext';
 import {
-  Avatar,
   Box,
-  Container,
   CircularProgress,
-  Grid,
-  Stack,
-  Typography,
 } from "@mui/material";
 import BarStats from './components/BarStats';
 import PieStats from './components/PieStats';
@@ -20,7 +15,7 @@ import PieStats from './components/PieStats';
 function Stats() {
   const router = useRouter();
   const { isLoggedIn } = useAuth();
-  const { records, loading, error, addRecord, refreshRecords } = useRecords();
+  const { records, loading } = useRecords();
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -53,7 +48,5 @@ function Stats() {
     </MainLayout>
   )
 }
-
-
 
 export default Stats;
