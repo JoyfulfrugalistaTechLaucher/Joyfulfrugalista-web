@@ -66,3 +66,14 @@ export function formatNumber(value: number | undefined): string {
   // else this must be a super billionare
   return (value / 1000_000_000).toString().concat('B');
 }
+
+// Format currency values
+export function formatCurrency(value: number): string {
+  if (value >= 1000000) {
+    return `$${(value / 1000000).toFixed(1)}M`;
+  } else if (value >= 1000) {
+    return `$${(value / 1000).toFixed(1)}K`;
+  } else {
+    return `$${value.toFixed(2)}`;
+  }
+}

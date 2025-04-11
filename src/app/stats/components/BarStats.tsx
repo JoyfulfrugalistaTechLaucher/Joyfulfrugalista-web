@@ -1,9 +1,7 @@
 'use client';
-import React, { useMemo, useState, useReducer } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Category, categories } from '@/data/Category';
-import { SortKey } from '@/app/constants';
 import { SavingsRecord } from '@/app/interface';
-
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -15,6 +13,16 @@ import {
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import { DateTime } from 'luxon';
+import {
+  Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  SelectChangeEvent
+} from '@mui/material';
+import { formatCurrency } from '@/app/utils';
+import { useTheme, useMediaQuery } from '@mui/material';
 
 // Register ChartJS components
 ChartJS.register(
@@ -28,8 +36,32 @@ ChartJS.register(
 
 type TimeRange = 'Today' | '1Week' | '1Month' | '1Year';
 
-function BarChat({ records }: { records: SavingsRecord[] }) {
+function BarStats({ records }: { records: SavingsRecord[] }) {
+  const currentYear = DateTime.now().year;
   const [timeRange, setTimeRange] = useState<TimeRange>('Today');
+  const [selectedYear, setSelectedYear] = useState<number>(currentYear);
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('lg'));
+
+  // Generate year options
+  const yearOptions = useMemo(() => {
+    const years = new Set<number>();
+    // Add current year by default
+    years.add(currentYear);
+
+    // Add years from records
+    records.forEach(record => {
+      const recordDate = record.date instanceof Date
+        ? DateTime.fromJSDate(record.date)
+        : DateTime.fromISO(record.date.toString());
+
+      if (recordDate.isValid) {
+        years.add(recordDate.year);
+      }
+    });
+
+    return Array.from(years).sort((a, b) => b - a); // Sort descending
+  }, [records, currentYear]);
 
   // Create a category map for quick lookup
   const categoryMap = useMemo(() => {
@@ -39,27 +71,50 @@ function BarChat({ records }: { records: SavingsRecord[] }) {
     }, {} as Record<string, Category>);
   }, []);
 
-  // Filter records based on the selected time range
+  // Filter records based on the selected time range and year
   const filteredRecords = useMemo(() => {
     const now = DateTime.now();
 
     return records.filter(record => {
-      const recordDate = DateTime.fromJSDate(new Date(record.date));
+      // Skip records with invalid data
+      if (!record.date || record.moneyAdded < 0) {
+        return false;
+      }
 
+      const recordDate = record.date instanceof Date
+        ? DateTime.fromJSDate(record.date)
+        : DateTime.fromISO(record.date.toString());
+
+      if (!recordDate.isValid) {
+        return false;
+      }
+
+      // Filter by selected year first (except for Today which can cross year boundary)
+      if (timeRange !== 'Today' && recordDate.year !== selectedYear) {
+        return false;
+      }
+
+      // Then filter by time range
       switch (timeRange) {
         case 'Today':
-          return recordDate.hasSame(now, 'day');
-        case '1Week':
-          return recordDate >= now.minus({ weeks: 1 });
-        case '1Month':
-          return recordDate >= now.minus({ months: 1 });
+          return recordDate.hasSame(now, 'day') && recordDate.year === selectedYear;
+        case '1Week': {
+          const startOfWeek = DateTime.now().startOf('week').set({ year: selectedYear });
+          const endOfWeek = startOfWeek.plus({ days: 6 });
+          return recordDate >= startOfWeek && recordDate <= endOfWeek;
+        }
+        case '1Month': {
+          // Show full month for the current date
+          const monthToShow = now.month;
+          return recordDate.year === selectedYear && recordDate.month === monthToShow;
+        }
         case '1Year':
-          return recordDate >= now.minus({ years: 1 });
+          return recordDate.year === selectedYear;
         default:
           return false;
       }
     });
-  }, [records, timeRange]);
+  }, [records, timeRange, selectedYear]);
 
   // Prepare chart data based on the selected time range
   const chartData = useMemo(() => {
@@ -92,29 +147,25 @@ function BarChat({ records }: { records: SavingsRecord[] }) {
 
     // For other views: aggregate by time period and category
     let labels: string[] = [];
-    let dateFormat = '';
-    let timeUnit: 'day' | 'month' = 'day';
 
     if (timeRange === '1Week') {
-      dateFormat = 'EEE';
-      timeUnit = 'day';
-      // Generate last 7 days
+      // Generate week days (Monday to Sunday)
+      const startOfWeek = DateTime.now().startOf('week').set({ year: selectedYear });
       labels = Array.from({ length: 7 }, (_, i) => {
-        return DateTime.now().minus({ days: 6 - i }).toFormat(dateFormat);
+        return startOfWeek.plus({ days: i }).toFormat('EEE');
       });
     } else if (timeRange === '1Month') {
-      dateFormat = 'LLL dd';
-      timeUnit = 'day';
-      // Generate last 30 days
-      labels = Array.from({ length: 30 }, (_, i) => {
-        return DateTime.now().minus({ days: 29 - i }).toFormat(dateFormat);
+      // Generate days of the current month
+      const now = DateTime.now();
+      const daysInMonth = DateTime.local(selectedYear, now.month).daysInMonth || 30;
+
+      labels = Array.from({ length: daysInMonth }, (_, i) => {
+        return DateTime.local(selectedYear, now.month, i + 1).toFormat('d');
       });
     } else if (timeRange === '1Year') {
-      dateFormat = 'LLL';
-      timeUnit = 'month';
-      // Generate last 12 months
+      // Generate months of the year
       labels = Array.from({ length: 12 }, (_, i) => {
-        return DateTime.now().minus({ months: 11 - i }).toFormat(dateFormat);
+        return DateTime.local(selectedYear, i + 1).toFormat('LLL');
       });
     }
 
@@ -123,10 +174,19 @@ function BarChat({ records }: { records: SavingsRecord[] }) {
     const uniqueCategories = new Set<string>();
 
     filteredRecords.forEach(record => {
-      const recordDate = DateTime.fromJSDate(new Date(record.date));
-      const dateKey = timeUnit === 'day'
-        ? recordDate.toFormat(dateFormat)
-        : recordDate.toFormat('LLL'); // Month format
+      const recordDate = record.date instanceof Date
+        ? DateTime.fromJSDate(record.date)
+        : DateTime.fromISO(record.date.toString());
+
+      let dateKey: string;
+
+      if (timeRange === '1Week') {
+        dateKey = recordDate.toFormat('EEE');
+      } else if (timeRange === '1Month') {
+        dateKey = recordDate.toFormat('d');
+      } else { // 1Year
+        dateKey = recordDate.toFormat('LLL');
+      }
 
       if (!groupedData[dateKey]) {
         groupedData[dateKey] = {};
@@ -152,7 +212,12 @@ function BarChat({ records }: { records: SavingsRecord[] }) {
     });
 
     return { labels, datasets };
-  }, [filteredRecords, timeRange, categoryMap]);
+  }, [filteredRecords, timeRange, categoryMap, selectedYear]);
+
+  // Handle year change
+  const handleYearChange = (event: SelectChangeEvent<number>) => {
+    setSelectedYear(Number(event.target.value));
+  };
 
   // Chart options
   const options = {
@@ -165,52 +230,81 @@ function BarChat({ records }: { records: SavingsRecord[] }) {
       y: {
         stacked: timeRange !== 'Today',
         beginAtZero: true,
+        ticks: {
+          callback: function(value: number) {
+            return formatCurrency(value);
+          }
+        }
       },
     },
     plugins: {
       title: {
         display: true,
-        text: `Savings by ${timeRange === 'Today' ? 'Category' : 'Time Period'}`,
+        text: `${selectedYear} ${timeRange === 'Today' ? 'Today' : ''} Savings by ${timeRange === 'Today' ? 'Category' : 'Time Period'}`,
       },
       tooltip: {
         callbacks: {
           label: function(context: any) {
-            return `${context.dataset.label}: $${context.raw}`;
+            return `${context.dataset.label}: ${formatCurrency(context.raw)}`;
           }
         }
       }
     },
   };
 
-  // Handle time range change
-  const handleRangeChange = (range: TimeRange) => {
-    setTimeRange(range);
-  };
-
   return (
-    <div className="w-full p-4">
-      <div className="mb-4 flex justify-center space-x-4">
-        {(['Today', '1Week', '1Month', '1Year'] as TimeRange[]).map(range => (
-          <button
-            key={range}
-            onClick={() => handleRangeChange(range)}
-            className={`px-3 py-1 rounded-md transition-colors ${
-              timeRange === range
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-200 hover:bg-gray-300'
-            }`}
+    <div className="w-full p-2">
+      <div className="mb-4 flex flex-col md:flex-row gap-4 justify-between items-center">
+        <div className="flex space-x-2 md:space-x-4">
+          {(['Today', '1Week', '1Month', '1Year'] as TimeRange[]).map(range => (
+            <Button
+              key={range}
+              onClick={() => setTimeRange(range)}
+              variant={timeRange === range ? "contained" : "outlined"}
+              size="small"
+            >
+             {isSmallScreen
+               ? range === 'Today'
+                 ? '1D'
+                 : range === '1Week'
+                   ? '1W'
+                   : range === '1Month'
+                     ? '1M'
+                     : '1Y'
+               : range
+             }
+            </Button>
+          ))}
+        </div>
+
+        <FormControl size="small" sx={{ minWidth: 100 }}>
+          <InputLabel id="year-select-label">Year</InputLabel>
+          <Select
+            labelId="year-select-label"
+            id="year-select"
+            value={selectedYear}
+            label="Year"
+            onChange={handleYearChange}
           >
-            {range}
-          </button>
-        ))}
+            {yearOptions.map(year => (
+              <MenuItem key={year} value={year}>
+                {year}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </div>
 
       <div className="h-[400px]">
         {filteredRecords.length > 0 ? (
           <Bar data={chartData} options={options} />
         ) : (
-          <div className="flex items-center justify-center h-full bg-gray-50 rounded-lg">
-            <p className="text-gray-500">No data available for the selected time range</p>
+          <div className="flex items-center justify-center h-full">
+            <p className="text-gray-500">
+             No data available for {
+               timeRange === 'Today' ? 'today' : `${timeRange} in ${selectedYear}`
+             }
+            </p>
           </div>
         )}
       </div>
@@ -218,4 +312,4 @@ function BarChat({ records }: { records: SavingsRecord[] }) {
   );
 }
 
-export default BarChat;
+export default BarStats;
