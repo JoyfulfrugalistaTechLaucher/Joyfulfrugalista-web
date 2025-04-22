@@ -40,27 +40,28 @@ export async function GET(
     const groupedByMonth: { [month: string]: { [category: string]: number } } = {};
 
     Object.entries(addInfoData)
-      .forEach(([recordId, recordData]) => {
-        const record = recordData as SavingsRecord;
-        const recordDate = record.date.toISOString().split('T')[0];
+        .forEach(([recordId, recordData]) => {
+          const record = recordData as SavingsRecord;
 
-      if (recordDate == null) {
-        return;
-      }
+          // Fix: handling the case where record.date is a string
+          const dateObj = new Date(record.date);
+          if (isNaN(dateObj.getTime())) {
+            console.warn('Invalid date:', record.date);
+            return;
+          }
+          const recordDate = dateObj.toISOString().split('T')[0];
 
-      // Records by month
-      const month = recordDate.slice(0, 7);
+          // fetch year and month
+          const month = recordDate.slice(0, 7);
 
-      // Initialise month grouping (if none exists)
-      if (!groupedByMonth[month]) {
-        groupedByMonth[month] = {};
-      }
+          if (!groupedByMonth[month]) {
+            groupedByMonth[month] = {};
+          }
 
-      // Summary amounts by category
-      const category = record.category;
-        groupedByMonth[month][category] = (groupedByMonth[month][category] || 0)
-          + record.saved;
-    });
+          const category = record.category;
+          groupedByMonth[month][category] = (groupedByMonth[month][category] || 0) + record.saved;
+        });
+
 
     // Return monthly results
     const responsePayload = {

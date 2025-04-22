@@ -238,6 +238,15 @@ function Navbar() {
           >
               Stats
           </NavButton>
+
+          {/*Add Dashboard*/}
+          <NavButton
+              href="/dashboard"
+              variant="text"
+              color="primary"
+          >
+            Dashboard
+          </NavButton>
           <NavButton
             href="/task"
             variant="text"
