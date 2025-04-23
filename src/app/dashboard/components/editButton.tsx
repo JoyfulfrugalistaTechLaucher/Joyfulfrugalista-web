@@ -12,7 +12,7 @@ const EditButton: React.FC<EditButtonProps> = ({ editMode, toggleEditMode }) => 
             onClick={toggleEditMode}
             style={{
                 position: 'fixed',
-                top: '140px',
+                top: '150px',
                 right: '200px',
                 zIndex: 1000,
                 padding: '10px 20px',

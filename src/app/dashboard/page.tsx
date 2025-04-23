@@ -15,7 +15,7 @@ import PieChartComponent from "@/app/dashboard/components/pieChart";
 import LineChartComponent from "@/app/dashboard/components/lineChart";
 import SavingList from "@/app/dashboard/components/savingList";
 import SavingRanking from "@/app/dashboard/components/savingRanking";
-
+import ExportCSVButton from './components/exportCSVButton';
 
 
 const DashboardPage: React.FC = () => {
@@ -121,6 +121,7 @@ const DashboardPage: React.FC = () => {
                     installedPlugins={installedPlugins}
                     togglePlugin={togglePlugin}
                 />
+                <ExportCSVButton/>
 
             </div>
         </MainLayout>

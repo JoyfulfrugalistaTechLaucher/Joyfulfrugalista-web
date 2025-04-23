@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 interface MarketButtonProps {
     marketMode: boolean;
@@ -8,60 +8,114 @@ interface MarketButtonProps {
 }
 
 const plugins = [
-    { id: 'piechart', name: 'Pie Chart', description: 'Show savings in a pie chart.' },
-    { id: 'linechart', name: 'Line Chart', description: 'Monthly savings line chart.' },
-    { id: 'savinglist', name: 'Saving List', description: 'List of recent savings.' },
-    { id: 'savingranking', name: 'Saving Ranking', description: 'Top saving categories.' },
+    {
+        id: 'piechart',
+        name: 'Pie Chart',
+        description: 'Show savings in a pie chart.',
+        detail: 'Displays category-wise breakdown using colorful slices.'
+    },
+    {
+        id: 'linechart',
+        name: 'Line Chart',
+        description: 'Monthly savings line chart.',
+        detail: 'Shows trends over months with a smooth line.'
+    },
+    {
+        id: 'savinglist',
+        name: 'Saving List',
+        description: 'List of recent savings.',
+        detail: 'Presents the saved entries in time sequence.'
+    },
+    {
+        id: 'savingranking',
+        name: 'Saving Ranking',
+        description: 'Top saving categories.',
+        detail: 'Highlights your most saved categories with medal colors.'
+    },
 ];
 
 const MarketButton: React.FC<MarketButtonProps> = ({
-                                                       marketMode,
-                                                       toggleMarketMode,
-                                                       installedPlugins,
-                                                       togglePlugin
-                                                   }) => {
+    marketMode,
+    toggleMarketMode,
+    installedPlugins,
+    togglePlugin
+}) => {
+    const [activePluginId, setActivePluginId] = useState<string | null>(null);
+
     return (
         <>
+            {/* Market Button */}
             <button
                 onClick={toggleMarketMode}
                 style={{
                     position: 'fixed',
-                    top: '180px',
-                    right: '200px',
+                    top: '200px',
+                    right: '180px',
                     zIndex: 1000,
                     padding: '10px 20px',
                     borderRadius: '8px',
                     backgroundColor: marketMode ? '#00b4f5' : '#f0f0f0',
                     color: marketMode ? 'white' : 'black',
                     border: 'none',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    fontWeight: 'bold',
+                    fontSize: '14px',
+                    boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
+                    transition: 'all 0.2s ease',
                 }}
             >
                 {marketMode ? 'Done' : 'Market'}
             </button>
 
+            {/* Market Modal */}
             {marketMode && (
                 <div style={styles.overlay}>
                     <div style={styles.modal}>
                         <button style={styles.closeButton} onClick={toggleMarketMode}>×</button>
                         <h2>Plugin Market</h2>
-                        {plugins.map(plugin => (
-                            <div key={plugin.id} style={styles.pluginCard}>
-                                <h3>{plugin.name}</h3>
-                                <p>{plugin.description}</p>
-                                <button
+                        {plugins.map(plugin => {
+                            const isActive = activePluginId === plugin.id;
+                            const isInstalled = installedPlugins.includes(plugin.id);
+
+                            return (
+                                <div
+                                    key={plugin.id}
                                     style={{
-                                        ...styles.installButton,
-                                        backgroundColor: installedPlugins.includes(plugin.id)
-                                            ? '#f44336'
-                                            : '#00b4f5'
+                                        ...styles.pluginCard,
+                                        backgroundColor: isActive ? '#f9f9f9' : 'white'
                                     }}
-                                    onClick={() => togglePlugin(plugin.id)}
                                 >
-                                    {installedPlugins.includes(plugin.id) ? 'Uninstall' : 'Install'}
-                                </button>
-                            </div>
-                        ))}
+                                    <div
+                                        onClick={() =>
+                                            setActivePluginId(isActive ? null : plugin.id)
+                                        }
+                                        style={{ cursor: 'pointer' }}
+                                    >
+                                        <h3>{plugin.name}</h3>
+                                        <p>{plugin.description}</p>
+                                    </div>
+
+                                    {/* Install/Uninstall button always visible */}
+                                    <div style={styles.buttonRow}>
+                                        <button
+                                            style={{
+                                                ...styles.installButton,
+                                                backgroundColor: isInstalled ? '#f44336' : '#00b4f5',
+                                            }}
+                                            onClick={() => togglePlugin(plugin.id)}
+                                        >
+                                            {isInstalled ? 'Uninstall' : 'Install'}
+                                        </button>
+                                    </div>
+
+                                    {/* Expandable details */}
+                                    <div style={isActive ? styles.expandedDetail : styles.collapsedDetail}>
+                                        <p>{plugin.detail}</p>
+                                    </div>
+
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
             )}
@@ -103,18 +157,47 @@ const styles: { [key: string]: React.CSSProperties } = {
     },
     pluginCard: {
         border: '1px solid #ccc',
-        borderRadius: '8px',
-        padding: '15px',
-        marginBottom: '10px',
+        borderRadius: '10px',
+        padding: '16px 20px',
+        marginBottom: '14px',
+        backgroundColor: '#fff',
+        boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
+        transition: 'all 0.3s ease',
+    },
+    buttonRow: {
+        marginTop: '10px',
     },
     installButton: {
-        marginTop: '10px',
-        padding: '6px 12px',
+        padding: '8px 16px',
         borderRadius: '6px',
         color: 'white',
         border: 'none',
-        cursor: 'pointer'
-    }
+        cursor: 'pointer',
+        fontWeight: 'bold',
+        transition: 'background-color 0.2s ease'
+    },
+    detailSection: {
+        marginTop: '10px',
+        paddingTop: '10px',
+        borderTop: '1px solid #ddd',
+        fontStyle: 'italic',
+        color: '#555'
+    },
+    collapsedDetail: {
+        maxHeight: 0,
+        overflow: 'hidden',
+        transition: 'max-height 0.5s ease',
+    },
+    expandedDetail: {
+        maxHeight: '300px',
+        overflow: 'hidden',
+        transition: 'max-height 0.5s ease',
+        paddingTop: '10px',
+        borderTop: '1px solid #ddd',
+        fontStyle: 'italic',
+        color: '#555',
+    },
+    
 };
 
 export default MarketButton;
