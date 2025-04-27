@@ -231,13 +231,6 @@ function Navbar() {
           >
               Ledger
           </NavButton>
-          <NavButton
-            href="/stats"
-            variant="text"
-            color="primary"
-          >
-              Stats
-          </NavButton>
 
           {/*Add Dashboard*/}
           <NavButton

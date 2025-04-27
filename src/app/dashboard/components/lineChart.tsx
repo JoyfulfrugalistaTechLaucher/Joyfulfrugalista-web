@@ -139,7 +139,7 @@ const LineChartComponent: React.FC <LineChartComponentProps> = ({ onClose, editM
     }, [uid, year]);
 
     const handleMouseDown = (e: React.MouseEvent) => {
-        if (!editMode || !lineRef.current) return;
+        if (!editMode || !lineRef.current || !(e.target as HTMLElement).dataset.drag) return;
 
         const startX = e.clientX;
         const startY = e.clientY;
@@ -165,7 +165,7 @@ const LineChartComponent: React.FC <LineChartComponentProps> = ({ onClose, editM
     };
 
     return (
-        <div
+        <div data-drag="true"
             ref={lineRef}
             onMouseDown={handleMouseDown}
             style={{
@@ -176,7 +176,7 @@ const LineChartComponent: React.FC <LineChartComponentProps> = ({ onClose, editM
             }}
         >
             {editMode && (
-                <button style={styles.closeButton} onClick={onClose}>×</button>
+                <button style={styles.closeButton} onClick={(e)=>{ e.stopPropagation(); onClose(); }}>×</button>
             )}
             <div style={styles.header}>Line Chart Summary</div>
             <div style={styles.selectContainer}>

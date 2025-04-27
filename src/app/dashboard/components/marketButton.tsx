@@ -21,6 +21,12 @@ const plugins = [
         detail: 'Shows trends over months with a smooth line.'
     },
     {
+        id: 'barchart',
+        name: 'Bar Chart',
+        description: 'Monthly savings bar chart.',
+        detail: 'Displays monthly savings with distinct bars.'
+    },
+    {
         id: 'savinglist',
         name: 'Saving List',
         description: 'List of recent savings.',
@@ -41,6 +47,12 @@ const MarketButton: React.FC<MarketButtonProps> = ({
     togglePlugin
 }) => {
     const [activePluginId, setActivePluginId] = useState<string | null>(null);
+    const [search, setSearch]                   = useState('');
+    const [onlyInstalled, setOnlyInstalled]     = useState(false);
+    const visiblePlugins = plugins
+    .filter(p => p.name.toLowerCase().includes(search.toLowerCase()))
+    .filter(p => (onlyInstalled ? installedPlugins.includes(p.id) : true))
+    .sort((a, b) => a.name.localeCompare(b.name));
 
     return (
         <>
@@ -72,8 +84,31 @@ const MarketButton: React.FC<MarketButtonProps> = ({
                 <div style={styles.overlay}>
                     <div style={styles.modal}>
                         <button style={styles.closeButton} onClick={toggleMarketMode}>×</button>
-                        <h2>Plugin Market</h2>
-                        {plugins.map(plugin => {
+                        <h2 style={{ marginTop: 0 }}>Plugin Market</h2>
+                        <input
+                        type="text"
+                        placeholder="Search plugins…"
+                        value={search}
+                        onChange={e => setSearch(e.target.value)}
+                        style={{
+                            width: '100%',
+                            padding: '8px 12px',
+                            marginBottom: '12px',
+                            border: '1px solid #ccc',
+                            borderRadius: '6px',
+                        }}
+                        />
+
+                        <label style={{ display: 'block', marginBottom: '14px', cursor: 'pointer' }}>
+                        <input
+                            type="checkbox"
+                            checked={onlyInstalled}
+                            onChange={() => setOnlyInstalled(!onlyInstalled)}
+                            style={{ marginRight: '6px' }}
+                        />
+                        Show installed only
+                        </label>
+                        {visiblePlugins.map(plugin => {
                             const isActive = activePluginId === plugin.id;
                             const isInstalled = installedPlugins.includes(plugin.id);
 
@@ -112,10 +147,13 @@ const MarketButton: React.FC<MarketButtonProps> = ({
                                     <div style={isActive ? styles.expandedDetail : styles.collapsedDetail}>
                                         <p>{plugin.detail}</p>
                                     </div>
-
                                 </div>
                             );
                         })}
+
+                        {visiblePlugins.length === 0 && (
+                                    <p style={{ textAlign: 'center', color: '#666' }}>No plugins match the filter.</p>
+                        )}
                     </div>
                 </div>
             )}

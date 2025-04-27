@@ -16,7 +16,7 @@ import LineChartComponent from "@/app/dashboard/components/lineChart";
 import SavingList from "@/app/dashboard/components/savingList";
 import SavingRanking from "@/app/dashboard/components/savingRanking";
 import ExportCSVButton from './components/exportCSVButton';
-
+import BarStats from './components/barStats';
 
 const DashboardPage: React.FC = () => {
     const [showModal, setShowModal] = useState(false);
@@ -113,6 +113,9 @@ const DashboardPage: React.FC = () => {
                 )}
                 {installedPlugins.includes('savingranking') && (
                     <SavingRanking editMode={editMode} onClose={() => togglePlugin('savingranking')} />
+                )}
+                {installedPlugins.includes('barchart') && (
+                    <BarStats editMode={editMode} onClose={() => togglePlugin('barchart')} />
                 )}
                 <EditButton editMode={editMode} toggleEditMode={toggleEditMode} />
                 <MarketButton

@@ -110,7 +110,7 @@ const SavingRanking: React.FC<SavingRankingProps> = ({ editMode = false, onClose
     const [categoryRankings, setCategoryRankings] = useState<CategoryRanking[]>([]);
     const [activeDetail, setActiveDetail] = useState<string | null>(null);
     const [allRecords, setAllRecords] = useState<any[]>([]);
-    const [pos, setPos] = useState({ x: 450, y: 570 });
+    const [pos, setPos] = useState({ x: 770, y: 570 });
     const boxRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -158,7 +158,7 @@ const SavingRanking: React.FC<SavingRankingProps> = ({ editMode = false, onClose
     };
 
     const handleMouseDown = (e: React.MouseEvent) => {
-        if (!editMode || !boxRef.current) return;
+        if (!editMode || !boxRef.current || !(e.target as HTMLElement).dataset.drag) return;
 
         const startX = e.clientX;
         const startY = e.clientY;
@@ -184,7 +184,7 @@ const SavingRanking: React.FC<SavingRankingProps> = ({ editMode = false, onClose
     };
 
     return (
-        <div
+        <div data-drag="true"
             ref={boxRef}
             onMouseDown={handleMouseDown}
             style={{
@@ -195,7 +195,7 @@ const SavingRanking: React.FC<SavingRankingProps> = ({ editMode = false, onClose
             }}
         >
             {editMode && (
-                <button style={styles.closeButton} onClick={onClose}>×</button>
+                <button style={styles.closeButton} onClick={(e)=>{ e.stopPropagation(); onClose(); }}>×</button>
             )}
             <div style={styles.header}>🏅 Top 3 Saving Categories</div>
             <div style={styles.medalList}>

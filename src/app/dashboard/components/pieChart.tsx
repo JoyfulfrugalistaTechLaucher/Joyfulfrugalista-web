@@ -132,7 +132,7 @@ const PieChartComponent: React.FC<PieChartComponentProps> = ({ onClose, editMode
     }, [rawData, year, month]);
 
     const handleMouseDown = (e: React.MouseEvent) => {
-        if (!editMode || !pieRef.current) return;
+        if (!editMode || !pieRef.current || !(e.target as HTMLElement).dataset.drag) return;
 
         const startX = e.clientX;
         const startY = e.clientY;
@@ -158,7 +158,7 @@ const PieChartComponent: React.FC<PieChartComponentProps> = ({ onClose, editMode
     };
 
     return (
-        <div
+        <div data-drag="true"
             ref={pieRef}
             onMouseDown={handleMouseDown}
             style={{
@@ -169,7 +169,7 @@ const PieChartComponent: React.FC<PieChartComponentProps> = ({ onClose, editMode
             }}
         >
             {editMode && (
-                <button style={styles.closeButton} onClick={onClose}>×</button>
+                <button style={styles.closeButton} onClick={(e)=>{ e.stopPropagation(); onClose(); }}>×</button>
             )}
             <div style={styles.header}>Pie Chart Summary</div>
             <div style={styles.selectContainer}>

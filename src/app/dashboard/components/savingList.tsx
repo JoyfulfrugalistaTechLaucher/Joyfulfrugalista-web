@@ -72,7 +72,7 @@ const styles: { [key: string]: React.CSSProperties } = {
 const SavingList: React.FC<SavingListProps> = ({ editMode = false, onClose }) => {
     const { uid } = useAuth();
     const [savingRecords, setSavingRecords] = useState<SavingRecord[]>([]);
-    const [pos, setPos] = useState({ x: -80, y: 550 });
+    const [pos, setPos] = useState({ x: 240, y: 550 });
     const listRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -107,7 +107,7 @@ const SavingList: React.FC<SavingListProps> = ({ editMode = false, onClose }) =>
     }, [uid]);
 
     const handleMouseDown = (e: React.MouseEvent) => {
-        if (!editMode || !listRef.current) return;
+        if (!editMode || !listRef.current || !(e.target as HTMLElement).dataset.drag) return;
 
         const startX = e.clientX;
         const startY = e.clientY;
@@ -133,7 +133,7 @@ const SavingList: React.FC<SavingListProps> = ({ editMode = false, onClose }) =>
     };
 
     return (
-        <div
+        <div data-drag="true"
             ref={listRef}
             onMouseDown={handleMouseDown}
             style={{
@@ -144,7 +144,7 @@ const SavingList: React.FC<SavingListProps> = ({ editMode = false, onClose }) =>
             }}
         >
             {editMode && (
-                <button style={styles.closeButton} onClick={onClose}>×</button>
+                <button style={styles.closeButton} onClick={(e)=>{ e.stopPropagation(); onClose(); }}>×</button>
             )}
             <div style={styles.header}>Recent Saving Lists</div>
             <div style={styles.recordList}>
