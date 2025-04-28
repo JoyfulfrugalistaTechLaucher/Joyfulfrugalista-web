@@ -1,6 +1,6 @@
 'use client';
 
-import  React, { useEffect, useState } from "react";
+import  React, { useEffect, useRef, useState } from "react";
 import {
   Box,
   Button,
@@ -10,7 +10,9 @@ import {
   ImageList,
   ImageListItem,
   Stack,
+  Typography,
 } from "@mui/material";
+import UploadIcon from '@mui/icons-material/Upload';
 import EditIcon from '@mui/icons-material/Edit';
 import CloseIcon from '@mui/icons-material/Close';
 import {useMediaQuery, useTheme} from '@mui/material';
@@ -20,6 +22,8 @@ import { ref, set } from 'firebase/database';
 import { db } from '@/app/config/firebaseConfig';
 import axios from "axios";
 import { useAuth } from "@/app/contexts/AuthContext";
+import { storage } from '@/app/config/firebaseConfig';
+import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import MainLayout from "@/app/layouts/MainLayout";
 import Animation from '@/app/components/Animation';
 import { CircImgBox } from '@/app/components/ImgBox';
@@ -33,6 +37,7 @@ import {
   UserPhone,
 } from './components/Inputs';
 import { UserMonthGoal } from './components/Goal';
+import { fromBlob } from 'image-resize-compress';
 
 // styles
 const AvatarButton = styled(Button)(() => ({
@@ -44,18 +49,94 @@ const AvatarButton = styled(Button)(() => ({
   },
 })) as typeof Button;
 
+const UploadInput = styled('input')({
+  display: 'none',
+});
+
 
 function AvatarSelection({user, handler}: UserProfileProps) {
   const theme = useTheme();
   const sm = useMediaQuery(theme.breakpoints.down('sm'));
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { uid } = useAuth();
+
+  const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+  
+    //basic validation
+    if (!file.type.startsWith('image/')) {
+      console.error('Only image files allowed');
+      return;
+    }
+
+    
+    if (!uid) {
+      console.error('User not logged in.');
+      return;
+    }    
+  
+    try {
+      const resizedBlob = await fromBlob(file, 80, 120, 120, 'jpeg');
+  
+      const filename = `${uid}.jpg`;
+      const avatarRef = storageRef(storage, `avatars/${filename}`);
+      console.log("uid :" + uid + "filename:"+ filename);
+      await uploadBytes(avatarRef, resizedBlob);
+  
+      const url = await getDownloadURL(avatarRef);
+  
+      handler({ avatar: url });
+    } catch (err) {
+      console.error('Failed to upload avatar:', err);
+    }
+  };
 
   return (
+    <>
+    {/* Hidden file input */}
+    <UploadInput
+      accept="image/*"
+      id="custom-avatar-upload"
+      type="file"
+      ref={fileInputRef}
+      onChange={onFileChange}
+    />
+
     <ImageList
       sx={{ width: 260, height: 380 }}
       cols={ sm ? 1 : 2}
       rowHeight={120}
       gap={2}
     >
+      {/* Upload avatar area */}
+      <ImageListItem
+          key="upload-blank"
+          onClick={() => fileInputRef.current?.click()}
+          sx={{
+            border: `2px dashed ${theme.palette.divider}`,
+            cursor: 'pointer',
+            width: 120,
+            height: 120,
+          }}
+        >
+          <Box 
+            sx={{
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <UploadIcon fontSize="large" color="disabled" />
+            <Typography variant="caption" color="textSecondary">
+              Upload
+            </Typography>
+          </Box>
+        </ImageListItem>
+
       {AVATARS.map((avt) => (
         <ImageListItem key={avt} onClick={() => handler({avatar: avt})}>
           <img
@@ -74,6 +155,7 @@ function AvatarSelection({user, handler}: UserProfileProps) {
         </ImageListItem>
       ))}
     </ImageList>
+    </>
   );
 }
 
