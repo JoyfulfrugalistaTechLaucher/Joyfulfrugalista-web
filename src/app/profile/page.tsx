@@ -11,7 +11,6 @@ import {
   ImageListItem,
   Stack,
 } from "@mui/material";
-import EditIcon from '@mui/icons-material/Edit';
 import CloseIcon from '@mui/icons-material/Close';
 import {useMediaQuery, useTheme} from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -33,6 +32,7 @@ import {
   UserPhone,
 } from './components/Inputs';
 import { UserMonthGoal } from './components/Goal';
+import { UserAvatar } from './components/Avatar';
 
 // styles
 const AvatarButton = styled(Button)(() => ({
@@ -200,22 +200,10 @@ function ProfilePage() {
         <Stack direction="row" className="justify-between items-center">
           {/* avatar */}
           <Box className="avatar-container">
-            <CircImgBox
-              imgSrc={userInfo.avatar}
-              alt={`${userInfo.name}'s profile image`}
-              size={ sm ? 200 : 140}
+            <UserAvatar
+              small={sm}
+              user={userInfo}
             />
-            <AvatarButton
-              component="label"
-              variant="outlined"
-              aria-label="upload new profile image"
-              onClick={onEditAvt}
-              startIcon={<EditIcon fontSize="small" />}
-              size="small"
-              className="avatar-btn"
-            >
-              Edit
-            </AvatarButton>
           </Box>
 
           {/* goal display on midlle or large screens */}

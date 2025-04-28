@@ -142,6 +142,7 @@ export function UserMonthGoal({ user, show, handleShow }: ProfileGoalProps) {
       if (!user || !user.task || !uid) return;
 
       try {
+        // TODO: consider switching to a react context
         const response = await fetch(`/api/savings/${uid}`);
 
         if (!response.ok) {

@@ -66,11 +66,11 @@ body {
 }
 
 .avatar-container {
-  @apply relative m-2 p-2 border border-2 border-black flex justify-center items-center;
+  @apply relative m-2 border border-2 border-black;
 }
 
 .avatar-btn {
-  @apply absolute right-0 bottom-4;
+  @apply absolute left-0 bottom-4;
 }
 
 /* used by MUI `Container' which uses flexbox by default */
