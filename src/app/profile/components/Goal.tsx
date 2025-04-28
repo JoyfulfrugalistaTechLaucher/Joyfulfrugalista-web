@@ -97,7 +97,7 @@ function CircProgressWithLabel({reached, prog, total }: CircProgressProps) {
       <Stack
         className="absolute left-0 right-0 justify-center items-center"
       >
-        <Box className="text-base font-semibold">Saved</Box>
+        <Box className="text-base">Saved</Box>
         <Box className="text-lg font-bold">${formatNumber(total)}</Box>
         {reached && <GoalDoneIcon />}
       </Stack>
@@ -228,8 +228,8 @@ export function UserMonthGoal({ user, show, handleShow }: ProfileGoalProps) {
       {sm &&
         <Box className="w-full">
           <Stack direction="row" className="justify-between items-center">
-            <Box className="text-base font-semibold">
-              Saved ${formatNumber(totalSavings)}
+            <Box className="text-base">Saved
+              <span className="font-semibold">${formatNumber(totalSavings)}</span>
             </Box>
             <Box className="text-base font-semibold">
               Your Monthily Goal ${hasGoal ? formatNumber(user.task?.goal) : 0}

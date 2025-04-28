@@ -51,20 +51,20 @@ export function getWeekBounds(date: Date): { start: Date, end: Date } {
 export function formatNumber(value: number | undefined): string {
   if (value === undefined) return '';
 
-  if (value < 1000) {
-    return value.toString();
+  if (value < 10_000) {
+    return value.toFixed(2).toString();
   }
 
   if (value < 1000_000) {
-    return (value / 1000).toString().concat('K');
+    return (value / 1000).toFixed(2).toString().concat('K');
   }
 
   if (value < 1000_000_000) {
-    return (value / 1000_000).toString().concat('M');
+    return (value / 1000_000).toFixed(2).toString().concat('M');
   }
 
   // else this must be a super billionare
-  return (value / 1000_000_000).toString().concat('B');
+  return (value / 1000_000_000).toFixed(2).toString().concat('B');
 }
 
 // Format currency values

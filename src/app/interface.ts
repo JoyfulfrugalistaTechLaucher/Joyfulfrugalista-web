@@ -4,7 +4,8 @@ export interface Task {
   setDate: string;
 };
 
-export interface User {
+export type User = {
+  readonly uid: string;
   email: string;
   name: string;
   gender?: string;
@@ -13,7 +14,7 @@ export interface User {
   task?: Task;
 };
 
-export interface UserProfileProps {
+export type UserProfileProps = {
   user: User;
   handler: (update: Partial<User>) => void;
 };
