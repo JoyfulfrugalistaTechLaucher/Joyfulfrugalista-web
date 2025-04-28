@@ -13,16 +13,30 @@ interface PieChartComponentProps {
 }
 
 const categories = [
-    'Housing', 'Household', 'Utilities', 'Transport', 'Leisure', 'Holidays', 'Wellbeing', 'Education', 'Grooming',
+    'General','Housing', 'Household', 'Utilities', 'Transport', 'Leisure', 'Holidays', 'Wellbeing', 'Education', 'Grooming',
     'Gifts', 'Christmas', 'Insurance', 'Childcare', 'Food', 'Health', 'Appearance', 'Lifestyle', 'Treat yourself'
 ];
 
 const categoryColorMap = {
-    'Housing': '#FF6384', 'Household': '#36A2EB', 'Utilities': '#FFCE56', 'Transport': '#FF9F40',
-    'Leisure': '#4BC0C0', 'Holidays': '#9966FF', 'Wellbeing': '#FF6384', 'Education': '#36A2EB',
-    'Grooming': '#FFCE56', 'Gifts': '#FF9F40', 'Christmas': '#4BC0C0', 'Insurance': '#9966FF',
-    'Childcare': '#FF6384', 'Food': '#36A2EB', 'Health': '#FFCE56', 'Appearance': '#FF9F40',
-    'Lifestyle': '#4BC0C0', 'Treat yourself': '#9966FF'
+    'General': '#FF5733',    
+    'Housing': '#33C1FF',    
+    'Household': '#9D33FF',  
+    'Utilities': '#33FF57',  
+    'Transport': '#FFC300',  
+    'Leisure': '#FF33A8',    
+    'Holidays': '#33FFEC',   
+    'Wellbeing': '#FF8C33',  
+    'Education': '#3375FF',  
+    'Grooming': '#C70039',  
+    'Gifts': '#00B894',      
+    'Christmas': '#6C5CE7', 
+    'Insurance': '#FAB1A0',  
+    'Childcare': '#00CEC9',  
+    'Food': '#E17055',       
+    'Health': '#0984E3',     
+    'Appearance': '#FD79A8', 
+    'Lifestyle': '#55EFC4',  
+    'Treat yourself': '#A29BFE' 
 };
 
 const styles: { [key: string]: React.CSSProperties } = {
@@ -190,6 +204,12 @@ const PieChartComponent: React.FC<PieChartComponentProps> = ({ onClose, editMode
             </div>
 
             {chartData.labels ? <Pie data={chartData} /> : <p>No data available for the selected month</p>}
+            {chartData.datasets.length > 0 && chartData.datasets[0].data && (
+                <div style={{ marginTop: '20px', fontSize: '16px', fontWeight: 'bold', textAlign: 'center' }}>
+                    Total Saved for {new Date(year, month - 1).toLocaleString('en-US', { month: 'long' })} {year}: $
+                    {chartData.datasets[0].data.reduce((sum, value) => sum + value, 0).toFixed(2)}
+                </div>
+            )}
         </div>
     );
 };
