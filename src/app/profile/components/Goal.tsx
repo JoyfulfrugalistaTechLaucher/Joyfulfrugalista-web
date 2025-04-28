@@ -150,13 +150,13 @@ export function UserMonthGoal({ user, show, handleShow }: ProfileGoalProps) {
         }
 
         const data = await response.json();
-        const { totalMoneyAdded, goal } = data;
-        const prop = (totalMoneyAdded / goal) * 100;
+        const { totalSaved, goal } = data;
+        const prop = (totalSaved / goal) * 100;
         const prog = prop < 1 ? 1 : Math.floor(prop);
-        setTotalSavings(totalMoneyAdded);
+        setTotalSavings(totalSaved);
         setProgress(prog);
 
-        if (totalMoneyAdded >= goal) {
+        if (totalSaved >= goal) {
           setGoalReached(true);
         }
 

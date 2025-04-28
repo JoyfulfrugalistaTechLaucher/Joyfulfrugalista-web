@@ -20,7 +20,7 @@ export async function GET(
 
     // Checking for task data
     if (!userData || !userData.task) {
-      console.log('No task field found for this user.');
+      console.error(`No task found for user: ${userId}`);
       return new NextResponse(null, { status: 204 });
     }
 
@@ -30,25 +30,24 @@ export async function GET(
 
     // If there is no info
     if (!addInfoData) {
+      console.error(`No add info found for user: ${userId}`);
       return new NextResponse(null, { status: 204 });
     }
 
     const currentSydneyTime = DateTime.now().setZone('Australia/Sydney').toISODate()
       || DateTime.now().toISODate();
 
-    // Records grouped by month and total amount calculated
+    // Records grouped by month in the same year and total amount calculated
     const groupedByMonth: { [month: string]: { [category: string]: number } } = {};
 
     Object.entries(addInfoData)
-      .forEach(([recordId, recordData]) => {
-        const record = recordData as SavingsRecord;
-        const recordDate = record.date.toISOString().split('T')[0];
+      .forEach(([recordId, record]) => {
 
-      if (recordDate == null) {
+      if (record === null || record.date === '') {
         return;
       }
 
-      // Records by month
+      // Records by month in the same year
       const month = recordDate.slice(0, 7);
 
       // Initialise month grouping (if none exists)

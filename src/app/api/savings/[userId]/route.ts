@@ -20,7 +20,7 @@ export async function GET(
 
     // Check if user has task data
     if (!userData || !userData.task) {
-      console.log('No task field found for this user.');
+      console.error(`No task found for user: ${userId}`);
       return new NextResponse(null, { status: 204 });}
 
     //fetch goal and the day of setting the goal
@@ -33,44 +33,37 @@ export async function GET(
 
     //handle no content
     if (!addInfoData) {
+      console.error(`No add info found for user: ${userId}`);
       return new NextResponse(null, { status: 204 });
     }
-    //console.log(addInfoData);
 
     //convert UTC to sydney
-    const setDateSydney = DateTime.fromISO(setDate, { zone: 'Australia/Sydney' }).toISODate();
+    const setDateSydney = DateTime.fromISO(setDate, { zone: 'Australia/Sydney' });
     if(setDateSydney == null) {
+      console.error(`Failed to get the goal-setting date for user: ${userId}`);
       return new NextResponse(null, { status: 204 });
     }
-    const currentSydneyTime = DateTime.now().setZone('Australia/Sydney').toISODate()
-      || DateTime.now().toISODate();
+
+    const currentSydneyTime = DateTime.now().setZone('Australia/Sydney');
 
     console.log("Current Sydney Date:", currentSydneyTime);
     console.log("setdate:", setDateSydney);
 
     //Filter records based on setDate and compute total saving
-    let totalMoneyAdded = 0;
-    const filteredRecords = [];
+    let totalSaved = 0;
 
     Object.entries(addInfoData)
-      .forEach(([recordId, recordData]) => {
-        const record = recordData as SavingsRecord;
-        const recordDate = record.date.toISOString().split('T')[0];
+      .forEach(([recordId, record]) => {
 
-        // Although it can return error message, now I just skip it.
-        if(recordDate == null) {
+        if(record === null || record.date === '') {
           return;
         }
-        //console.log(recordData);
-        // Only consider records where the date is on or before the current Sydney date
-        if (recordDate >= setDateSydney && recordDate <= currentSydneyTime) {
-          filteredRecords.push({
-            id: recordId,
-            ...record,
-          });
-          console.log(record);
+        let recordDate = DateTime.fromISO(record.date, { zone: 'Australia/Sydney'});
 
-          totalMoneyAdded += record.saved || 0;  // Accumulate total money added
+        // Only consider records where the date is on/before the current Sydney date
+        if (recordDate.valueOf() >= setDateSydney.valueOf()
+          && recordDate.valueOf() <= currentSydneyTime.valueOf()) {
+          totalSaved += record.saved || 0;  // Accumulate total money added
         }
       });
 
@@ -78,9 +71,8 @@ export async function GET(
     const responsePayload = {
       userId,
       goal,
-      totalMoneyAdded,
+      totalSaved,
       setDateSydney
-
     };
 
     // 返回用户数据
