@@ -5,7 +5,7 @@ export interface Task {
 };
 
 export type User = {
-  readonly uid: string;
+  readonly id: string;
   email: string;
   name: string;
   gender?: string;
@@ -20,8 +20,15 @@ export type UserProfileProps = {
 };
 
 export type SavingsRecord = {
-  id?: string;
+  readonly id?: string;
   date: Date;
+  category: string;
+  saved: number;
+  description?: string;
+}
+
+export type RawRecord = {
+  date: string;
   category: string;
   saved: number;
   description?: string;

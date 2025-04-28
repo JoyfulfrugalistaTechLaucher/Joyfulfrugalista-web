@@ -1,30 +1,20 @@
 'use client';
-
 import  React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
   CircularProgress,
   Container,
-  IconButton,
-  ImageList,
-  ImageListItem,
   Stack,
 } from "@mui/material";
-import CloseIcon from '@mui/icons-material/Close';
 import {useMediaQuery, useTheme} from '@mui/material';
-import { styled } from '@mui/material/styles';
 import { useRouter } from "next/navigation";
-import { ref, set } from 'firebase/database';
-import { db } from '@/app/config/firebaseConfig';
-import axios from "axios";
 import { useAuth } from "@/app/contexts/AuthContext";
 import MainLayout from "@/app/layouts/MainLayout";
 import Animation from '@/app/components/Animation';
-import { CircImgBox } from '@/app/components/ImgBox';
 import Castle from "@/app/components/Castle";
-import { FB_URL, AVATARS, DUSER } from '@/app/constants';
-import { User, UserProfileProps } from "@/app/interface";
+import { DUSER } from '@/app/constants';
+import { User } from "@/app/interface";
 import {
   UserEmail,
   UserGender,

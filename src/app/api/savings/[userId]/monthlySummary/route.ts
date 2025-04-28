@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import axios from 'axios';
 import { DateTime } from 'luxon';
 import { FB_URL } from '@/app/constants';
-import { SavingsRecord } from '@/app/interface';
+import { RawRecord, SavingsRecord } from '@/app/interface';
 
 export async function GET(
   request: Request,
@@ -41,25 +41,25 @@ export async function GET(
     const groupedByMonth: { [month: string]: { [category: string]: number } } = {};
 
     Object.entries(addInfoData)
-      .forEach(([recordId, record]) => {
+      .forEach(([recordId, rawRecord]) => {
+        const record = rawRecord as RawRecord;
+        if (record == null || record.date === '') {
+          return;
+        }
 
-      if (record === null || record.date === '') {
-        return;
-      }
+        // Records by month in the same year
+        const month = record.date.slice(0, 7);
 
-      // Records by month in the same year
-      const month = recordDate.slice(0, 7);
+        // Initialise month grouping (if none exists)
+        if (!groupedByMonth[month]) {
+          groupedByMonth[month] = {};
+        }
 
-      // Initialise month grouping (if none exists)
-      if (!groupedByMonth[month]) {
-        groupedByMonth[month] = {};
-      }
-
-      // Summary amounts by category
-      const category = record.category;
+        // Summary amounts by category
+        const category = record.category;
         groupedByMonth[month][category] = (groupedByMonth[month][category] || 0)
           + record.saved;
-    });
+      });
 
     // Return monthly results
     const responsePayload = {

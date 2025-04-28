@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Button, CircularProgress, Container, Divider, Stack, TextField } from '@mui/material';
 import { useRouter } from 'next/navigation';
-import { ref, set, get, getDatabase } from 'firebase/database';
-import { db } from '../config/firebaseConfig';
+import { ref, set } from 'firebase/database';
+import { db } from '@/app/config/firebaseConfig';
 import { useAuth } from '@/app/contexts/AuthContext';
 import MainLayout from '@/app/layouts/MainLayout';
 import { SemiCircGoalPanel } from '@/app/components/Goal';

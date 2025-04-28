@@ -11,12 +11,13 @@ import {
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import {
-  getDatabase,
   getStorage,
-  ref as dbRef,
+  ref as storageRef,
   uploadBytes,
   getDownloadURL
 } from 'firebase/storage';
+import { ref as dbRef, update } from 'firebase/database';
+import { db } from '@/app/config/firebaseConfig';
 import { User } from '@/app/interface';
 import { DEFAULT_AVATAR } from '@/app/constants';
 import { CircImgBox } from '@/app/components/ImgBox';
@@ -27,7 +28,7 @@ async function uploadUserAvatar(userId: string, file: File): Promise<string> {
   // Create a storage reference for this specific user's avatar
   // this pattern ensures each user has their own avatar location
   // and new uploads will replace the old one
-  const avatarRef = dbRef(storage, `avatars/${userId}`);
+  const avatarRef = storageRef(storage, `avatars/${userId}`);
 
   // Upload the file
   await uploadBytes(avatarRef, file);
@@ -40,7 +41,6 @@ async function uploadUserAvatar(userId: string, file: File): Promise<string> {
 }
 
 async function updateUserAvatarURL(userId: string, avatarURL: string): Promise<void> {
-  const db = getDatabase();
   const userRef = dbRef(db, `users/${userId}`);
 
   // Update only the avatar field

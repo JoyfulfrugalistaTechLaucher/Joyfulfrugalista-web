@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import axios from 'axios';
 import { DateTime } from 'luxon';
 import { log } from 'console';
-import { SavingsRecord } from '@/app/interface';
+import { RawRecord, SavingsRecord } from '@/app/interface';
 import { FB_URL } from '@/app/constants';
 
 export async function GET(
@@ -53,18 +53,19 @@ export async function GET(
     let totalSaved = 0;
 
     Object.entries(addInfoData)
-      .forEach(([recordId, record]) => {
-
-        if(record === null || record.date === '') {
+      .forEach(([recordId, rawRecord]) => {
+        const record = rawRecord as RawRecord;
+        if(record == null || record.date === '') {
           return;
         }
-        let recordDate = DateTime.fromISO(record.date, { zone: 'Australia/Sydney'});
+        const recordDate = DateTime.fromISO(
+          record.date, { zone: 'Australia/Sydney'});
 
         // Only consider records where the date is on/before the current Sydney date
         if (recordDate.valueOf() >= setDateSydney.valueOf()
           && recordDate.valueOf() <= currentSydneyTime.valueOf()) {
-          totalSaved += record.saved || 0;  // Accumulate total money added
-        }
+            totalSaved += record.saved || 0;  // Accumulate total money added
+          }
       });
 
     // Return the result
