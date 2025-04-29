@@ -1,31 +1,20 @@
 'use client';
-
 import  React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
   CircularProgress,
   Container,
-  IconButton,
-  ImageList,
-  ImageListItem,
   Stack,
 } from "@mui/material";
-import EditIcon from '@mui/icons-material/Edit';
-import CloseIcon from '@mui/icons-material/Close';
 import {useMediaQuery, useTheme} from '@mui/material';
-import { styled } from '@mui/material/styles';
 import { useRouter } from "next/navigation";
-import { ref, set } from 'firebase/database';
-import { db } from '@/app/config/firebaseConfig';
-import axios from "axios";
 import { useAuth } from "@/app/contexts/AuthContext";
 import MainLayout from "@/app/layouts/MainLayout";
 import Animation from '@/app/components/Animation';
-import { CircImgBox } from '@/app/components/ImgBox';
 import Castle from "@/app/components/Castle";
-import { FB_URL, AVATARS, DUSER } from '@/app/constants';
-import { User, UserProfileProps } from "@/app/interface";
+import { DUSER } from '@/app/constants';
+import { User } from "@/app/interface";
 import {
   UserEmail,
   UserGender,
@@ -33,148 +22,49 @@ import {
   UserPhone,
 } from './components/Inputs';
 import { UserMonthGoal } from './components/Goal';
-
-// styles
-const AvatarButton = styled(Button)(() => ({
-  '& .MuiButton-startIcon' : {
-    marginRight: '2px',
-  },
-  '&.MuiButton-root' : {
-    padding: 0,
-  },
-})) as typeof Button;
-
-
-function AvatarSelection({user, handler}: UserProfileProps) {
-  const theme = useTheme();
-  const sm = useMediaQuery(theme.breakpoints.down('sm'));
-
-  return (
-    <ImageList
-      sx={{ width: 260, height: 380 }}
-      cols={ sm ? 1 : 2}
-      rowHeight={120}
-      gap={2}
-    >
-      {AVATARS.map((avt) => (
-        <ImageListItem key={avt} onClick={() => handler({avatar: avt})}>
-          <img
-            srcSet={avt}
-            src={avt}
-            alt="saving jar avatar"
-            loading="lazy"
-            style={{
-              border: user.avatar === avt ?
-                `4px solid ${theme.palette.info.main}` : 'none',
-              cursor: 'pointer',
-              width: 120,
-              height: 120,
-            }}
-          />
-        </ImageListItem>
-      ))}
-    </ImageList>
-  );
-}
-
+import { UserAvatar } from './components/Avatar';
 
 function ProfilePage() {
-  const [userInfo, setUserInfo] = useState<User>(DUSER);
-  const [origUserInfo, setUserOrigInfo] = useState<User>(DUSER);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [editAvt, setEditAvt] = useState<boolean>(false);
   const [edited, setEdited] = useState<boolean>(false);
   const [showAnimation, setShowAnimation] = useState<boolean>(false);
-  const { uid, isLoggedIn } = useAuth();
+  const [localUserData, setLocalUserData] = useState<Partial<User>>({});
+  const { user, loading, updateUserProfile, uid, isLoggedIn } = useAuth();
   const router = useRouter();
 
   const theme = useTheme();
   const sm = useMediaQuery(theme.breakpoints.down('sm'));
   const md = useMediaQuery(theme.breakpoints.up('sm'));
 
+  useEffect(() => {
+    if (!loading && !isLoggedIn) {
+      router.replace("/login");
+    }
+  }, [isLoggedIn, loading, router]);
+
+  // Prepare combined user data (current user + local edits)
+  const userInfo: User = user ? { ...user, ...localUserData } : DUSER;
+
   // handlers
   const handleUserInfoChange = (update: Partial<User>) => {
-    setUserInfo((oldUserData) => ({ ...oldUserData, ...update }));
+    setLocalUserData(prev => ({ ...prev, ...update }));
     setEdited(true);
-    console.log('User updated: ', update);
   };
 
-  const onEditAvt = () => {
-    setEditAvt(!editAvt);
-  }
-
   const onSave = async () => {
-    setEdited(false);
-    setUserInfo(userInfo);
-    setUserOrigInfo(userInfo);
-    console.log("Updated profile: ", userInfo);
-
-    if (!uid || !userInfo) {
-      console.log("Undefined uid or user info");
-      console.group();
-      console.log("uid: ", uid);
-      console.log("user info: ", userInfo);
-      console.groupEnd();
-      return;
-    }
-
-    setLoading(true);
     try {
-      const userRef = ref(db, 'users/'+ uid);
-
-      await set(userRef, {
-        email: userInfo.email,
-        name: userInfo.name,
-        gender: userInfo.gender,
-        phone: userInfo.phone,
-        avatar: userInfo.avatar,
-        task: userInfo.task === undefined ? {goal: 0, setDtate: ''} : userInfo.task,
-      });
-
+      await updateUserProfile(localUserData);
+      setLocalUserData({});
       setEdited(false);
-      console.log("Profile updated successfully");
-      // TODO: show a success message to the user
     } catch (error) {
-      console.error("Error updating profile: ", error);
-      // TODO: show an error message to the user here
-    } finally {
-      setLoading(false);
+      console.error("Failed to save profile:", error);
+      // TODO: show error message to user
     }
   };
 
   const onCancel = () => {
+    setLocalUserData({});
     setEdited(false);
-    setUserInfo(origUserInfo);
-    console.log("Original profile: ", origUserInfo);
   };
-
-  // start rendering the page
-  // fetch user info from firebase rtdb
-  useEffect(() => {
-    console.log("uid" + uid);
-
-    if (!isLoggedIn) {
-      router.replace("/login");
-    } else if (uid) {
-      const fetchProfile = async () => {
-        try {
-          const response = await axios.get(`${FB_URL}/users/${uid}.json`);
-          // TOOD: handle null?
-          const user: User = response.data;
-          setUserInfo({...DUSER, ...user});
-          setUserOrigInfo({...DUSER, ...user});
-          setLoading(false);
-
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-          setLoading(false);
-        }
-      };
-
-      fetchProfile();
-    }
-  }, [isLoggedIn, uid, router]);
-
 
   if (loading) {
     return (
@@ -200,22 +90,10 @@ function ProfilePage() {
         <Stack direction="row" className="justify-between items-center">
           {/* avatar */}
           <Box className="avatar-container">
-            <CircImgBox
-              imgSrc={userInfo.avatar}
-              alt={`${userInfo.name}'s profile image`}
-              size={ sm ? 200 : 140}
+            <UserAvatar
+              small={sm}
+              user={userInfo}
             />
-            <AvatarButton
-              component="label"
-              variant="outlined"
-              aria-label="upload new profile image"
-              onClick={onEditAvt}
-              startIcon={<EditIcon fontSize="small" />}
-              size="small"
-              className="avatar-btn"
-            >
-              Edit
-            </AvatarButton>
           </Box>
 
           {/* goal display on midlle or large screens */}
@@ -264,41 +142,6 @@ function ProfilePage() {
 
         {/* Animation component */}
         {uid && showAnimation && <Animation uid={uid} />}
-
-        {editAvt &&
-          <Box
-            sx={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              backgroundColor: 'primary.light',
-              overflow: 'auto',
-              boxShadow: 24,
-              p: 1,
-              borderRadius: 2,
-              zIndex: 9,
-            }}
-          >
-            <Box sx={{ position: "relative"}} >
-              <IconButton
-                size="medium"
-                aria-label="close avatar selection panel"
-                onClick={() => setEditAvt(false)}
-                color="primary"
-                sx={{
-                  position: "absolute",
-                  right: -10,
-                  top: -30,
-                  zIndex: 10,
-                }}
-              >
-                <CloseIcon fontSize="inherit" />
-              </IconButton>
-              <AvatarSelection user={userInfo} handler={handleUserInfoChange} />
-            </Box>
-          </Box>
-        }
 
       </Container>
     </MainLayout>

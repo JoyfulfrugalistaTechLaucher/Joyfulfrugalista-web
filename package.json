@@ -20,6 +20,7 @@
     "chart.js": "^4.4.8",
     "dayjs": "^1.11.13",
     "firebase": "^11.6.0",
+    "image-resize-compress": "^2.1.1",
     "luxon": "^3.6.1",
     "next": "^15.2.4",
     "react": "^19.1.0",
