@@ -17,8 +17,10 @@ import {
   getDownloadURL
 } from 'firebase/storage';
 import { ref as dbRef, update } from 'firebase/database';
+import { blobToURL, fromBlob } from 'image-resize-compress';
 import { db } from '@/app/config/firebaseConfig';
 import { User } from '@/app/interface';
+import { useAuth } from '@/app/contexts/AuthContext';
 import { DEFAULT_AVATAR } from '@/app/constants';
 import { CircImgBox } from '@/app/components/ImgBox';
 
@@ -28,7 +30,7 @@ async function uploadUserAvatar(userId: string, file: File): Promise<string> {
   // Create a storage reference for this specific user's avatar
   // this pattern ensures each user has their own avatar location
   // and new uploads will replace the old one
-  const avatarRef = storageRef(storage, `avatars/${userId}`);
+  const avatarRef = storageRef(storage, `avatars/${userId}-pfp.jpeg`);
 
   // Upload the file
   await uploadBytes(avatarRef, file);
@@ -49,14 +51,16 @@ async function updateUserAvatarURL(userId: string, avatarURL: string): Promise<v
   });
 }
 
-
 export function UserAvatar({ small, user }: {small: boolean, user: User}) {
+  const { updateUserProfile } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const [uploading, setUploading] = useState(false);
   const open = Boolean(anchorEl);
 
  // State for modal
-  const [modalOpen, setModalOpen] = useState(false);
+  const [uploadModalOpen, setUploadModalOpen] = useState(false);
+  const [removeModalOpen, setRemoveModalOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
@@ -72,19 +76,33 @@ export function UserAvatar({ small, user }: {small: boolean, user: User}) {
     handleMenuClose();
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Create a preview URL for the selected image
-    const objectUrl = URL.createObjectURL(file);
+    // Create a preview URL for the selected compressed image
+    const resizedBlob = await fromBlob(file, 80, 240, 240, 'jpeg');
+    const url = await blobToURL(resizedBlob);
+
+    // Convert Blob to File by creating a new File object
+    const resizedFile = new File([resizedBlob], file.name, {
+      type: 'image/jpeg',
+      lastModified: new Date().getTime()
+    });
 
     // Store the file and preview URL in state
-    setSelectedFile(file);
-    setPreviewUrl(objectUrl);
+    setSelectedFile(resizedFile);
+
+    // Check if url is a string before setting it
+    if (typeof url === 'string') {
+      setPreviewUrl(url);
+    } else {
+      console.error('Failed to set new image url');
+      return;
+    }
 
     // Open the confirmation modal
-    setModalOpen(true);
+    setUploadModalOpen(true);
 
     // Clear the file input value so the same file can be selected again if needed
     e.target.value = '';
@@ -92,7 +110,7 @@ export function UserAvatar({ small, user }: {small: boolean, user: User}) {
 
   const handleModalClose = () => {
     // Close the modal and clean up the preview URL
-    setModalOpen(false);
+    setUploadModalOpen(false);
     if (previewUrl) {
       URL.revokeObjectURL(previewUrl);
       setPreviewUrl(null);
@@ -102,11 +120,15 @@ export function UserAvatar({ small, user }: {small: boolean, user: User}) {
 
   const handleUploadConfirm = async () => {
     if (!selectedFile) return;
+    setUploading(true);
 
     try {
-      // Your firebase upload logic here
+      // firebase upload logic here
       const downloadURL = await uploadUserAvatar(user.id, selectedFile);
       await updateUserAvatarURL(user.id, downloadURL);
+
+      // update the auth context
+      await updateUserProfile({ avatar: downloadURL });
 
       console.log("Image upload confirmed for:", selectedFile.name);
 
@@ -114,6 +136,38 @@ export function UserAvatar({ small, user }: {small: boolean, user: User}) {
       handleModalClose();
     } catch (error) {
       console.error("Error uploading image:", error);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleRemovePhoto = () => {
+    handleMenuClose();
+    setRemoveModalOpen(true);
+  };
+
+  const handleRemoveModalClose = () => {
+    setRemoveModalOpen(false);
+  };
+
+  const handleRemoveConfirm = async () => {
+    setUploading(true);
+
+    try {
+      // Update avatar to default in Firebase
+      await updateUserAvatarURL(user.id, DEFAULT_AVATAR);
+
+      // Update the auth context to reflect the change
+      await updateUserProfile({ avatar: DEFAULT_AVATAR });
+
+      console.log("Profile photo removed successfully");
+
+      // Close modal after successful removal
+      handleRemoveModalClose();
+    } catch (error) {
+      console.error("Error removing profile photo:", error);
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -147,7 +201,7 @@ export function UserAvatar({ small, user }: {small: boolean, user: User}) {
         onClick={handleMenuClose}
       >
         <MenuItem onClick={handleUploadPhoto}>Upload a photo</MenuItem>
-        <MenuItem onClick={handleMenuClose}>Remove photo</MenuItem>
+        <MenuItem onClick={handleRemovePhoto}>Remove photo</MenuItem>
       </Menu>
 
       {/* hidden file input */}
@@ -162,7 +216,7 @@ export function UserAvatar({ small, user }: {small: boolean, user: User}) {
 
       {/* Confirmation Modal */}
       <Modal
-        open={modalOpen}
+        open={uploadModalOpen}
         onClose={handleModalClose}
         aria-labelledby="preview-modal-title"
       >
@@ -189,6 +243,7 @@ export function UserAvatar({ small, user }: {small: boolean, user: User}) {
             <Button
               variant="outlined"
               onClick={handleModalClose}
+              disabled={uploading}
             >
                Cancel
             </Button>
@@ -196,7 +251,50 @@ export function UserAvatar({ small, user }: {small: boolean, user: User}) {
               variant="contained"
               onClick={handleUploadConfirm}
               color="primary"
-            >Update Profile Photo
+              disabled={uploading}
+              loading={uploading}
+            >
+              {uploading ? 'Updating...' : 'Update Profile Photo'}
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
+
+      {/* Remove Confirmation Modal */}
+      <Modal
+        open={removeModalOpen}
+        onClose={handleRemoveModalClose}
+        aria-labelledby="remove-modal-title"
+      >
+        <Box className="avatar-modal">
+          <Typography color="info" className="m-2 p-2 text-center">
+            This will remove your current profile photo and use the default avatar instead.
+          </Typography>
+
+          <Box className="mb-3 flex justify-center">
+            <img
+              src={user.avatar ?? DEFAULT_AVATAR}
+              alt="Current Avatar"
+              className="avatar-preview"
+            />
+          </Box>
+
+          <Box className="flex gap-2">
+            <Button
+              variant="outlined"
+              onClick={handleRemoveModalClose}
+              disabled={uploading}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              onClick={handleRemoveConfirm}
+              color="error"
+              disabled={uploading}
+              loading={uploading}
+            >
+              {uploading ? 'Removing...' : 'Remove Photo'}
             </Button>
           </Box>
         </Box>

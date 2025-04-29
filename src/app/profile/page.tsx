@@ -24,7 +24,6 @@ import {
 import { UserMonthGoal } from './components/Goal';
 import { UserAvatar } from './components/Avatar';
 
-// styles
 function ProfilePage() {
   const [edited, setEdited] = useState<boolean>(false);
   const [showAnimation, setShowAnimation] = useState<boolean>(false);
