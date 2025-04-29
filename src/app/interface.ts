@@ -4,7 +4,8 @@ export interface Task {
   setDate: string;
 };
 
-export interface User {
+export type User = {
+  readonly id: string;
   email: string;
   name: string;
   gender?: string;
@@ -13,14 +14,21 @@ export interface User {
   task?: Task;
 };
 
-export interface UserProfileProps {
+export type UserProfileProps = {
   user: User;
   handler: (update: Partial<User>) => void;
 };
 
 export type SavingsRecord = {
-  id?: string;
+  readonly id?: string;
   date: Date;
+  category: string;
+  saved: number;
+  description?: string;
+}
+
+export type RawRecord = {
+  date: string;
   category: string;
   saved: number;
   description?: string;

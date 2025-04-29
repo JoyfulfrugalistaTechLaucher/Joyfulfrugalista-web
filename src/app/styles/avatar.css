@@ -1,0 +1,23 @@
+/* styles for avatar */
+.avatar-container {
+  @apply relative m-2 border border-2 border-black;
+}
+
+.avatar-btn {
+  @apply absolute left-0 bottom-4;
+}
+
+.avatar-modal {
+  @apply absolute rounded-md p-2 bg-gray-100 flex flex-col items-center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  box-shadow: 24;
+}
+
+.avatar-preview {
+    @apply rounded-md;
+    max-width: 100%;
+    max-height: 300px;
+}

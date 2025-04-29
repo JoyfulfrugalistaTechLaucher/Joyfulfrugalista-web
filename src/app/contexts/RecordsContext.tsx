@@ -115,7 +115,10 @@ export const RecordsProvider = ({ children }: { children: ReactNode }) => {
     if (!isLoggedIn || !uid) return false;
 
     try {
-      const response = await axios.post(`${FB_URL}/addInfo/${uid}.json`, record);
+      const response = await axios.post(
+        `${FB_URL}/addInfo/${uid}.json`,
+        {...record, date: record.date.toISOString().split('T')[0]}
+      );
       if (response.data && response.status === 200) {
         const newRecord = {
           ...record,

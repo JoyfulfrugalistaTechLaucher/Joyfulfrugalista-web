@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import axios from 'axios';
 import { DateTime } from 'luxon';
 import { FB_URL } from '@/app/constants';
-import { SavingsRecord } from '@/app/interface';
+import { RawRecord, SavingsRecord } from '@/app/interface';
 
 export async function GET(
   request: Request,
@@ -20,7 +20,7 @@ export async function GET(
 
     // Checking for task data
     if (!userData || !userData.task) {
-      console.log('No task field found for this user.');
+      console.error(`No task found for user: ${userId}`);
       return new NextResponse(null, { status: 204 });
     }
 
@@ -30,37 +30,36 @@ export async function GET(
 
     // If there is no info
     if (!addInfoData) {
+      console.error(`No add info found for user: ${userId}`);
       return new NextResponse(null, { status: 204 });
     }
 
     const currentSydneyTime = DateTime.now().setZone('Australia/Sydney').toISODate()
       || DateTime.now().toISODate();
 
-    // Records grouped by month and total amount calculated
+    // Records grouped by month in the same year and total amount calculated
     const groupedByMonth: { [month: string]: { [category: string]: number } } = {};
 
     Object.entries(addInfoData)
-      .forEach(([recordId, recordData]) => {
-        const record = recordData as SavingsRecord;
-        const recordDate = record.date.toISOString().split('T')[0];
+      .forEach(([recordId, rawRecord]) => {
+        const record = rawRecord as RawRecord;
+        if (record == null || record.date === '') {
+          return;
+        }
 
-      if (recordDate == null) {
-        return;
-      }
+        // Records by month in the same year
+        const month = record.date.slice(0, 7);
 
-      // Records by month
-      const month = recordDate.slice(0, 7);
+        // Initialise month grouping (if none exists)
+        if (!groupedByMonth[month]) {
+          groupedByMonth[month] = {};
+        }
 
-      // Initialise month grouping (if none exists)
-      if (!groupedByMonth[month]) {
-        groupedByMonth[month] = {};
-      }
-
-      // Summary amounts by category
-      const category = record.category;
+        // Summary amounts by category
+        const category = record.category;
         groupedByMonth[month][category] = (groupedByMonth[month][category] || 0)
           + record.saved;
-    });
+      });
 
     // Return monthly results
     const responsePayload = {

@@ -1,23 +1,26 @@
-"use client";
+'use client';
 import React, {
   createContext,
   useState,
   useContext,
   useEffect,
   ReactNode,
-} from "react";
+} from 'react';
 import axios from 'axios';
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../config/firebaseConfig";
+import { onAuthStateChanged } from 'firebase/auth';
+import { ref, set } from 'firebase/database';
+import { auth, db } from '@/app/config/firebaseConfig';
 import { User } from '@/app/interface';
+import { DUSER } from '@/app/constants';
 import { FB_URL } from '@/app/constants';
 
-// TODO: Add avatar to this context and drop the user data hook
 type AuthContextType = {
   uid: string | null;
   setUid: (uid: string | null) => void;
   isLoggedIn: boolean;
   user: User | null;
+  loading: boolean;
+  updateUserProfile: (userData: Partial<User>) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -44,6 +47,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return false;
   });
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -57,7 +61,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setIsLoggedIn(false);
         localStorage.removeItem("uid");
         localStorage.removeItem("isLoggedIn");
-      }
+        setUser(null);
+    }
     });
 
     return () => unsubscribe();
@@ -69,10 +74,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const fetchProfile = async () => {
         try {
           const response = await axios.get<User>(`${FB_URL}/users/${uid}.json`);
-          setUser(response.data || null);
+          const userData = response.data;
+          // Combine default user values, data from Firebase, and add id
+          setUser(userData ? { ...DUSER, ...userData, id: uid } : null);
         } catch (error) {
           console.error("Error fetching user data:", error);
           setUser(null);
+        } finally {
+          setLoading(false);
         }
       };
 
@@ -80,9 +89,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [uid]);
 
+  const updateUserProfile = async (userData: Partial<User>) => {
+    if (!uid || !user) {
+      console.error("Cannot update profile: no user logged in");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const userRef = ref(db, `users/${uid}`);
+      const updatedUser = { ...user, ...userData };
+
+      // Remove id before saving to Firebase
+      const { id, ...userWithoutId } = updatedUser;
+
+      await set(userRef, userWithoutId);
+      setUser(updatedUser);
+
+      console.log("Profile updated successfully");
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <AuthContext.Provider value={{ uid, user, isLoggedIn, setUid }}>
+    <AuthContext.Provider
+      value={{ uid, user, isLoggedIn, setUid, loading, updateUserProfile }}
+    >
       {children}
     </AuthContext.Provider>
   );

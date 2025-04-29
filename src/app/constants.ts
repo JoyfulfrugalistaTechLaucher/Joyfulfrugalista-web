@@ -21,6 +21,7 @@ export const AVATARS: string[] = [
 
 // a minimum valid user object to avoid handling null
 export const DUSER: User = {
+  id: 'joyfulsavings001',
   email: 'example@com.au',
   name: 'Joyfule Jar',
   gender: 'Prefer not to say',

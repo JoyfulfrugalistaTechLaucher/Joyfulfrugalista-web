@@ -6,6 +6,7 @@
 /* custom modules */
 @import './goal.css';
 @import './ledger.css';
+@import './avatar.css';
 
 body {
   @apply font-sans;
@@ -63,14 +64,6 @@ body {
 .logo {
   font-size: 1.5rem;
   font-weight: bold;
-}
-
-.avatar-container {
-  @apply relative m-2 p-2 border border-2 border-black flex justify-center items-center;
-}
-
-.avatar-btn {
-  @apply absolute right-0 bottom-4;
 }
 
 /* used by MUI `Container' which uses flexbox by default */
