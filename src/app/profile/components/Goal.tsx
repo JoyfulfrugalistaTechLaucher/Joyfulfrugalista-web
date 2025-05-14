@@ -161,7 +161,7 @@ export function UserMonthGoal({ user, show, handleShow }: ProfileGoalProps) {
           setGoalReached(true);
         }
 
-        // Fetch animation preference from localStorage
+        // FIXME: Fetch animation preference from localStorage
         const savedShowAnimation = localStorage.getItem('showAnimation');
         handleShow(savedShowAnimation === null
           ? true

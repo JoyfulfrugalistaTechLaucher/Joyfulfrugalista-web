@@ -27,3 +27,8 @@
 .ledger-inputs-form {
     @apply m-1 w-full flex flex-col sm:flex-row gap-2 justify-between items-center;
 }
+
+.ledger-record-card {
+    @apply p-2 my-1 mr-1 flex justify-between items-center;
+    background-color: #DECEE0EF;
+}

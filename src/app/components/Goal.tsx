@@ -104,9 +104,8 @@ export function SemiCircGoalPanel({reached, prog, total, size}: CircProgressProp
       }
 
       const elapsed = time - startTimeRef.current;
-      const duration = Math.min(elapsed / 3000, 1); // 3000ms duration
-      const easedProgress = easeInOutQuad(duration);
-      const newProg = Math.min(prog * easedProgress, Math.min(100, prog));
+      const duration = Math.min(elapsed / 2000, 1); // 2000ms duration
+      const newProg = Math.min(prog, Math.min(100, prog));
 
       setCurrProg(newProg);
 
@@ -135,19 +134,19 @@ export function SemiCircGoalPanel({reached, prog, total, size}: CircProgressProp
     >
       <div className="semi-progress-overflow">
         <Typography
-          variant={md ? 'h4' : 'h5'}
           className="absolute left-0 right-0 font-semibold"
           style={{
             top: md ? '3.25rem' : '3rem',
+            fontSize: md ? '1.5em' : '1.25em'
           }}
         >
-          Saved
+          Today Saved
         </Typography>
         <Typography
           variant={md ? 'h2' : 'h3'}
           className="absolute left-0 right-0 font-bold"
           style={{
-            top: md ? '5.2rem' : '4.5rem',
+            top: md ? '5.5rem' : '4.5rem',
           }}
         >
           ${total}
