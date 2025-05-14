@@ -35,15 +35,15 @@ function TaskPage() {
         }
 
         const data = await response.json();
-        const { totalMoneyAdded, goal } = data;
+        const { totalSaved, goal } = data;
         setGoal(goal);
         setLoading(false);
-        const prop = (totalMoneyAdded / goal) * 100;
+        const prop = (totalSaved / goal) * 100;
         const prog = prop < 1 ? 1 : Math.floor(prop);
-        setTotalSavings(totalMoneyAdded);
+        setTotalSavings(totalSaved);
         setProgress(prog);
 
-        if (totalMoneyAdded >= goal) {
+        if (totalSaved >= goal) {
           setGoalReached(true);
         }
 
@@ -75,7 +75,7 @@ function TaskPage() {
         goal: goal,
         setDate: new Date().toISOString().split('T')[0],  // Set the current date
       });
-      router.push('/profile'); // Redirect back to profile page after saving
+      router.push('/task'); // Redirect back to profile page after saving
     } catch (error) {
       console.error('Error setting goal:', error);
       setError('Failed to update goal. Please try again.');
@@ -141,7 +141,7 @@ function TaskPage() {
             </Button>
             <Button
               variant="outlined"
-              onClick={() => router.push('/profile')}
+              onClick={() => router.push('/task')}
             >
               Cancel
             </Button>

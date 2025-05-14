@@ -61,7 +61,7 @@ export async function GET(
         const recordDate = DateTime.fromISO(
           record.date, { zone: 'Australia/Sydney'});
 
-        // Only consider records where the date is on/before the current Sydney date
+        // Only consider records on/earlier than current Sydney date
         if (recordDate.valueOf() >= setDateSydney.valueOf()
           && recordDate.valueOf() <= currentSydneyTime.valueOf()) {
             totalSaved += record.saved || 0;  // Accumulate total money added

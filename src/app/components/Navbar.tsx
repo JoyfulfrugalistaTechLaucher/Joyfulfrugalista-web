@@ -95,8 +95,18 @@ function DrawerMenu() {
 function ProfileMenu() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const { user, setUid } = useAuth();
+  const { user, setUid, isLoggedIn } = useAuth();
   const router = useRouter();
+  const [authReady, setAuthReady] = useState(false);
+
+  // Only show auth UI after auth state confirmed on client
+  // because server cannot see `isLoggedIn`
+  useEffect(() => {
+    if (isLoggedIn) {
+      setAuthReady(true);
+    }
+  }, [isLoggedIn]);
+
   // handlers
   const handleClick = (e: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(e.currentTarget);
@@ -121,6 +131,10 @@ function ProfileMenu() {
       console.error("Error signing out:", error);
     }
   };
+
+  if(!authReady) {
+    return null;
+  }
 
   return (
     <Box>
