@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import axios from 'axios';
 import { DateTime } from 'luxon';
 import { log } from 'console';
-import { RawRecord, SavingsRecord } from '@/app/interface';
+import { RawRecord } from '@/app/interface';
 import { FB_URL } from '@/app/constants';
 
 export async function GET(

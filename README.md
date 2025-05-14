@@ -7,8 +7,7 @@ People in Australia are struggling with the cost of living, with 6.9 million peo
 
 ## Set up for development
 
-Download ``.env.local`` file and place in the project root file, you need to have those environment variable to access the firebase.
-It should be like
+Download ``.env.local`` file and place in the project root file, you need to set up these environment variable to access the Firebase:
 ```env
 NEXT_PUBLIC_FIREBASE_API_KEY=
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=
@@ -28,10 +27,11 @@ npx next
 
 Then in your browser, visit `localhost:3000` or `127.0.0.1:3000`
 
-## Build and deploy
-Before you push any updates, run the following first:
+## Build
+Before pushing your updates, run the following command to make sure it builds:
 ```shell
 npx next build
 ```
-This project use [github actions](.github/workflows/vercel.yml), each commit and pull request on main and dev branches will trigger the build and deploy to vercel instance.
-You can access through [Joyful Savings Jar](https://joyfulfrugalista-web.vercel.app/) web.
+## Deploy
+This project uses [github actions](.github/workflows/vercel.yml). Each commit and pull request on the `main` and `dev` branches will trigger the building of the website and its deployment to a vercel instance.
+You can visit the deployed website at [Joyful Savings Jar](https://joyfulfrugalista-web.vercel.app/)

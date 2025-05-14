@@ -95,7 +95,7 @@ function DrawerMenu() {
 function ProfileMenu() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const { user, isLoggedIn, setUid } = useAuth();
+  const { user, setUid } = useAuth();
   const router = useRouter();
   // handlers
   const handleClick = (e: React.MouseEvent<HTMLElement>) => {
@@ -122,26 +122,6 @@ function ProfileMenu() {
     }
   };
 
-  // Use a client-side only initial render
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  // Return null on server-side
-  if (!mounted) {
-    return null;
-  }
-
-  if (!isLoggedIn) {
-    return  (
-      <Button variant="outlined" href="/login">
-        Login
-      </Button>
-    );
-  }
-
   return (
     <Box>
       <Tooltip title="Profile settings">
@@ -166,7 +146,6 @@ function ProfileMenu() {
         onClose={handleClose}
         onClick={handleClose}
       >
-
         <MenuItem onClick={handleProfile}>
           <ListItemIcon>
             <AccountCircleIcon fontSize="small" />
@@ -200,6 +179,17 @@ function Navbar() {
 
   const theme = useTheme();
   const sm = useMediaQuery(theme.breakpoints.down('sm'));
+  const { isLoggedIn, loading } = useAuth();
+  const [authReady, setAuthReady] = useState(false);
+
+  // Only show auth UI after auth state confirmed on client
+  // because server cannot see `isLoggedIn`
+  useEffect(() => {
+    console.log("Auth state:", { loading, isLoggedIn, authReady });
+    if (isLoggedIn) {
+      setAuthReady(true);
+    }
+  }, [isLoggedIn]);
 
   return (
     <FlatAppBar component="nav" color="transparent" position="static">
@@ -247,7 +237,8 @@ function Navbar() {
           </NavButton>
         </Box>
         <Box className="nav-icons">
-          <ProfileMenu />
+          { !authReady && <Button variant="outlined" href="/login">Login</Button> }
+          { isLoggedIn && <ProfileMenu /> }
         </Box>
       </Toolbar>
     </FlatAppBar>
